@@ -41,7 +41,7 @@ export const locations: Location[] = [
     id: 'south_march',
     name: '南境',
     faction: '斯特莱家族',
-    description: '温暖的南方，盛产美酒与果实。斯特莱伯爵统治着这片土地，是王室坚定的盟友。',
+    description: '温暖的南方，盛产美酒与果实。斯特莱公爵统治着这片土地。',
     x: 50,
     y: 80,
     path: 'all'
@@ -108,15 +108,6 @@ export const locations: Location[] = [
     x: 51,
     y: 44,
     path: 'deer'
-  },
-  {
-    id: 'valles_keep',
-    name: '瓦列堡',
-    faction: '瓦列家族',
-    description: '瓦列家族的根据地，位于南境主道与林路的交汇处。这里的学士消息灵通，甚至比渡鸦更早知晓王城的动向。',
-    x: 42,
-    y: 58,
-    path: 'fox'
   },
   {
     id: 'valles_keep',

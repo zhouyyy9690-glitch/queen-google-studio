@@ -137,8 +137,8 @@ export const characters: Character[] = [
   {
     id: 'stray',
     name: '伯恩·斯特莱',
-    title: '南境伯爵',
-    description: '来自南方的领主，热爱美酒与夏日的果实。在红廷的盛宴中献上南方的佳酿。',
+    title: '南境公爵',
+    description: '来自南方的领主，热爱美酒与夏日的果实。在红廷的盛宴中献上南方的佳酿。他是乔治·哈蒙德的盟友。',
     unlockedAt: 'HerMaiesty',
     iconType: 'tiger',
     path: 'fox'
@@ -146,8 +146,8 @@ export const characters: Character[] = [
   {
     id: 'durin',
     name: '杜林·阿尔摩恩',
-    title: '北境之主',
-    description: '来自寒冷北境的领主，为女王带来了王统的剑盔。',
+    title: '北境公爵',
+    description: '来自寒冷北境的领主，为女王带来了王统的剑盔。他沉默寡言，忠于王室传统，手握王国的北方边境。',
     unlockedAt: 'HerMaiesty',
     iconType: 'bear',
     path: 'fox'
@@ -157,7 +157,7 @@ export const characters: Character[] = [
     name: '迪恩·哈蒙德',
     title: '西境继承人',
     description: '乔治·哈蒙德的长子。在某些命运的分支中，他成为了女王的丈夫。',
-    unlockedAt: ['Caesar', 'Thedespisedeldestson'],
+    unlockedAt: ['Caesar', 'Thedespisedeldestson', 'd2-1-DeanHammond'],
     iconType: 'ring',
     path: 'all'
   },
@@ -183,6 +183,12 @@ export const characters: Character[] = [
     name: '维克托·德·雷斯多',
     title: '雷斯多伯爵',
     description: '达里安的父亲，一位严谨而关爱孩子的领主。他效忠于南境领主斯特莱家族。',
+    updates: [
+      {
+        atScene: 'd3-Dissatisfied',
+        description: '在前往王城的马车上，他表现出了对局势的担忧，并严厉嘱咐你必须待在他身边，不能乱跑。'
+      }
+    ],
     unlockedAt: 'd1-deer',
     iconType: 'sword',
     path: 'deer'
@@ -201,6 +207,12 @@ export const characters: Character[] = [
     name: '菲利克斯·德·雷斯多',
     title: '雷斯多家的三哥',
     description: '达里安的三哥，黑发蓝眼。看似不着调，实则是家族中最聪明的人。他被称为“风流的菲力”。',
+    updates: [
+      {
+        atScene: 'd3-Dissatisfied',
+        description: '虽然平时总是在开玩笑，但在父亲提到王城的危险时，他与父亲交换了一个深沉的眼神，显示出他敏锐的洞察力。'
+      }
+    ],
     unlockedAt: ['d1-deer', 'Therunawayprodigalson'],
     iconType: 'user',
     path: 'all'
@@ -276,23 +288,5 @@ export const characters: Character[] = [
     iconType: 'heart',
     path: 'fox',
     unlockedAt: 'F41-LeaveWithFain'
-  },
-  {
-    id: 'byrne',
-    name: '伯恩·斯特莱',
-    title: '南境大公',
-    description: '南境的统治者，斯特莱家族的首领。他性格豪爽，热爱美酒与宴会，是乔治·哈蒙德的盟友。',
-    iconType: 'shield',
-    path: 'fox',
-    unlockedAt: 'HerMaiesty'
-  },
-  {
-    id: 'durin',
-    name: '杜林·阿尔摩恩',
-    title: '北境大公',
-    description: '北境的统治者，阿尔摩恩家族的首领。他沉默寡言，忠于王室传统，手握王国的北方边境。',
-    iconType: 'shield',
-    path: 'fox',
-    unlockedAt: 'HerMaiesty'
   }
 ];

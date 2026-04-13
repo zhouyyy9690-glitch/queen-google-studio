@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, WheelEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Book, 
@@ -126,64 +126,7 @@ const TypewriterText = ({ segments, speed = 80, onComplete }: { segments: TextSe
 
 // Flower Bloom Effect for specific scenes
 const FlowerBloomEffect = () => {
-  const flowerTypes = [
-    { name: 'Cornflower', color: 'text-blue-400/40', icon: Flower },
-    { name: 'Daisy', color: 'text-white/40', icon: Flower2 },
-    { name: 'WildPea', color: 'text-purple-500/40', icon: Flower },
-    { name: 'Marigold', color: 'text-yellow-500/40', icon: Flower2 },
-  ];
-  
-  const flowers = Array.from({ length: 40 });
-  
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {flowers.map((_, i) => {
-        const type = flowerTypes[i % flowerTypes.length];
-        const Icon = type.icon;
-        
-        // Distribute flowers around the edges
-        const angle = (i / flowers.length) * Math.PI * 2 + (Math.random() * 0.5);
-        const distance = 150; // Start further outside
-        const startX = Math.cos(angle) * distance;
-        const startY = Math.sin(angle) * distance;
-        
-        // Target positions (moving towards center but staying spread)
-        const targetX = Math.cos(angle) * (20 + Math.random() * 60);
-        const targetY = Math.sin(angle) * (20 + Math.random() * 60);
-        
-        const scale = 0.5 + Math.random() * 1.5;
-        const duration = 3 + Math.random() * 4;
-        
-        return (
-          <motion.div
-            key={i}
-            initial={{ 
-              opacity: 0, 
-              scale: 0,
-              x: `${startX}vw`,
-              y: `${startY}vh`,
-              rotate: 0
-            }}
-            animate={{ 
-              opacity: [0, 0.6, 0.3], 
-              scale: [0, scale * 1.2, scale],
-              x: `${targetX}vw`,
-              y: `${targetY}vh`,
-              rotate: 360
-            }}
-            transition={{ 
-              duration: duration, 
-              delay: i * 0.1,
-              ease: "easeOut"
-            }}
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${type.color}`}
-          >
-            <Icon className="w-16 h-16 md:w-32 md:h-32 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
-          </motion.div>
-        );
-      })}
-    </div>
-  );
+  return null;
 };
 
 // Animal Pattern Background Component
@@ -535,6 +478,7 @@ export default function App() {
   const [newlyUnlockedCharacterIds, setNewlyUnlockedCharacterIds] = useState<Set<string>>(new Set());
   const [seenCharacterNames, setSeenCharacterNames] = useState<Set<string>>(new Set());
   const [unlockedLocations, setUnlockedLocations] = useState<Set<string>>(new Set());
+  const [newlyUnlockedLocationIds, setNewlyUnlockedLocationIds] = useState<Set<string>>(new Set());
   const [seenLocationNames, setSeenLocationNames] = useState<Set<string>>(new Set());
   const [visitedTexts, setVisitedTexts] = useState<string[]>([]);
   const [isMuted, setIsMuted] = useState(false);
@@ -550,7 +494,22 @@ export default function App() {
   const [showGallery, setShowGallery] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [mapScale, setMapScale] = useState(1);
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+
+  const handleMapZoom = (e: WheelEvent) => {
+    if (e.deltaY < 0) {
+      setMapScale(prev => Math.min(prev + 0.2, 4));
+    } else {
+      setMapScale(prev => Math.max(prev - 0.2, 0.5));
+    }
+  };
+
+  const selectedLocation = useMemo(() => 
+    locations.find(l => l.id === selectedLocationId),
+    [selectedLocationId]
+  );
   const [notification, setNotification] = useState<{title: string, visible: boolean, type?: 'ending' | 'character' | 'location'}>({ title: '', visible: false });
 
   // Endings are now session-only (cleared on refresh/close)
@@ -647,12 +606,17 @@ export default function App() {
         } else {
           // Check if src actually changed (using URL to normalize)
           try {
-            const currentSrc = new URL(audioRef.current.src).href;
-            const targetSrc = new URL(scene.bgm!, window.location.href).href;
-            if (currentSrc !== targetSrc) {
-              audioRef.current.pause();
+            if (!audioRef.current.src) {
               audioRef.current.src = scene.bgm!;
               audioRef.current.load();
+            } else {
+              const currentSrc = new URL(audioRef.current.src).href;
+              const targetSrc = new URL(scene.bgm!, window.location.href).href;
+              if (currentSrc !== targetSrc) {
+                audioRef.current.pause();
+                audioRef.current.src = scene.bgm!;
+                audioRef.current.load();
+              }
             }
           } catch (e) {
             // Fallback if URL parsing fails
@@ -757,9 +721,10 @@ export default function App() {
     const currentPara = activeParagraphs[currentParaIndex];
     if (!currentPara) return;
 
-    // Only start recognition from fox path act1-p1-morning scenes (F1-fox, etc.)
+    // Only start recognition from fox path or deer path act1-p1 scenes
     const isFoxPath = currentSceneId.startsWith('F') || currentPath === 'fox';
-    if (!isFoxPath) return;
+    const isDeerPath = currentSceneId.startsWith('d') || currentPath === 'deer';
+    if (!isFoxPath && !isDeerPath) return;
 
     const currentText = currentPara.text;
 
@@ -798,13 +763,18 @@ export default function App() {
           next.add(loc.id);
           return next;
         });
+        setNewlyUnlockedLocationIds(prev => {
+          const next = new Set(prev);
+          next.add(loc.id);
+          return next;
+        });
         setSeenLocationNames(prev => {
           const next = new Set(prev);
           next.add(loc.name);
           return next;
         });
         setNotification({ 
-          title: `${loc.name}`, 
+          title: `${loc.name} 已解锁`, 
           visible: true, 
           type: 'location' 
         });
@@ -914,6 +884,7 @@ export default function App() {
     const paraKey = `${currentSceneId}-${currentParaIndex}`;
     if (lastParaRef.current !== paraKey) {
       setNewlyUnlockedCharacterIds(new Set());
+      setNewlyUnlockedLocationIds(new Set());
       lastParaRef.current = paraKey;
     }
   }, [currentParaIndex, currentSceneId]);
@@ -967,6 +938,8 @@ export default function App() {
         });
 
         // Split by location names to highlight them if they were just unlocked
+        const highlightedLocationsInThisText = new Set<string>();
+
         locations.forEach(loc => {
           const newSubSegments: TextSegment[] = [];
           subSegments.forEach(seg => {
@@ -977,11 +950,12 @@ export default function App() {
 
             const nameParts = seg.text.split(new RegExp(`(${loc.name})`, 'g'));
             nameParts.forEach(namePart => {
-              if (namePart === loc.name && !seenLocationNames.has(loc.name)) {
-                // Highlight ONLY if this is the first time we see the location name
+              if (namePart === loc.name && newlyUnlockedLocationIds.has(loc.id) && !highlightedLocationsInThisText.has(loc.id)) {
+                // Highlight ONLY if this is the first time we see the location name in this paragraph
+                highlightedLocationsInThisText.add(loc.id);
                 newSubSegments.push({
                   text: namePart,
-                  className: "font-bold border-b-2 border-emerald-900/30 px-0.5 relative after:content-['·'] after:ml-0.5 after:text-emerald-600/50",
+                  className: "font-bold border-b-2 border-emerald-600 px-0.5 text-emerald-600",
                   isDialogue: false
                 });
               } else if (namePart) {
@@ -993,7 +967,7 @@ export default function App() {
         });
 
         subSegments.forEach(seg => {
-          if (seg.className?.includes('border-amber-600') || seg.className?.includes('border-emerald-900/30')) {
+          if (seg.className?.includes('border-amber-600') || seg.className?.includes('border-emerald-600')) {
             segments.push(seg);
           } else {
             segments.push({
@@ -1081,7 +1055,6 @@ export default function App() {
 
         {/* Game Content */}
         <div className="flex-grow flex flex-col justify-center relative z-10">
-          {(currentSceneId === 'F8-openthedoor' || currentSceneId === 'openthedoor_after_eavesdrop') && <FlowerBloomEffect />}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSceneId + '-' + (currentStageId || 'base') + '-' + currentParaIndex}
@@ -1172,7 +1145,8 @@ export default function App() {
             >
               <div className="w-2 h-2 bg-amber-600 rounded-full animate-pulse" />
               <span className="font-display text-amber-600 tracking-[0.2em] uppercase text-sm">
-                {notification.type === 'character' ? '人物解锁：' : notification.type === 'location' ? `${notification.title} 已记录` : '新的收录：'}{notification.type === 'location' ? '' : notification.title}
+                {notification.type === 'character' ? '人物解锁：' : notification.type === 'location' ? '地点解锁：' : '新的收录：'}
+                {notification.title}
               </span>
               <div className="w-2 h-2 bg-amber-600 rounded-full animate-pulse" />
             </motion.div>
@@ -1315,28 +1289,28 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-[#0a0a0a]/95 backdrop-blur-sm p-8 overflow-y-auto"
+              className="fixed inset-0 z-[100] bg-[#0a0a0a] p-4 md:p-8 overflow-y-auto"
             >
-              <div className="max-w-2xl mx-auto pt-16">
-                <div className="flex justify-between items-center mb-12 border-b border-amber-900/20 pb-6">
-                  <h3 className="font-display text-2xl text-amber-600 tracking-widest uppercase">Chronicle History</h3>
+              <div className="max-w-2xl mx-auto pt-12 md:pt-16">
+                <div className="flex justify-between items-center mb-8 md:mb-12 border-b border-amber-900/20 pb-6">
+                  <h3 className="font-display text-xl md:text-2xl text-amber-600 tracking-widest uppercase">Chronicle History</h3>
                   <button 
                     onClick={() => setShowHistory(false)}
-                    className="text-neutral-500 hover:text-neutral-100 transition-colors uppercase tracking-widest text-xs cursor-pointer"
+                    className="text-neutral-500 hover:text-neutral-100 transition-colors uppercase tracking-widest text-[10px] md:text-xs cursor-pointer p-2"
                   >
                     Close
                   </button>
                 </div>
-                <div className="space-y-8 pb-24">
+                <div className="space-y-6 md:space-y-8 pb-24">
                   {visitedTexts.map((text, i) => (
                     <motion.div 
                       key={i}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      transition={{ delay: Math.min(i * 0.05, 1) }}
                       className={text.startsWith('---') 
-                        ? "text-center py-4 text-amber-900/40 font-display text-sm tracking-[0.5em] uppercase"
-                        : "text-lg text-neutral-400 leading-relaxed font-serif italic border-l-2 border-amber-900/10 pl-6"
+                        ? "text-center py-4 text-amber-900/40 font-display text-xs md:text-sm tracking-[0.3em] md:tracking-[0.5em] uppercase"
+                        : "text-base md:text-lg text-neutral-400 leading-relaxed font-serif italic border-l-2 border-amber-900/10 pl-4 md:pl-6"
                       }
                     >
                       {text.startsWith('---') ? text.replace(/---/g, '') : text}
@@ -1355,7 +1329,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-[#0a0a0a]/95 backdrop-blur-sm p-8 overflow-y-auto"
+              className="fixed inset-0 z-[100] bg-[#0a0a0a]/95 p-8 overflow-y-auto"
             >
               <div className="max-w-4xl mx-auto pt-16">
                 <div className="flex justify-between items-center mb-12 border-b border-amber-900/20 pb-6">
@@ -1460,113 +1434,118 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-[#0a0a0a]/95 backdrop-blur-sm p-4 md:p-8 overflow-hidden flex flex-col"
+              className="fixed inset-0 z-[100] bg-[#0a0a0a] p-4 md:p-8 overflow-hidden flex flex-col"
             >
-              <div className="max-w-6xl mx-auto w-full flex-grow flex flex-col pt-16">
-                <div className="flex justify-between items-center mb-8 border-b border-amber-900/20 pb-6">
+              <div className="max-w-6xl mx-auto w-full flex-grow flex flex-col pt-12 md:pt-16">
+                <div className="flex justify-between items-center mb-6 md:mb-8 border-b border-amber-900/20 pb-4 md:pb-6">
                   <div className="flex items-center gap-4">
-                    <Scroll className="w-6 h-6 text-emerald-600" />
-                    <h3 className="font-display text-2xl text-emerald-600 tracking-widest uppercase">征服王国全图 · World Map</h3>
+                    <Scroll className="w-5 h-5 md:w-6 md:h-6 text-emerald-600" />
+                    <h3 className="font-display text-xl md:text-2xl text-emerald-600 tracking-widest uppercase">征服王国全图 · World Map</h3>
                   </div>
-                  <button 
-                    onClick={() => setShowMap(false)}
-                    className="text-neutral-500 hover:text-neutral-100 transition-colors uppercase tracking-widest text-xs cursor-pointer"
-                  >
-                    Close
-                  </button>
+                  <div className="flex items-center gap-6">
+                    <div className="hidden md:flex items-center gap-3 text-[10px] text-amber-900/40 uppercase tracking-widest">
+                      <span>滚轮缩放 / Zoom with Wheel</span>
+                      <span className="w-px h-3 bg-amber-900/20" />
+                      <span>拖拽移动 / Drag to Pan</span>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        setShowMap(false);
+                        setMapScale(1);
+                        setSelectedLocationId(null);
+                      }}
+                      className="text-neutral-500 hover:text-neutral-100 transition-colors uppercase tracking-widest text-[10px] md:text-xs cursor-pointer p-2"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
 
-                <div className="flex-grow relative bg-[#1a1a1a] border-2 border-amber-900/20 rounded-sm overflow-hidden shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
-                  {unlockedLocations.size === 0 && (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-                      <div className="text-center space-y-4 p-8 border border-amber-900/20 bg-[#0a0a0a]/80">
-                        <p className="text-neutral-500 italic">地图尚未开启。</p>
-                        <p className="text-amber-900/40 text-[10px] uppercase tracking-widest">随着您的探索，王国的疆域将逐渐显现</p>
+                <div 
+                  className="flex-grow relative bg-[#1a1a1a] border-2 border-amber-900/20 rounded-sm overflow-hidden shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] cursor-grab active:cursor-grabbing"
+                  onWheel={handleMapZoom}
+                >
+                  <motion.div 
+                    drag
+                    dragConstraints={{ left: -1000, right: 1000, top: -1000, bottom: 1000 }}
+                    dragElastic={0.1}
+                    animate={{ scale: mapScale }}
+                    className="w-full h-full relative origin-center"
+                    style={{ minWidth: '100%', minHeight: '100%' }}
+                  >
+                    <div className="absolute inset-0 min-w-[1200px] min-h-[900px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                      {unlockedLocations.size === 0 && (
+                        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/40">
+                          <div className="text-center space-y-4 p-8 border border-amber-900/20 bg-[#0a0a0a]/80">
+                            <p className="text-neutral-500 italic">地图尚未开启。</p>
+                            <p className="text-amber-900/40 text-[10px] uppercase tracking-widest">随着您的探索，王国的疆域将逐渐显现</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Parchment Texture Overlay */}
+                      <div className="absolute inset-0 opacity-30 pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/old-map.png')]" />
+                      
+                      {/* Map Grid/Lines */}
+                      <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
+                        <defs>
+                          <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                            <path d="M 100 0 L 0 0 0 100" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                          </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" className="text-amber-900" />
+                      </svg>
+
+                      {/* Locations */}
+                      {locations
+                        .filter(loc => !loc.path || loc.path === 'all' || loc.path === currentPath)
+                        .map((loc) => {
+                          const isUnlocked = unlockedLocations.has(loc.id);
+                          return (
+                            <motion.div
+                              key={loc.id}
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ 
+                                scale: isUnlocked ? 1 : 0.8, 
+                                opacity: isUnlocked ? 1 : 0.2 
+                              }}
+                              style={{ 
+                                left: `${loc.x}%`, 
+                                top: `${loc.y}%` 
+                              }}
+                              className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
+                            >
+                              <button 
+                                onClick={() => isUnlocked && setSelectedLocationId(loc.id)}
+                                className={`relative flex flex-col items-center group ${isUnlocked ? 'cursor-pointer' : 'cursor-default'}`}
+                              >
+                                {/* Location Marker */}
+                                <div className={`w-3 h-3 md:w-5 md:h-5 rounded-full border-2 ${isUnlocked ? 'border-emerald-500 bg-emerald-900/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'border-neutral-700 bg-neutral-900'} transition-all group-hover:scale-125 group-hover:border-emerald-400`} />
+                                
+                                {/* Location Label */}
+                                <div className={`mt-3 px-2 py-0.5 md:px-3 md:py-1 bg-black/80 border border-amber-900/20 backdrop-blur-sm transition-all ${isUnlocked ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                                  <p className="text-[8px] md:text-[10px] font-display text-amber-600 tracking-widest uppercase whitespace-nowrap">
+                                    {isUnlocked ? loc.name : '???'}
+                                  </p>
+                                </div>
+                              </button>
+                            </motion.div>
+                          );
+                        })}
+
+                      {/* Map Decorations */}
+                      <div className="absolute top-12 right-12 opacity-20 pointer-events-none">
+                        <svg width="160" height="160" viewBox="0 0 100 100" className="text-amber-900">
+                          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+                          <path d="M50 5 L50 95 M5 50 L95 50 M20 20 L80 80 M80 20 L20 80" stroke="currentColor" strokeWidth="0.5" />
+                          <text x="50" y="15" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">N</text>
+                          <text x="50" y="92" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">S</text>
+                          <text x="85" y="53" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">E</text>
+                          <text x="15" y="53" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">W</text>
+                        </svg>
                       </div>
                     </div>
-                  )}
-                  {/* Scroll Opening Animation Overlay */}
-                  <motion.div 
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-emerald-900/5 z-50 pointer-events-none origin-center"
-                  />
-                  
-                  {/* Parchment Texture Overlay */}
-                  <div className="absolute inset-0 opacity-30 pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/old-map.png')]" />
-                  
-                  {/* Map Grid/Lines */}
-                  <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
-                    <defs>
-                      <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" className="text-amber-900" />
-                  </svg>
-
-                  {/* Locations */}
-                  {locations
-                    .filter(loc => !loc.path || loc.path === 'all' || loc.path === currentPath)
-                    .map((loc) => {
-                      const isUnlocked = unlockedLocations.has(loc.id);
-                      return (
-                        <motion.div
-                          key={loc.id}
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ 
-                            scale: isUnlocked ? 1 : 0.8, 
-                            opacity: isUnlocked ? 1 : 0.2 
-                          }}
-                          style={{ 
-                            left: `${loc.x}%`, 
-                            top: `${loc.y}%` 
-                          }}
-                          className="absolute -translate-x-1/2 -translate-y-1/2 group z-20"
-                        >
-                          <div className="relative flex flex-col items-center">
-                            {/* Location Marker */}
-                            <div className={`w-4 h-4 rounded-full border-2 ${isUnlocked ? 'border-emerald-500 bg-emerald-900/50 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'border-neutral-700 bg-neutral-900'} transition-all group-hover:scale-125`} />
-                            
-                            {/* Location Label */}
-                            <div className={`mt-2 px-3 py-1 bg-black/80 border border-amber-900/20 backdrop-blur-sm transition-all ${isUnlocked ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                              <p className="text-[10px] font-display text-amber-600 tracking-widest uppercase whitespace-nowrap">
-                                {isUnlocked ? loc.name : '???'}
-                              </p>
-                              {isUnlocked && (
-                                <p className="text-[8px] text-emerald-500/60 tracking-tighter uppercase mt-0.5">
-                                  {loc.faction}
-                                </p>
-                              )}
-                            </div>
-
-                            {/* Tooltip on Hover */}
-                            {isUnlocked && (
-                              <div className="absolute bottom-full mb-4 w-48 p-4 bg-neutral-900 border border-amber-900/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30 shadow-2xl">
-                                <h5 className="text-amber-600 font-display text-sm mb-2 border-b border-amber-900/20 pb-1">{loc.name}</h5>
-                                <p className="text-[10px] text-emerald-500/80 mb-2 uppercase tracking-widest">势力：{loc.faction}</p>
-                                <p className="text-[10px] text-neutral-400 font-serif italic leading-relaxed">
-                                  {loc.description}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-
-                  {/* Map Decorations */}
-                  <div className="absolute top-8 right-8 opacity-20 pointer-events-none">
-                    <svg width="120" height="120" viewBox="0 0 100 100" className="text-amber-900">
-                      <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
-                      <path d="M50 5 L50 95 M5 50 L95 50 M20 20 L80 80 M80 20 L20 80" stroke="currentColor" strokeWidth="0.5" />
-                      <text x="50" y="15" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">N</text>
-                      <text x="50" y="92" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">S</text>
-                      <text x="85" y="53" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">E</text>
-                      <text x="15" y="53" textAnchor="middle" fontSize="8" fill="currentColor" className="font-display">W</text>
-                    </svg>
-                  </div>
+                  </motion.div>
                 </div>
                 
                 <div className="mt-8 text-center pb-8">
@@ -1575,6 +1554,66 @@ export default function App() {
                   </p>
                 </div>
               </div>
+
+              {/* Location Detail Overlay */}
+              <AnimatePresence>
+                {selectedLocation && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 100 }}
+                    className="fixed top-0 right-0 bottom-0 w-full md:w-96 bg-[#0a0a0a] border-l border-amber-900/20 z-[110] shadow-2xl p-8 flex flex-col"
+                  >
+                    <button 
+                      onClick={() => setSelectedLocationId(null)}
+                      className="absolute top-8 right-8 text-neutral-500 hover:text-neutral-100 transition-colors p-2"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+
+                    <div className="mt-16 space-y-8">
+                      <div className="space-y-2">
+                        <span className="text-[10px] text-emerald-500/60 uppercase tracking-[0.3em] font-display">
+                          {selectedLocation.faction}
+                        </span>
+                        <h4 className="text-4xl text-amber-600 font-display tracking-wider">
+                          {selectedLocation.name}
+                        </h4>
+                      </div>
+
+                      <div className="h-px bg-gradient-to-r from-amber-900/40 to-transparent" />
+
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 text-amber-900/60">
+                          <Shield className="w-4 h-4" />
+                          <span className="text-xs uppercase tracking-widest">势力归属 · Faction</span>
+                        </div>
+                        <p className="text-neutral-300 font-serif italic text-lg leading-relaxed">
+                          {selectedLocation.faction}
+                        </p>
+                      </div>
+
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 text-amber-900/60">
+                          <Book className="w-4 h-4" />
+                          <span className="text-xs uppercase tracking-widest">地点志 · Description</span>
+                        </div>
+                        <p className="text-neutral-400 font-serif italic leading-relaxed text-base">
+                          {selectedLocation.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-auto pt-12">
+                      <div className="p-6 border border-amber-900/10 bg-amber-900/5 rounded-sm">
+                        <p className="text-[10px] text-amber-900/40 uppercase tracking-widest leading-relaxed">
+                          此地的历史已与您的旅程交织。每一个被踏足的角落，都见证了权力的更迭与命运的流转。
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
         </AnimatePresence>
