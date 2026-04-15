@@ -615,20 +615,25 @@ export default function App() {
     }
   }, []);
 
-  // Handle BGM Change
+  // Track desired BGM URL so click handler can start it
+  const pendingBgmRef = useRef<string | null>(null);
+
+  // Handle BGM Change - only preload, don't try to play before interaction
   useEffect(() => {
     const scene = gameData.scenes[currentSceneId];
     const bgmUrl = SCENE_BGM_CONFIG[currentSceneId] || scene?.bgm;
-    
+
     if (!bgmUrl || !audioRef.current) return;
 
     const audio = audioRef.current;
-    
+
     // 检查 src 是否真的改变了
     const normalizedTarget = new URL(bgmUrl, window.location.href).href;
     const normalizedCurrent = audio.src ? new URL(audio.src, window.location.href).href : '';
 
     if (normalizedCurrent !== normalizedTarget) {
+      pendingBgmRef.current = bgmUrl;
+
       const switchBGM = async () => {
         // 如果正在播放，先淡出
         if (!audio.paused) {
@@ -639,41 +644,40 @@ export default function App() {
         audio.src = bgmUrl;
         audio.load();
         audio.volume = 0;
-        audio.muted = !hasInteracted || isMuted;
 
-        try {
-          await audio.play();
-          if (hasInteracted && !isMuted) {
-            audio.muted = false;
-            fadeAudio(audio, 0.4, 1500);
+        // Only attempt playback if user has already interacted
+        if (hasInteracted) {
+          audio.muted = isMuted;
+          try {
+            await audio.play();
+            pendingBgmRef.current = null;
+            if (!isMuted) {
+              fadeAudio(audio, 0.4, 1500);
+            }
+          } catch (e) {
+            console.log("BGM play blocked:", e);
           }
-        } catch (e) {
-          console.log("BGM play blocked:", e);
         }
       };
       switchBGM();
     }
-  }, [currentSceneId]);
+  }, [currentSceneId, hasInteracted]);
 
-  // Handle Interaction & Mute Sync
+  // Sync mute state (no play calls here - those happen in click handler)
   useEffect(() => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
 
-    if (hasInteracted && !isMuted) {
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      }
-      audio.muted = false;
-      fadeAudio(audio, 0.4, 1000);
-    } else {
+    if (isMuted) {
       fadeAudio(audio, 0, 500);
-      // 不要立即 pause，等淡出后再静音
       setTimeout(() => {
         if (isMuted) audio.muted = true;
       }, 500);
+    } else if (hasInteracted && !audio.paused) {
+      audio.muted = false;
+      fadeAudio(audio, 0.4, 1000);
     }
-  }, [hasInteracted, isMuted]);
+  }, [isMuted]);
 
   useEffect(() => {
     setCurrentParaIndex(0);
@@ -681,14 +685,23 @@ export default function App() {
 
   useEffect(() => {
     const handleGlobalClick = () => {
-      setHasInteracted(true);
-      if (audioRef.current && !isMuted) {
-        audioRef.current.play().catch(() => {});
+      if (!hasInteracted) {
+        setHasInteracted(true);
+      }
+      // CRITICAL: audio.play() MUST be called synchronously inside the click
+      // handler to satisfy browser autoplay policy. useEffect runs async and
+      // loses the user-gesture context, so we cannot rely on it.
+      const audio = audioRef.current;
+      if (audio && !isMuted) {
+        audio.muted = false;
+        audio.play().then(() => {
+          fadeAudio(audio, 0.4, 1000);
+        }).catch(() => {});
       }
     };
     window.addEventListener('click', handleGlobalClick);
     return () => window.removeEventListener('click', handleGlobalClick);
-  }, [isMuted]);
+  }, [isMuted, hasInteracted]);
 
   const currentScene: Scene = gameData.scenes[currentSceneId] || gameData.scenes[gameData.initialScene];
   const currentStage: Stage | null = (currentScene.event && currentStageId) 
@@ -1088,14 +1101,16 @@ export default function App() {
                   setHasInteracted(true);
                   resetGame();
                   setIsStarting(true);
-                  
-                  // 强制解锁音频
+
+                  // 在点击事件中同步调用 play() 以满足浏览器自动播放策略
                   playSFX(SFX_ASSETS.CLICK, isMuted);
                   if (audioRef.current) {
                     const audio = audioRef.current;
-                    audio.muted = false;
+                    audio.muted = isMuted;
                     audio.play().then(() => {
-                      fadeAudio(audio, 0.4, 1000);
+                      if (!isMuted) {
+                        fadeAudio(audio, 0.4, 1000);
+                      }
                     }).catch(e => console.log("Manual play failed:", e));
                   }
                 }}
