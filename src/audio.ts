@@ -8,14 +8,10 @@
 
 export const BGM_ASSETS = {
   // 推荐：低调氛围 (主界面/通用)
-  MAIN_THEME: "/audio/deuslower-medieval-ambient-236809.mp3",
+  MAIN_THEME: "/audio/bgm_main.mp3",
   
   // 推荐：教堂/神秘感 (仪式/重要转折)
-  MYSTERY: "https://cdn.pixabay.com/audio/2022/10/25/audio_946b5d4f6e.mp3",
-  
-  // 可以在此继续添加更多资源...
-  // TAVERN: "...",
-  // BATTLE: "...",
+  MYSTERY: "/audio/bgm_mystery.mp3", // 建议也上传一个本地文件
 };
 
 export const SFX_ASSETS = {
