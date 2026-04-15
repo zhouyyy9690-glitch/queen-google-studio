@@ -8,7 +8,7 @@
 
 export const BGM_ASSETS = {
   // 推荐：低调氛围 (主界面/通用)
-  MAIN_THEME: "public/audio/deuslower-medieval-ambient-236809.mp3",
+  MAIN_THEME: "/audio/deuslower-medieval-ambient-236809.mp3",
   
   // 推荐：教堂/神秘感 (仪式/重要转折)
   MYSTERY: "https://cdn.pixabay.com/audio/2022/10/25/audio_946b5d4f6e.mp3",
