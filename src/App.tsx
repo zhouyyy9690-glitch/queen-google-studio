@@ -32,6 +32,7 @@ import { gameData } from './gameData';
 import { Scene, Stage, Choice, Character, Location as GameLocation, Paragraph } from './types';
 import { characters } from './characters';
 import { locations } from './locations';
+import { fadeAudio, playSFX, SCENE_BGM_CONFIG, SFX_ASSETS } from './audio';
 
 // Medieval Corner Decoration Component
 const OrnateCorner = ({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) => {
@@ -163,6 +164,8 @@ const SceneDisplay = ({
   choices,
   selectedChoice,
   onChoiceClick,
+  playSFX,
+  isMuted,
   renderTextWithDialogue,
   isMenuExpanded,
   setIsMenuExpanded,
@@ -181,6 +184,8 @@ const SceneDisplay = ({
   choices: Choice[],
   selectedChoice: Choice | null,
   onChoiceClick: (choice: Choice) => void,
+  playSFX: (url: string, isMuted: boolean) => void,
+  isMuted: boolean,
   renderTextWithDialogue: (text: string, isThought?: boolean) => TextSegment[],
   isMenuExpanded: boolean,
   setIsMenuExpanded: (v: boolean) => void,
@@ -361,7 +366,12 @@ const SceneDisplay = ({
                   x: selectedChoice && selectedChoice !== choice ? (index % 2 === 0 ? -20 : 20) : 0
                 }}
                 transition={{ duration: 0.5 }}
-                onClick={() => !selectedChoice && onChoiceClick(choice)}
+                onClick={() => {
+                  if (!selectedChoice) {
+                    playSFX(SFX_ASSETS.CLICK, isMuted);
+                    onChoiceClick(choice);
+                  }
+                }}
                 disabled={!!selectedChoice}
                 className={`group relative flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-sm border-2 border-amber-900/20 bg-neutral-900/20 transition-all text-left overflow-hidden ${!selectedChoice ? 'hover:bg-amber-950/10 hover:border-amber-950/40 hover:border-amber-900/60 cursor-pointer' : ''}`}
               >
@@ -486,7 +496,7 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  
+
   // Selection & Explanation States
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -600,68 +610,49 @@ export default function App() {
   // Handle BGM
   useEffect(() => {
     const scene = gameData.scenes[currentSceneId];
-    if (scene?.bgm) {
-      const playBGM = async () => {
-        if (!audioRef.current) {
-          audioRef.current = new Audio(scene.bgm);
-          audioRef.current.loop = true;
-        } else {
-          // Check if src actually changed (using URL to normalize)
-          try {
-            if (!audioRef.current.src) {
-              audioRef.current.src = scene.bgm!;
-              audioRef.current.load();
-            } else {
-              const currentSrc = new URL(audioRef.current.src).href;
-              const targetSrc = new URL(scene.bgm!, window.location.href).href;
-              if (currentSrc !== targetSrc) {
-                audioRef.current.pause();
-                audioRef.current.src = scene.bgm!;
-                audioRef.current.load();
-              }
-            }
-          } catch (e) {
-            // Fallback if URL parsing fails
-            if (audioRef.current.src !== scene.bgm) {
-              audioRef.current.src = scene.bgm;
-            }
-          }
-        }
-        
+    const bgmUrl = SCENE_BGM_CONFIG[currentSceneId] || scene?.bgm;
+    
+    if (!bgmUrl) return;
+
+    const playBGM = async () => {
+      const newAudio = new Audio(bgmUrl);
+      newAudio.loop = true;
+      newAudio.volume = 0; // 从0开始淡入
+      newAudio.preload = "auto";
+
+      try {
         if (!isMuted && hasInteracted) {
-          try {
-            await audioRef.current.play();
-          } catch (e) {
-            console.log("Audio play blocked by browser:", e);
-          }
-        } else {
-          audioRef.current.pause();
+          await newAudio.play();
+          fadeAudio(newAudio, 0.4, 2000); // 淡入到40%音量
         }
-      };
-      
-      playBGM();
-    } else if (audioRef.current) {
-      audioRef.current.pause();
-    }
+      } catch (e) {
+        console.log("BGM blocked:", e);
+      }
+
+      // 淡出旧音乐
+      if (audioRef.current) {
+        const oldAudio = audioRef.current;
+        fadeAudio(oldAudio, 0, 1000);
+        setTimeout(() => oldAudio.pause(), 1000);
+      }
+
+      audioRef.current = newAudio;
+    };
+
+    playBGM();
   }, [currentSceneId, hasInteracted, isMuted]);
 
+  // 静音同步
   useEffect(() => {
-    const syncAudio = async () => {
-      if (audioRef.current) {
-        audioRef.current.muted = isMuted;
-        if (!isMuted && hasInteracted) {
-          try {
-            await audioRef.current.play();
-          } catch (e) {
-            console.log("Audio play failed in sync:", e);
-          }
-        } else {
-          audioRef.current.pause();
-        }
-      }
-    };
-    syncAudio();
-  }, [isMuted, hasInteracted]);
+    if (!audioRef.current) return;
+
+    if (isMuted) {
+      fadeAudio(audioRef.current, 0, 500);
+    } else if (hasInteracted) {
+      audioRef.current.play().catch(() => {});
+      fadeAudio(audioRef.current, 0.4, 1000);
+    }
+  }, [isMuted]);
 
   useEffect(() => {
     setCurrentParaIndex(0);
@@ -789,11 +780,9 @@ export default function App() {
   const handleChoiceClick = (choice: Choice) => {
     setSelectedChoice(choice);
     
-    // Play SFX if provided
-    if (choice.sfx && !isMuted) {
-      const sfx = new Audio(choice.sfx);
-      sfx.volume = 0.5; // Slightly lower volume for SFX
-      sfx.play().catch(e => console.log("SFX play blocked:", e));
+    // Play SFX if provided in choice data
+    if (choice.sfx) {
+      playSFX(choice.sfx, isMuted);
     }
 
     if (choice.explanation) {
@@ -1082,6 +1071,8 @@ export default function App() {
                 choices={activeChoices}
                 selectedChoice={selectedChoice}
                 onChoiceClick={handleChoiceClick}
+                playSFX={playSFX}
+                isMuted={isMuted}
                 renderTextWithDialogue={renderTextWithDialogue}
                 isMenuExpanded={isMenuExpanded}
                 setIsMenuExpanded={setIsMenuExpanded}
