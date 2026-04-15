@@ -620,9 +620,13 @@ export default function App() {
       newAudio.volume = 0; // 从0开始淡入
       newAudio.preload = "auto";
 
+      // 先静音播放（浏览器通常允许静音自动播放）
+      newAudio.muted = true;
+
       try {
-        if (!isMuted && hasInteracted) {
-          await newAudio.play();
+        await newAudio.play();
+        if (hasInteracted && !isMuted) {
+          newAudio.muted = false;
           fadeAudio(newAudio, 0.4, 2000); // 淡入到40%音量
         }
       } catch (e) {
@@ -648,7 +652,11 @@ export default function App() {
 
     if (isMuted) {
       fadeAudio(audioRef.current, 0, 500);
+      setTimeout(() => {
+        if (audioRef.current) audioRef.current.muted = true;
+      }, 500);
     } else if (hasInteracted) {
+      audioRef.current.muted = false;
       audioRef.current.play().catch(() => {});
       fadeAudio(audioRef.current, 0.4, 1000);
     }
@@ -1067,6 +1075,14 @@ export default function App() {
                   resetGame();
                   setIsStarting(true);
                   setHasInteracted(true);
+                  
+                  // 强制解锁音频：在用户点击按钮的瞬间触发播放
+                  playSFX(SFX_ASSETS.CLICK, isMuted);
+                  if (audioRef.current) {
+                    audioRef.current.muted = false;
+                    audioRef.current.play().catch(() => {});
+                    fadeAudio(audioRef.current, 0.4, 1000);
+                  }
                 }}
                 choices={activeChoices}
                 selectedChoice={selectedChoice}
