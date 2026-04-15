@@ -497,6 +497,12 @@ export default function App() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // 极简初始化：确保 Audio 实例在组件生命周期内唯一且尽早创建
+  if (!audioRef.current && typeof Audio !== 'undefined') {
+    audioRef.current = new Audio();
+    audioRef.current.loop = true;
+  }
+
   // Selection & Explanation States
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -607,14 +613,6 @@ export default function App() {
     setVisitedTexts(prev => [...prev, `--- ${scene.title} ---`]);
   }, [currentSceneId]);
 
-  // 初始化音频实例（仅一次）
-  useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.loop = true;
-    }
-  }, []);
-
   // Handle BGM Change
   useEffect(() => {
     const scene = gameData.scenes[currentSceneId];
@@ -637,7 +635,7 @@ export default function App() {
         }
 
         audio.src = bgmUrl;
-        audio.load();
+        // 根据建议，移除 audio.load()，因为它在某些环境下会重置权限
         audio.volume = 0;
         audio.muted = !hasInteracted || isMuted;
 
@@ -1089,14 +1087,15 @@ export default function App() {
                   resetGame();
                   setIsStarting(true);
                   
-                  // 强制解锁音频
+                  // 强制解锁音频：在用户点击的瞬间执行 play()
                   playSFX(SFX_ASSETS.CLICK, isMuted);
                   if (audioRef.current) {
                     const audio = audioRef.current;
                     audio.muted = false;
-                    audio.play().then(() => {
-                      fadeAudio(audio, 0.4, 1000);
-                    }).catch(e => console.log("Manual play failed:", e));
+                    audio.volume = 0.4;
+                    audio.play()
+                      .then(() => console.log("✅ 音频成功解锁"))
+                      .catch(e => console.log("❌ 仍然被拦截", e));
                   }
                 }}
                 choices={activeChoices}
