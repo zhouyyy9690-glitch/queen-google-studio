@@ -622,8 +622,26 @@ export default function App() {
 
     const audio = audioRef.current;
     
+    // 调试日志：检查 URL 类型和内容
+    console.log("🎵 BGM 切换请求:", {
+      type: typeof bgmUrl,
+      url: bgmUrl,
+      sceneId: currentSceneId
+    });
+
+    if (typeof bgmUrl !== 'string') {
+      console.error("❌ 错误: BGM URL 不是字符串类型，请检查导入配置。");
+      return;
+    }
+
     // 检查 src 是否真的改变了
-    const normalizedTarget = new URL(bgmUrl, window.location.href).href;
+    let normalizedTarget = '';
+    try {
+      normalizedTarget = new URL(bgmUrl, window.location.href).href;
+    } catch (e) {
+      console.error("❌ 无法解析 BGM URL:", bgmUrl, e);
+      return;
+    }
     const normalizedCurrent = audio.src ? new URL(audio.src, window.location.href).href : '';
 
     if (normalizedCurrent !== normalizedTarget) {
@@ -636,7 +654,12 @@ export default function App() {
         }
 
         audio.src = bgmUrl;
-        // 根据建议，移除 audio.load()，因为它在某些环境下会重置权限
+        // 显式设置类型并重新加载，解决 "no supported sources" 错误
+        if (bgmUrl.endsWith('.mp3')) {
+          audio.type = 'audio/mpeg';
+        }
+        audio.load(); 
+        
         audio.volume = 0;
         audio.muted = !hasInteracted || isMuted;
 

@@ -6,14 +6,12 @@
 
 // --- 1. 音频资源库 (Assets Library) ---
 
-import bgmMain from './assets/audio/bgm_main.mp3';
-
 // 使用静音数据 URI 作为占位符，防止 403 错误干扰测试
 const SILENT_SOUND = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==";
 
 export const BGM_ASSETS = {
-  // 使用模块导入，确保 Vite 在构建时正确处理路径
-  MAIN_THEME: bgmMain,
+  // 使用绝对路径指向 public 文件夹
+  MAIN_THEME: "/audio/bgm_main.mp3",
   
   // 推荐：教堂/神秘感 (仪式/重要转折)
   MYSTERY: SILENT_SOUND, 
