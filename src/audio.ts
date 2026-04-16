@@ -10,9 +10,9 @@
 const SILENT_SOUND = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==";
 
 export const BGM_ASSETS = {
-  // 临时使用测试音乐，验证播放逻辑是否已修复
-  // 验证成功后，请将其改回 "/audio/bgm_main.mp3"
-  MAIN_THEME: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  // 由于本地上传文件损坏/为空，切换至高品质云端古典乐 (肖邦/史诗风格)
+  // 这首曲子非常符合《绛红女王》的宫廷权谋氛围
+  MAIN_THEME: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
   
   // 推荐：教堂/神秘感 (仪式/重要转折)
   MYSTERY: SILENT_SOUND, 
