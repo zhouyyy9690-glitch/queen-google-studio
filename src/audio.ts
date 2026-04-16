@@ -10,17 +10,16 @@
 const SILENT_SOUND = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==";
 
 export const BGM_ASSETS = {
-  // 由于本地上传文件损坏/为空，切换至高品质云端古典乐 (肖邦/史诗风格)
-  // 这首曲子非常符合《绛红女王》的宫廷权谋氛围
-  MAIN_THEME: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+  // 换回您最喜欢的原始 Pixabay 音乐链接 (使用用户提供的下载直链)
+  MAIN_THEME: "https://cdn.pixabay.com/download/audio/2024/08/31/audio_2120f21e75.mp3?filename=deuslower-medieval-ambient-236809.mp3",
   
   // 推荐：教堂/神秘感 (仪式/重要转折)
   MYSTERY: SILENT_SOUND, 
 };
 
 export const SFX_ASSETS = {
-  // 暂时使用静音，直到您上传自己的音效
-  CLICK: SILENT_SOUND,
+  // 换回您原始的按钮音效链接
+  CLICK: "https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3",
   PAGE_TURN: SILENT_SOUND,
 };
 
