@@ -47,24 +47,16 @@ const FloatingClouds = ({ count = 6 }: { count?: number }) => {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-20">
       {Array.from({ length: count }).map((_, i) => (
-        <motion.div
+        <div
           key={i}
-          initial={{ 
-            x: `${Math.random() * 100}%`, 
-            y: `${Math.random() * 100}%`,
-            scale: 1 + Math.random() * 1.5,
+          style={{ 
+            position: 'absolute',
+            left: `${Math.random() * 100}%`, 
+            top: `${Math.random() * 100}%`,
+            transform: `scale(${1 + Math.random() * 1.5})`,
             opacity: 0.3 + Math.random() * 0.5
           }}
-          animate={{ 
-            x: ['-20%', '120%'],
-          }}
-          transition={{ 
-            duration: 60 + Math.random() * 60, 
-            repeat: Infinity, 
-            ease: "linear",
-            delay: -Math.random() * 100
-          }}
-          className="absolute w-64 h-32 bg-white blur-[60px] rounded-[100%]"
+          className="w-64 h-32 bg-white blur-[60px] rounded-[100%]"
         />
       ))}
     </div>
@@ -109,7 +101,7 @@ const MapFogOfWar = ({ unlockedLocations, locations }: { unlockedLocations: Set<
       />
       <defs>
         <pattern id="mist-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-          <circle cx="100" cy="100" r="80" fill="white" className="opacity-10 blur-2xl animate-pulse" />
+          <circle cx="100" cy="100" r="80" fill="white" className="opacity-10 blur-2xl" />
         </pattern>
       </defs>
     </svg>
