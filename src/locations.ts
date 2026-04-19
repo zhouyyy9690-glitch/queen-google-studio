@@ -1,7 +1,9 @@
 import { Location } from './types';
 
+// 地点数据定义：包含所有在地图上显示的区域标签与具体地点
 export const locations: Location[] = [
-  // --- REGION LABELS ---
+  // --- 区域标签 (REGION LABELS) ---
+  // 这些数据主要用于在地图上绘制大范围的文字标识
   {
     id: 'reg_north',
     name: '北境 · The North',
@@ -63,9 +65,10 @@ export const locations: Location[] = [
     matchNames: ['东境']
   },
 
-  // --- SPECIFIC LOCATIONS ---
+  // --- 具体地点 (SPECIFIC LOCATIONS) ---
+  // 每个地点包含坐标 (x, y)、所属势力、统治者及剧情匹配关键词
   
-  // Central
+  // 中央河间地 (Central)
   {
     id: 'kase_city',
     name: '王城',
@@ -90,6 +93,7 @@ export const locations: Location[] = [
     region: 'Central',
     matchNames: ['凯斯大教堂', '大圣堂']
   },
+  // ... 其他地点数据以此类推
   {
     id: 'oakport_cathedral',
     name: '橡港大教堂',

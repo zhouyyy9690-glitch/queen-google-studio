@@ -47,18 +47,20 @@ const DetailedOrnateCorner = ({ position }: { position: 'tl' | 'tr' | 'bl' | 'br
   );
 };
 
+// 章节转场/标题页组件：当玩家进入新章节时显示的华丽全屏封面
 export const ChapterSplash: React.FC<ChapterSplashProps> = ({ 
   chapterNumber, 
   chapterTitle, 
   chapterSubtitle,
   onContinue 
 }) => {
-  const [isExiting, setIsExiting] = useState(false);
+  const [isExiting, setIsExiting] = useState(false); // 控制退出动画的状态
 
+  // 处理点击退出：触发华丽的消失动画并在延迟后继续游戏
   const handleStartExit = () => {
     if (isExiting) return;
     setIsExiting(true);
-    // Adjusted timing: transition exactly when ink fades to near-zero
+    // 动画时间调整为 1.8 秒，以便在墨水/渐隐效果最明显时跳转
     setTimeout(onContinue, 1800);
   };
 
@@ -70,12 +72,12 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
       className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a] cursor-pointer"
       onClick={handleStartExit}
     >
-      {/* Background Parchment Texture */}
+      {/* 羊皮纸底层背景与纹理叠加 */}
       <div className="absolute inset-0 bg-[#e3bc6a] opacity-90" />
       <div className="absolute inset-0 opacity-40 mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/old-map.png')]" />
       <div className="absolute inset-0 opacity-20 mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
       
-      {/* Ornate Frame Structure */}
+      {/* 华丽的边框装饰结构 */}
       <motion.div 
         animate={isExiting ? { scale: 1.02, opacity: 0, filter: "blur(20px)" } : { scale: 1, opacity: 1 }}
         transition={{ duration: 2.0, ease: "easeInOut" }}
@@ -87,7 +89,7 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
         <DetailedOrnateCorner position="br" />
       </motion.div>
 
-      {/* Main Content Area */}
+      {/* 中心文字内容区域 */}
       <div className="relative z-10 text-center max-w-2xl px-8 select-none">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -106,11 +108,11 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
           }
           className="space-y-12"
         >
-          {/* Chapter Header */}
+          {/* 章节页眉：拉丁语标题与罗马数字 */}
           <div className="flex flex-col items-center">
             <div className={`w-12 h-px bg-amber-950/40 mb-6 transition-all duration-1200 ${isExiting ? 'w-80 opacity-0' : ''}`} />
             <h4 className="font-typewriter italic text-amber-950/60 tracking-[0.4em] uppercase text-sm md:text-base">
-              Incipit Liber
+              Incipit Liber (卷首)
             </h4>
             <h2 className="font-typewriter text-5xl md:text-7xl text-amber-950 tracking-[0.2em] mt-2 mb-2">
               {chapterNumber}
@@ -118,7 +120,7 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
             <div className={`w-12 h-px bg-amber-950/40 mt-4 transition-all duration-1200 ${isExiting ? 'w-80 opacity-0' : ''}`} />
           </div>
 
-          {/* Titles with Ink Dispersion Effect Container */}
+          {/* 章节主、副标题：带有墨水晕开效果的渐变动画 */}
           <div className="space-y-4">
             <motion.h1 
               animate={isExiting ? { letterSpacing: "0.3em", opacity: 0.6 } : {}}
@@ -134,7 +136,7 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
             )}
           </div>
 
-          {/* Prompt */}
+          {/* 交互提示词 */}
           <AnimatePresence>
             {!isExiting && (
               <motion.div 
@@ -145,7 +147,7 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
                  className="pt-20"
               >
                 <p className="font-typewriter text-amber-950/40 text-[10px] tracking-[0.4em] uppercase">
-                  Tap to unroll the destiny
+                  点击屏幕，揭开命运的篇章 · Tap to unroll the destiny
                 </p>
               </motion.div>
             )}
@@ -153,7 +155,7 @@ export const ChapterSplash: React.FC<ChapterSplashProps> = ({
         </motion.div>
       </div>
       
-      {/* Decorative Ink/Paper Edge Overlay */}
+      {/* 装饰边框与阴影叠加 */}
       <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.6)_100%)] shadow-inner" />
     </motion.div>
   );

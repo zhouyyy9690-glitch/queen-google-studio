@@ -42,11 +42,12 @@ import { characters } from './characters';
 import { locations } from './locations';
 import { insights, Insight } from './insights';
 import { fadeAudio, playSFX, SCENE_BGM_CONFIG, SFX_ASSETS } from './audio';
-import ParticleBackground from './components/ParticleBackground';
+import ParticleBackground, { ParticleType } from './components/ParticleBackground';
 import CustomCursor from './components/CustomCursor';
 
-// Medieval Corner Decoration Component
-// UI Component: Floating Clouds for Map
+// --- 基础 UI 组件与工具函数 ---
+
+// 装饰性组件：地图上的流动云朵，增强氛围感
 const FloatingClouds = ({ count = 6 }: { count?: number }) => {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-20">
@@ -67,7 +68,7 @@ const FloatingClouds = ({ count = 6 }: { count?: number }) => {
   );
 };
 
-// UI Component: Fog of War
+// UI 组件：地图战争迷雾，用于遮盖未探索区域
 const MapFogOfWar = ({ unlockedLocations, locations }: { unlockedLocations: Set<string>, locations: any[] }) => {
   return (
     <svg className="absolute inset-0 w-full h-full pointer-events-none z-30">
@@ -119,7 +120,7 @@ interface TextSegment {
   isDialogue?: boolean;
 }
 
-// Typewriter Component for Segments
+// 打字机文本组件：处理剧情文本的分段渲染序列
 const TypewriterText = ({ segments, onComplete }: { segments: TextSegment[], onComplete?: () => void }) => {
   const totalChars = useMemo(() => segments.reduce((acc, s) => acc + s.text.length, 0), [segments]);
 
@@ -177,12 +178,12 @@ const TypewriterText = ({ segments, onComplete }: { segments: TextSegment[], onC
   );
 };
 
-// Flower Bloom Effect for specific scenes
+// 场景花瓣绽放特效（预留组件）
 const FlowerBloomEffect = () => {
   return null;
 };
 
-// Animal Pattern Background Component
+// 动物图腾背景组件：在选择路径时显示对应的狐狸、鹿或鹰的背景
 const AnimalPattern = ({ type }: { type?: 'fox' | 'deer' | 'eagle' }) => {
   if (!type) return null;
   
@@ -201,10 +202,7 @@ const AnimalPattern = ({ type }: { type?: 'fox' | 'deer' | 'eagle' }) => {
   );
 };
 
-// Scene Display Component to isolate state during transitions
-// Volume Mixer Component
-// Scene Display Component to isolate state during transitions
-// Volume Mixer Component
+// 蜡烛火焰组件：用于音量调节器的视觉反馈，带有呼吸和摇摆动画
 const CandleFlame = ({ size = "md", isActive = false }: { size?: "sm" | "md", isActive?: boolean }) => (
   <motion.div 
     className={`relative flex items-center justify-center shrink-0 ${size === "sm" ? "w-2.5 h-4" : "w-3 h-5"}`}
@@ -232,6 +230,7 @@ const CandleFlame = ({ size = "md", isActive = false }: { size?: "sm" | "md", is
   </motion.div>
 );
 
+// 带有凹凸感的首字母组件：用于人物志或地名志的装饰
 const EmbossedInitial = ({ nameEn, className = "" }: { nameEn: string, className?: string }) => {
   const initial = (nameEn || 'U').charAt(0).toUpperCase();
   return (
@@ -254,6 +253,7 @@ const EmbossedInitial = ({ nameEn, className = "" }: { nameEn: string, className
   );
 };
 
+// 蜡烛火焰进度条组件：自定义的音量滑块
 const FlameSlider = ({ 
   label, 
   icon: Icon, 
@@ -324,6 +324,7 @@ const FlameSlider = ({
   );
 };
 
+// 音量调音台组件：控制背景音乐和音效的音量
 const VolumeMixer = ({ 
   bgmVolume, 
   sfxVolume, 
@@ -430,6 +431,7 @@ const VolumeMixer = ({
   );
 };
 
+// 核心场景显示组件：处理舞台、文本、选项、时间印记等界面的核心渲染
 const SceneDisplay = ({ 
   sceneTitle, 
   stageId, 
@@ -452,7 +454,8 @@ const SceneDisplay = ({
   setShowProgress,
   setShowMap,
   sceneId,
-  skipTypewriter
+  skipTypewriter,
+  particleType
 }: { 
   sceneTitle: string, 
   stageId: string | null, 
@@ -475,9 +478,27 @@ const SceneDisplay = ({
   setShowProgress: (v: boolean) => void,
   setShowMap: (v: boolean) => void,
   sceneId: string,
-  skipTypewriter?: boolean
+  skipTypewriter?: boolean,
+  particleType?: ParticleType
 }) => {
   const textSegments = paraObj ? renderTextWithDialogue(paraObj.text, paraObj.isThought) : [];
+  
+  const timeInfo = useMemo(() => {
+    switch (particleType) {
+      case 'dust': return { label: 'Aurea Mane', subLabel: '正午' };
+      case 'evening': return { label: 'Vesperis', subLabel: '暮色' };
+      case 'nature': return { label: 'Silen Nocte', subLabel: '寂静之夜' };
+      default: return null;
+    }
+  }, [particleType]);
+
+  const isKillScene = [
+    'ForgottenPrincess-kill', 'ForgottenPrincess-kill1',
+    'MoonlightEscape-kill', 'MoonlightEscape-kill1',
+    'LegendoftheGreenValley-kill', 'LegendoftheGreenValley-kill2',
+    'F41_TrapDeath-1'
+  ].includes(sceneId);
+
   return (
     <div className="space-y-8 lg:space-y-6 relative">
       <div className="text-left relative z-10">
@@ -493,7 +514,41 @@ const SceneDisplay = ({
             className="font-display text-3xl md:text-5xl lg:text-4xl text-amber-600 tracking-wider leading-tight mb-2 text-center"
           >
             {sceneTitle}
-            {stageId && <span className="block text-xs md:text-sm text-amber-900/40 mt-1 tracking-[0.5em] uppercase">— {stageId} —</span>}
+            {stageId && (
+              <div className="space-y-4 mt-2">
+                <span className="block text-xs md:text-sm text-amber-900/40 tracking-[0.5em] uppercase">— {stageId} —</span>
+                
+                {timeInfo && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex flex-col items-center gap-3"
+                  >
+                    {/* Seven Stars Symbol */}
+                    <div className="flex items-center gap-2 text-amber-900/40">
+                      {[0.3, 0.5, 0.8].map((op, i) => (
+                        <div key={`star-l-${i}`} className="w-1 h-1 rounded-full bg-current" style={{ opacity: op }} />
+                      ))}
+                      <div className="w-2.5 h-2.5 rotate-45 border border-amber-900/60 flex items-center justify-center">
+                        <div className="w-1 h-1 bg-amber-600 rounded-full blur-[1px]" />
+                      </div>
+                      {[0.8, 0.5, 0.3].map((op, i) => (
+                        <div key={`star-r-${i}`} className="w-1 h-1 rounded-full bg-current" style={{ opacity: op }} />
+                      ))}
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                      <span className={`font-mono text-[9px] tracking-[0.4em] uppercase ${isKillScene ? 'text-rose-600' : 'text-amber-900/30'}`}>
+                        {timeInfo.label}
+                      </span>
+                      <span className={`font-typewriter text-[10px] tracking-[0.2em] mt-1 ${isKillScene ? 'text-rose-600/60' : 'text-amber-900/20'}`}>
+                        {timeInfo.subLabel}
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            )}
           </motion.h2>
           <div className="w-24 md:w-32 h-1 bg-gradient-to-r from-transparent via-amber-900/40 to-transparent mx-auto mb-6 lg:mb-4 relative">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rotate-45 border border-amber-900/60 bg-[#0a0a0a]" />
@@ -687,6 +742,7 @@ const SceneDisplay = ({
   );
 };
 
+// 结局展示组件：当玩家达到故事终点时触发，提供沉浸式的结局叙事体验
 const EndingDisplay = ({ 
   scene, 
   paraIndex, 
@@ -700,8 +756,8 @@ const EndingDisplay = ({
   onReturn: () => void,
   renderTextWithDialogue: (text: string, isThought?: boolean) => TextSegment[]
 }) => {
-  const isLastPara = paraIndex === (scene.paragraphs?.length || 0) - 1;
-  const currentPara = scene.paragraphs?.[paraIndex];
+  const isLastPara = paraIndex === (scene.paragraphs?.length || 0) - 1; // 判断是否为结局的最后一段
+  const currentPara = scene.paragraphs?.[paraIndex]; // 当前显示的结局段落
 
   return (
     <motion.div
@@ -710,6 +766,7 @@ const EndingDisplay = ({
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[100] bg-[#0a0a0a] flex items-center justify-center p-8 overflow-hidden"
     >
+      {/* 纹理背景与装饰框架 */}
       <div className="fixed inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-20 pointer-events-none" />
       <div className="absolute inset-4 md:inset-8 border-2 border-double border-amber-900/20 pointer-events-none" />
       
@@ -719,6 +776,7 @@ const EndingDisplay = ({
       <OrnateCorner position="br" />
 
       <div className="relative max-w-2xl lg:max-w-4xl w-full text-center space-y-12 md:space-y-16">
+        {/* 结局标题展示 */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -741,6 +799,7 @@ const EndingDisplay = ({
           <div className="w-16 md:w-24 lg:w-32 h-px bg-amber-900/40 mx-auto" />
         </motion.div>
 
+        {/* 结局文本区域（打字机效果） */}
         <div className="min-h-[200px] flex items-center justify-center w-full">
           <AnimatePresence mode="wait">
             <motion.div
@@ -756,18 +815,21 @@ const EndingDisplay = ({
           </AnimatePresence>
         </div>
 
+        {/* 交互按钮区域 */}
         <div className="flex flex-col items-center gap-8">
           {isLastPara ? (
+            /* 结局结束，返回起始页 */
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               onClick={onReturn}
               className="group relative py-2 px-8 text-amber-900/40 hover:text-amber-600 transition-all duration-1000 cursor-pointer"
             >
-              <span className="font-display text-lg tracking-[0.8em] uppercase">AGAIN WRITING</span>
+              <span className="font-display text-lg tracking-[0.8em] uppercase">AGAIN WRITING (再次谱写)</span>
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-px bg-amber-600 group-hover:w-full transition-all duration-1000" />
             </motion.button>
           ) : (
+            /* 翻阅下一段结局文本 */
             <button
               onClick={onNext}
               className="flex items-center gap-2 text-amber-700/60 hover:text-amber-600 transition-colors uppercase tracking-[0.3em] text-xs cursor-pointer group"
@@ -834,32 +896,49 @@ const ChroniclerTransition = ({ children, keyStr }: { children: ReactNode, keySt
 };
 
 export default function App() {
+  // --- 核心状态 (Core States) ---
+  // 当前场景 ID，初始为 gameData 中定义的初始场景
   const [currentSceneId, setCurrentSceneId] = useState<string>(gameData.initialScene);
+  // 当前舞台 ID（用于同一场景内的多级对话/事件）
   const [currentStageId, setCurrentStageId] = useState<string | null>(null);
+  // 历史记录：存储玩家经历过的场景 ID
   const [history, setHistory] = useState<string[]>([]);
+  // 加载状态，用于确保初始化完成
   const [isLoaded, setIsLoaded] = useState(false);
   
+  // 当前文本段落索引
   const [currentParaIndex, setCurrentParaIndex] = useState(0);
+  // 当前选择的动物路径（狐狸、鹿、鹰）
   const [currentPath, setCurrentPath] = useState<'fox' | 'deer' | 'eagle' | null>(null);
+  // 剧情旗标（Flags）：存储玩家的选择和触发的事件，影响后续剧情
   const [flags, setFlags] = useState<Record<string, any>>({});
+  
+  // UI 显示控制状态
   const [showHistory, setShowHistory] = useState(false);
   const [showCompendium, setShowCompendium] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  
+  // 解锁系统：角色、地点、传闻、已读文本
   const [unlockedCharacters, setUnlockedCharacters] = useState<Set<string>>(new Set());
   const [seenCharacterNames, setSeenCharacterNames] = useState<Set<string>>(new Set());
   const [unlockedLocations, setUnlockedLocations] = useState<Set<string>>(new Set());
   const [seenLocationNames, setSeenLocationNames] = useState<Set<string>>(new Set());
   const [unlockedInsights, setUnlockedInsights] = useState<Set<string>>(new Set());
   const [visitedTexts, setVisitedTexts] = useState<string[]>([]);
+  
+  // 通用 UI 状态：地图、音频、菜单
   const [showMap, setShowMap] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [bgmVolume, setBgmVolume] = useState(0.4);
   const [sfxVolume, setSfxVolume] = useState(0.3);
   const [showVolumeMixer, setShowVolumeMixer] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  
+  // 引用管理：音频实例与通知计时器
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const notificationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 触发全局通知（解锁角色/地点等）
   const triggerNotification = (title: string, type: 'ending' | 'character' | 'location' | 'insight') => {
     if (notificationTimeoutRef.current) {
       clearTimeout(notificationTimeoutRef.current);
@@ -963,15 +1042,9 @@ export default function App() {
 
   const [notification, setNotification] = useState<{title: string, visible: boolean, type?: 'ending' | 'character' | 'location' | 'insight'}>({ title: '', visible: false });
 
-  // Endings are now session-only (cleared on refresh/close)
-  const saveEnding = (id: string, title: string, text: string) => {
-    setUnlockedEndings(prev => {
-      if (prev.find(e => e.id === id)) return prev;
-      const next = [...prev, { id, title, text }];
-      return next;
-    });
-  };
+  // --- 数据持久化与生命周期 (Persistence & Lifecycle) ---
 
+  // 保存当前游戏状态到本地存储
   const saveGame = () => {
     const gameState = {
       currentSceneId,
@@ -993,6 +1066,7 @@ export default function App() {
     localStorage.setItem('hersey_save_data', JSON.stringify(gameState));
   };
 
+  // 从本地存储加载游戏状态
   const loadGame = () => {
     const saved = localStorage.getItem('hersey_save_data');
     if (saved) {
@@ -1017,6 +1091,7 @@ export default function App() {
     }
   };
 
+  // 返回标题画面并重置临时状态
   const returnToTitle = () => {
     saveGame();
     setIsStarting(false);
@@ -1027,7 +1102,7 @@ export default function App() {
     setIsLoaded(true);
   }, []);
 
-  // Handle Auto-Transitions
+  // 处理剧情自动转场：满足特定标志位时自动移动到新场景
   useEffect(() => {
     if (currentSceneId === 'F19-CheckWhoElse') {
       if (flags.talkedToNun && flags.talkedToKnight && flags.talkedToScholar && flags.toldFain) {
@@ -1052,7 +1127,7 @@ export default function App() {
     setVisitedTexts(prev => [...prev, `--- ${scene.title} ---`]);
   }, [currentSceneId]);
 
-  // Handle BGM Change
+  // 环境音/背景音乐 (BGM) 管理：处理场景切换时的平滑过渡
   useEffect(() => {
     const scene = gameData.scenes[currentSceneId];
     const bgmUrl = SCENE_BGM_CONFIG[currentSceneId] || scene?.bgm;
@@ -1262,6 +1337,16 @@ export default function App() {
       }
     });
   }, [currentParaIndex, currentSceneId, isStarting, activeParagraphs, unlockedCharacters, unlockedLocations]);
+
+  // 保存结局至画廊并触发全局通知
+  const saveEnding = (id: string, title: string, text: string) => {
+    setUnlockedEndings(prev => {
+      // 避免重复记录同一结局
+      if (prev.find(e => e.id === id)) return prev;
+      triggerNotification(`结局已达成: ${title}`, 'ending');
+      return [...prev, { id, title, text }];
+    });
+  };
 
   const handleChoiceClick = (choice: Choice) => {
     setSelectedChoice(choice);
@@ -1483,7 +1568,32 @@ export default function App() {
     return segments;
   };
 
+  // 环境光效/粒子效果管理：根据地理位置、时间、特定剧情决定背景粒子 (尘埃、雪、夕阳、萤火虫)
   const currentParticleType = useMemo(() => {
+    // 1. Manually check specific ranges/IDs requested by user
+    if (currentScene.isEnding) return 'none'; // User requested act1 endings to be none
+
+    const scenesToNature = [
+      'ForgottenPrincess-kill', 'ForgottenPrincess-kill1',
+      'MoonlightEscape-kill', 'MoonlightEscape-kill1',
+      'LegendoftheGreenValley-kill', 'LegendoftheGreenValley-kill2'
+    ];
+    if (scenesToNature.includes(currentSceneId)) return 'nature';
+
+    // Handle ranges for Fox Path (F2-F12, F13, F14-F39, F41)
+    if (currentSceneId.startsWith('F')) {
+      // Regex to extract the number after 'F'
+      const match = currentSceneId.match(/^F(\d+)/);
+      if (match) {
+        const num = parseInt(match[1]);
+        if (num >= 2 && num <= 12) return 'dust'; // Daylight
+        if (num === 13) return 'evening'; // Evening Transition
+        if (num >= 14 && num <= 39) return 'nature'; // Night (Fireflies)
+        if (num >= 41) return 'dust'; // Leave with Fain / Day again
+      }
+    }
+
+    // 2. Default heuristic logic
     if (currentScene.particleType) return currentScene.particleType;
     if (Object.keys(commonScenes).includes(currentSceneId)) return 'none';
     
@@ -1508,21 +1618,26 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#d4d4d8] font-serif selection:bg-amber-900/40 overflow-x-hidden no-scrollbar lg:cursor-none">
+      {/* 自定义鼠标指针组件 */}
       <CustomCursor />
       
-      {/* Chronicler's Ink & Parchment Filters */}
+      {/* 墨水失真与羊皮纸滤镜：通过 SVG filter 实现复古质感 */}
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
         <filter id="ink-distortion">
           <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
           <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" />
         </filter>
       </svg>
+      {/* 全局背景纹理与阴影渐变 */}
       <div className="fixed inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-20 pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0)_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none" />
+      
+      {/* 动态粒子背景：渲染尘埃、雪花或萤火虫 */}
       <ParticleBackground type={currentParticleType} />
       
       <AnimatePresence mode="wait">
         {currentScene.isEnding ? (
+          /* 结局展示界面：当场景标记为 isEnding 时触发 */
           <EndingDisplay 
             scene={currentScene}
             paraIndex={currentParaIndex}
@@ -1531,16 +1646,19 @@ export default function App() {
             renderTextWithDialogue={renderTextWithDialogue}
           />
         ) : (
+          /* 主游戏容器：处理剧情、地图、人物志等所有核心交互 */
           <main key="main-content" className="relative max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto px-6 md:px-12 lg:px-24 py-12 lg:py-16 flex flex-col min-h-screen transition-all duration-700">
+        {/* 装饰边框 */}
         <div className="absolute inset-2 md:inset-4 lg:inset-8 border-[1px] border-amber-900/20 pointer-events-none" />
         <div className="absolute inset-4 md:inset-6 lg:inset-12 border-[1px] border-amber-900/10 pointer-events-none" />
         
+        {/* 四角的中世纪装饰纹样 */}
         <OrnateCorner position="tl" />
         <OrnateCorner position="tr" />
         <OrnateCorner position="bl" />
         <OrnateCorner position="br" />
 
-        {/* Header */}
+        {/* 顶部页眉：显示标题、音量调节器、历史记录等 */}
         <header className="mb-6 lg:mb-10 flex items-center justify-between border-b-2 border-double border-amber-900/30 pb-3 lg:pb-5 relative z-10 gap-2">
           <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <Scroll className="w-3.5 h-3.5 md:w-5 md:h-5 text-amber-700/60" />
@@ -1592,10 +1710,11 @@ export default function App() {
           </div>
         </header>
 
-        {/* Game Content */}
+        {/* 核心剧情展示区域 */}
         <div className="flex-grow flex flex-col justify-center relative z-20 pointer-events-auto">
           <AnimatePresence mode="wait">
             {currentScene.isChapter ? (
+              /* 章节转场/标题页：显示“第一章”等大标题 */
               <ChapterSplash 
                 key={currentSceneId}
                 chapterNumber={currentScene.chapterNumber || "I"}
@@ -1608,6 +1727,7 @@ export default function App() {
                 }}
               />
             ) : (
+              /* 剧情场景页：显示对话、旁白和玩家选项 */
               <ChroniclerTransition keyStr={currentSceneId + '-' + (currentStageId || 'base') + '-' + currentParaIndex + '-' + isStarting}>
                 <SceneDisplay 
                 sceneTitle={currentScene.title}
@@ -1647,6 +1767,7 @@ export default function App() {
                 setShowMap={setShowMap}
                 sceneId={currentSceneId}
                 skipTypewriter={Object.keys(commonScenes).includes(currentSceneId)}
+                particleType={currentParticleType}
               />
               
               {!showChoices && !showStartTrigger && activeParagraphs.length > 1 && currentParaIndex < activeParagraphs.length - 1 && (
@@ -1668,7 +1789,7 @@ export default function App() {
           </AnimatePresence>
         </div>
 
-        {/* Explanation Overlay */}
+        {/* 选项解释弹窗：当玩家选择路径时，显示该选择的深层含义 */}
         <AnimatePresence>
           {showExplanation && selectedChoice && (
             <motion.div
@@ -1697,7 +1818,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Notification Toast */}
+        {/* 全局通知浮层：解锁角色、地点或传闻时的顶部提示 */}
         <AnimatePresence>
           {notification.visible && (
             <motion.div
@@ -1739,7 +1860,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Ending Gallery Overlay */}
+        {/* 结局画廊：查看已达成的所有剧情结局 */}
         <AnimatePresence>
           {showGallery && (
             <motion.div
@@ -1795,7 +1916,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Progress Overlay */}
+        {/* 存档/加载系统弹窗 */}
         <AnimatePresence>
           {showProgress && (
             <motion.div
@@ -1920,7 +2041,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Character Compendium Overlay */}
+        {/* 人物志：查看已解锁角色的背景与状态 */}
         <AnimatePresence>
           {showCompendium && (
             <motion.div
@@ -2092,7 +2213,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* World Map Overlay */}
+        {/* 交互式王国大地图 */}
         <AnimatePresence>
           {showMap && (
             <motion.div
@@ -2616,7 +2737,7 @@ export default function App() {
                 )}
               </AnimatePresence>
 
-        {/* Footer Info */}
+        {/* 底部页脚：包含全局导航（人物志、地图）和游戏标题 */}
         <footer className="mt-20 md:mt-32 pt-12 md:pt-16 relative z-10 w-full group/footer flex flex-col items-center px-8 md:px-16 lg:px-24">
           {/* Breaking Title with Split Lines */}
           <div className="absolute top-0 left-0 right-0 flex items-center justify-center gap-4 md:gap-8 px-8 md:px-16 lg:px-24">
@@ -2671,7 +2792,7 @@ export default function App() {
           </div>
         </footer>
 
-        {/* Chapter Select Modal */}
+        {/* 章节选择模态框：用于跨章节跳转 */}
         <AnimatePresence>
           {showChapterSelect && (
             <ChapterSelectModal
