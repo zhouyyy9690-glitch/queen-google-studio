@@ -64,7 +64,7 @@ export const afterDayScenes: Record<string, Scene> = {
       { text: '之后的几天，你们无比小心，没再出现什么意外。\n七天后，王城的轮廓终于出现在地平线上。\n与你得到消息的夜晚不同，这是个无比明媚的白天。' }
     ],
     choices: [
-      { text: '进入王城', nextSceneId: 'HerMaiesty' }
+      { text: '进入王城', nextSceneId: 'Act2ChapterSplash' }
     ]
   },
 

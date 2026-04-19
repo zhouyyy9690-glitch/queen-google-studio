@@ -38,6 +38,9 @@ export interface Scene {
   event?: EventConfig;
   choices?: Choice[];
   isEnding?: boolean;
+  isChapter?: boolean;
+  chapterNumber?: string; // e.g., "CAPVT I" or "I"
+  chapterSubtitle?: string; // e.g., "THE NEW QUEEN"
   bgm?: string;
   particleType?: ParticleType;
 }

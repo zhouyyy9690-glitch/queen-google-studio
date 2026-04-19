@@ -1,6 +1,19 @@
 import { Scene } from '../../../types';
 
 export const act2Scenes: Record<string, Scene> = {
+  // CHAPTER 1 SPLASH
+  Act2ChapterSplash: {
+    id: 'Act2ChapterSplash',
+    isChapter: true,
+    chapterNumber: 'CAPVT I', // Latin for Chapter 1
+    chapterSubtitle: 'REGINA NOVA', // Latin for The New Queen
+    title: '新的女王',
+    description: 'Fox Path Act 2 Chapter Splash',
+    choices: [
+      { text: '继续', nextSceneId: 'HerMaiesty' }
+    ]
+  },
+
   HerMaiesty: {
     id: 'HerMaiesty',
     title: '新的女王',

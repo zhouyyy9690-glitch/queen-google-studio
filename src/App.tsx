@@ -5,6 +5,10 @@
 
 import { useState, useEffect, useMemo, useRef, WheelEvent, type ReactNode } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'motion/react';
+import { CHAPTERS_CONFIG, STORAGE_KEYS } from './constants';
+import { ChapterSelectModal } from './components/ChapterSelectModal';
+import { ChapterSplash } from './components/ChapterSplash';
+import { OrnateCorner } from './components/OrnateCorner';
 import { 
   Book, 
   ChevronRight, 
@@ -108,34 +112,6 @@ const MapFogOfWar = ({ unlockedLocations, locations }: { unlockedLocations: Set<
   );
 };
 
-const OrnateCorner = ({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) => {
-  const rotations = {
-    tl: 'rotate-0',
-    tr: 'rotate-90',
-    bl: 'rotate-270',
-    br: 'rotate-180'
-  };
-  const positions = {
-    tl: 'top-4 left-4',
-    tr: 'top-4 right-4',
-    bl: 'bottom-4 left-4',
-    br: 'bottom-4 right-4'
-  };
-
-  return (
-    <div className={`absolute ${positions[position]} ${rotations[position]} w-16 h-16 md:w-24 md:h-24 pointer-events-none opacity-50`}>
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-amber-700/40">
-        <path d="M10 10H45M10 10V45M10 10L35 35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M25 15C25 15 20 25 30 25C40 25 35 15 35 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M15 25C15 25 25 20 25 30C25 40 15 35 15 35" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx="10" cy="10" r="3" fill="currentColor"/>
-        <circle cx="50" cy="10" r="1.5" fill="currentColor"/>
-        <circle cx="10" cy="50" r="1.5" fill="currentColor"/>
-        <path d="M60 10C60 10 65 5 70 10M10 60C10 60 5 65 10 70" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
-      </svg>
-    </div>
-  );
-};
 
 interface TextSegment {
   text: string;
@@ -928,6 +904,11 @@ export default function App() {
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
 
+  // Chapter Progress States
+  const [unlockedChapters, setUnlockedChapters] = useState<string[]>(['act1']);
+  const [showChapterSelect, setShowChapterSelect] = useState(false);
+  const [chapterSnapshots, setChapterSnapshots] = useState<Record<string, any>>({});
+
   // Separation Logic handled by CSS Variables to avoid React re-renders
   useEffect(() => {
     return mapScaleSpring.on("change", (latest) => {
@@ -1005,6 +986,8 @@ export default function App() {
       seenLocationNames: Array.from(seenLocationNames),
       unlockedInsights: Array.from(unlockedInsights),
       visitedTexts,
+      unlockedChapters,
+      chapterSnapshots,
       timestamp: new Date().toISOString()
     };
     localStorage.setItem('hersey_save_data', JSON.stringify(gameState));
@@ -1025,6 +1008,8 @@ export default function App() {
       if (data.unlockedLocations) setUnlockedLocations(new Set(data.unlockedLocations));
       if (data.seenLocationNames) setSeenLocationNames(new Set(data.seenLocationNames));
       if (data.unlockedInsights) setUnlockedInsights(new Set(data.unlockedInsights));
+      if (data.unlockedChapters) setUnlockedChapters(data.unlockedChapters);
+      if (data.chapterSnapshots) setChapterSnapshots(data.chapterSnapshots);
       setVisitedTexts(data.visitedTexts);
       setIsStarting(true);
       setShowProgress(false);
@@ -1317,8 +1302,28 @@ export default function App() {
     if (choice.nextStageId) {
       setCurrentStageId(choice.nextStageId);
     } else if (choice.nextSceneId) {
+      const nextId = choice.nextSceneId;
       setHistory([...history, currentSceneId]);
-      setCurrentSceneId(choice.nextSceneId);
+      setCurrentSceneId(nextId);
+
+      // Chapter Unlock Logic
+      if (nextId === 'Act2ChapterSplash' && !unlockedChapters.includes('act2')) {
+        setUnlockedChapters(prev => [...prev, 'act2']);
+        setChapterSnapshots(prev => ({
+          ...prev,
+          'act2': {
+            currentSceneId: nextId,
+            currentStageId: null,
+            history: [...history, currentSceneId],
+            currentPath: currentPath,
+            flags: { ...flags, ...choice.setFlags },
+            unlockedCharacters: Array.from(unlockedCharacters),
+            unlockedLocations: Array.from(unlockedLocations),
+            unlockedInsights: Array.from(unlockedInsights),
+            visitedTexts: [...visitedTexts]
+          }
+        }));
+      }
     } else if (currentScene.event?.onComplete) {
       setHistory([...history, currentSceneId]);
       setCurrentSceneId(currentScene.event.onComplete);
@@ -1337,6 +1342,50 @@ export default function App() {
     setCurrentSceneId(gameData.initialScene);
     setCurrentStageId(null);
     setCurrentParaIndex(0);
+  };
+
+  const resetAllProgress = () => {
+    localStorage.removeItem('hersey_save_data');
+    setUnlockedChapters(['act1']);
+    setChapterSnapshots({});
+    resetGame();
+    setIsStarting(false);
+    setShowChapterSelect(false);
+  };
+
+  const loadFromChapter = (chapterId: string) => {
+    const config = CHAPTERS_CONFIG.find(c => c.id === chapterId);
+    if (!config) return;
+
+    // Use snapshot if exists, otherwise default setup
+    const snapshot = chapterSnapshots[chapterId];
+    
+    if (snapshot) {
+      setCurrentSceneId(snapshot.currentSceneId);
+      setCurrentStageId(snapshot.currentStageId);
+      setHistory(snapshot.history || []);
+      setCurrentParaIndex(0);
+      setCurrentPath(snapshot.currentPath);
+      setFlags(snapshot.flags || {});
+      setUnlockedCharacters(new Set(snapshot.unlockedCharacters || []));
+      setUnlockedLocations(new Set(snapshot.unlockedLocations || []));
+      setUnlockedInsights(new Set(snapshot.unlockedInsights || []));
+      setVisitedTexts(snapshot.visitedTexts || []);
+    } else {
+      // Default jump for specific chapters if no snapshot
+      setCurrentSceneId(config.startSceneId);
+      setCurrentStageId(null);
+      setCurrentParaIndex(0);
+      setHistory([]);
+      setVisitedTexts([]);
+      setFlags({});
+      setCurrentPath(null);
+    }
+
+    setIsStarting(true);
+    setShowChapterSelect(false);
+    setShowMap(false);
+    setShowCompendium(false);
   };
 
   const nextParagraph = () => {
@@ -1546,8 +1595,21 @@ export default function App() {
         {/* Game Content */}
         <div className="flex-grow flex flex-col justify-center relative z-20 pointer-events-auto">
           <AnimatePresence mode="wait">
-            <ChroniclerTransition keyStr={currentSceneId + '-' + (currentStageId || 'base') + '-' + currentParaIndex + '-' + isStarting}>
-              <SceneDisplay 
+            {currentScene.isChapter ? (
+              <ChapterSplash 
+                key={currentSceneId}
+                chapterNumber={currentScene.chapterNumber || "I"}
+                chapterTitle={currentScene.title}
+                chapterSubtitle={currentScene.chapterSubtitle}
+                onContinue={() => {
+                  if (activeChoices.length > 0) {
+                    handleChoiceClick(activeChoices[0]);
+                  }
+                }}
+              />
+            ) : (
+              <ChroniclerTransition keyStr={currentSceneId + '-' + (currentStageId || 'base') + '-' + currentParaIndex + '-' + isStarting}>
+                <SceneDisplay 
                 sceneTitle={currentScene.title}
                 stageId={currentStageId}
                 paraObj={activeParagraphs[currentParaIndex]}
@@ -1602,6 +1664,7 @@ export default function App() {
                 </div>
               )}
             </ChroniclerTransition>
+          )}
           </AnimatePresence>
         </div>
 
@@ -2554,12 +2617,23 @@ export default function App() {
               </AnimatePresence>
 
         {/* Footer Info */}
-        <footer className="mt-20 md:mt-32 pt-12 md:pt-16 border-t border-amber-900/15 relative z-10 w-full group/footer flex flex-col items-center px-8 md:px-16 lg:px-24">
-          {/* Breaking Title (Perfectly Centered on the line) */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0a0a0a] px-6 py-1 transition-all duration-1000 group-hover/footer:px-16 group-hover/footer:text-amber-600/60 overflow-visible text-center">
-            <h1 className="font-display text-[10px] md:text-sm lg:text-lg tracking-[0.4em] text-amber-800/10 uppercase transition-all duration-1000 group-hover/footer:tracking-[0.8em] group-hover/footer:text-amber-600/60 cursor-default leading-none whitespace-nowrap">
-              The Crimson Queen
-            </h1>
+        <footer className="mt-20 md:mt-32 pt-12 md:pt-16 relative z-10 w-full group/footer flex flex-col items-center px-8 md:px-16 lg:px-24">
+          {/* Breaking Title with Split Lines */}
+          <div className="absolute top-0 left-0 right-0 flex items-center justify-center gap-4 md:gap-8 px-8 md:px-16 lg:px-24">
+            <div className="flex-grow h-px bg-amber-900/15" />
+            <div className="transition-all duration-1000 group-hover/footer:px-8 group-hover/footer:text-amber-600/60 overflow-visible text-center">
+              <button 
+                onClick={() => setShowChapterSelect(true)}
+                className="group/chapter-btn relative focus:outline-none"
+              >
+                <h1 className="font-display text-[10px] md:text-sm lg:text-lg tracking-[0.4em] text-amber-800/20 uppercase transition-all duration-1000 group-hover/footer:tracking-[0.8em] group-hover/footer:text-amber-600/60 cursor-pointer leading-none whitespace-nowrap">
+                  The Crimson Queen
+                </h1>
+                {/* Glowing Indicator */}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-px bg-amber-600/40 group-hover/chapter-btn:w-2/3 transition-all duration-700" />
+              </button>
+            </div>
+            <div className="flex-grow h-px bg-amber-900/15" />
           </div>
           
           {/* Centered Functional Buttons */}
@@ -2596,6 +2670,19 @@ export default function App() {
             </div>
           </div>
         </footer>
+
+        {/* Chapter Select Modal */}
+        <AnimatePresence>
+          {showChapterSelect && (
+            <ChapterSelectModal
+              unlockedChapters={unlockedChapters}
+              unlockedLocations={Array.from(unlockedLocations)}
+              onSelect={loadFromChapter}
+              onClose={() => setShowChapterSelect(false)}
+              onReset={resetAllProgress}
+            />
+          )}
+        </AnimatePresence>
       </main>
     )}
   </AnimatePresence>
