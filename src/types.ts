@@ -30,7 +30,13 @@ export interface Paragraph {
   isThought?: boolean;
 }
 
-export type ParticleType = 'snow' | 'dust' | 'nature' | 'ink' | 'none';
+export interface TextSegment {
+  text: string;
+  className?: string;
+  isDialogue?: boolean;
+}
+
+export type ParticleType = 'snow' | 'dust' | 'evening' | 'nature' | 'ink' | 'none';
 
 // 场景定义接口：描述了游戏中的每一个环节，包括文本、立绘风格、环境粒子等
 export interface Scene {
@@ -89,4 +95,12 @@ export interface Location {
 export interface GameData {
   initialScene: string;
   scenes: Record<string, Scene>;
+}
+
+export interface Insight {
+  id: string;
+  title: string;
+  description: string;
+  matchPatterns: string[];
+  locationId?: string; // Optional: Link to a specific location on the map
 }

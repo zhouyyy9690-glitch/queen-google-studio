@@ -1,10 +1,4 @@
-export interface Insight {
-  id: string;
-  title: string;
-  description: string;
-  matchPatterns: string[];
-  locationId?: string; // Optional: Link to a specific location on the map
-}
+import { Insight } from './types';
 
 export const insights: Insight[] = [
   // --- General Lore ---
