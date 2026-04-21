@@ -65,10 +65,6 @@ import CustomCursor from './components/CustomCursor';
 
 // --- 基础 UI 组件与工具函数 ---
 
-// 场景花瓣绽放特效（预留组件）
-const FlowerBloomEffect = () => {
-  return null;
-};
 
 export default function App() {
   // --- 测试模式探测 ---
@@ -237,10 +233,9 @@ export default function App() {
   );
 
   const selectedCharacter = useMemo(() => {
-    const char = characters.find(c => c.id === selectedCharacterId);
-    if (!char && filteredCharacters.length > 0) return filteredCharacters[0];
-    return char || filteredCharacters[0];
-  }, [selectedCharacterId, filteredCharacters]);
+    if (!selectedCharacterId) return null;
+    return characters.find(c => c.id === selectedCharacterId) || null;
+  }, [selectedCharacterId]);
 
   const [notification, setNotification] = useState<{title: string, visible: boolean, type?: 'ending' | 'character' | 'location' | 'insight'}>({ title: '', visible: false });
 
@@ -1062,17 +1057,21 @@ export default function App() {
         />
 
         {/* 人物志：查看已解锁角色的背景与状态 */}
-        <Compendium 
-          showCompendium={showCompendium}
-          setShowCompendium={setShowCompendium}
-          unlockedCharacters={unlockedCharacters}
-          characters={characters}
-          filteredCharacters={filteredCharacters}
-          selectedCharacter={selectedCharacter}
-          setSelectedCharacterId={setSelectedCharacterId}
-          history={history}
-          currentSceneId={currentSceneId}
-        />
+        <AnimatePresence>
+          {showCompendium && (
+            <Compendium 
+              showCompendium={showCompendium}
+              setShowCompendium={setShowCompendium}
+              unlockedCharacters={unlockedCharacters}
+              characters={characters}
+              filteredCharacters={filteredCharacters}
+              selectedCharacter={selectedCharacter}
+              setSelectedCharacterId={setSelectedCharacterId}
+              history={history}
+              currentSceneId={currentSceneId}
+            />
+          )}
+        </AnimatePresence>
 
         <WorldMap 
           showMap={showMap}

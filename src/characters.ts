@@ -21,7 +21,15 @@ export const characters: Character[] = [
     unlockedAt: 'F2-Bishop',
     iconType: 'fox',
     path: 'fox',
-    matchNames: ['凯瑟琳']
+    matchNames: ['凯瑟琳'],
+    positionHint: { x: 50, y: 55 },
+    relations: [
+      { to: 'laughton', type: 'kin', label: '父王' },
+      { to: 'isabella', type: 'kin', label: '母后' },
+      { to: 'finn', type: 'friend', label: '挚友' },
+      { to: 'george', type: 'enemy', label: '权臣 / 争夺者' },
+      { to: 'valantir', type: 'vassal', label: '宗教导师' }
+    ]
   },
   // Fox Path Characters
   {
@@ -39,7 +47,11 @@ export const characters: Character[] = [
     ],
     unlockedAt: 'DelayedePrincess',
     iconType: 'sword',
-    path: 'fox'
+    path: 'fox',
+    positionHint: { x: 25, y: 50 },
+    relations: [
+      { to: 'catherine', type: 'friend', label: '守护者' }
+    ]
   },
   {
     id: 'george',
@@ -60,7 +72,13 @@ export const characters: Character[] = [
     ],
     unlockedAt: ['HerMaiesty', 'd1-deer', 'BlackHawksRemarriage', 'BlackHawksNewMarriage'],
     iconType: 'eagle',
-    path: 'all'
+    path: 'all',
+    positionHint: { x: 75, y: 50 },
+    relations: [
+      { to: 'catherine', type: 'enemy', label: '摄政敌人' },
+      { to: 'laughton', type: 'vassal', label: '前御前首相' },
+      { to: 'dean', type: 'kin', label: '长子' }
+    ]
   },
   {
     id: 'valantir',
@@ -76,7 +94,8 @@ export const characters: Character[] = [
     ],
     unlockedAt: ['fox', 'Yourdecision'],
     iconType: 'ring',
-    path: 'fox'
+    path: 'fox',
+    positionHint: { x: 50, y: 85 }
   },
   {
     id: 'margaret',
@@ -324,7 +343,12 @@ export const characters: Character[] = [
     description: '凯瑟琳的父亲，征服王国的国王。一个威严而神秘的人物，他的命运与王国的存亡紧紧相连。',
     iconType: 'ring',
     path: 'common',
-    unlockedAt: 'F5-LaughtonAndIsabella'
+    unlockedAt: 'F5-LaughtonAndIsabella',
+    positionHint: { x: 40, y: 20 },
+    relations: [
+      { to: 'isabella', type: 'spouse', label: '王后' },
+      { to: 'catherine', type: 'kin', label: '女儿' }
+    ]
   },
   {
     id: 'isabella',
@@ -334,6 +358,11 @@ export const characters: Character[] = [
     description: '凯瑟琳的母亲，劳顿·赫西的王后。据说她拥有惊人的美貌与非凡的智慧。',
     iconType: 'heart',
     path: 'common',
-    unlockedAt: 'F5-LaughtonAndIsabella'
+    unlockedAt: 'F5-LaughtonAndIsabella',
+    positionHint: { x: 60, y: 20 },
+    relations: [
+      { to: 'laughton', type: 'spouse', label: '国王' },
+      { to: 'catherine', type: 'kin', label: '女儿' }
+    ]
   }
 ];

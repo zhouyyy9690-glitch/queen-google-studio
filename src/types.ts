@@ -73,6 +73,14 @@ export interface Character {
   iconType: 'fox' | 'sword' | 'eagle' | 'bear' | 'tiger' | 'ring' | 'user' | 'scroll' | 'shield' | 'heart'; // 显示的图标类型
   path?: 'fox' | 'deer' | 'eagle' | 'all' | 'common'; // 所属剧情路径
   matchNames?: string[];  // 剧情文本中用于自动高亮的匹配词
+  
+  // NEW: 关系网扩展
+  relations?: {
+    to: string;       // 目标角色 ID
+    type: 'kin' | 'ally' | 'enemy' | 'vassal' | 'spouse' | 'master' | 'friend';
+    label: string;    // 关系显示标签 (如 "血亲", "政治盟友")
+  }[];
+  positionHint?: { x: number; y: number }; // 在关系网中的大致坐标 (0-100)
 }
 
 // 地点定义接口：用于地图显示与地点志
