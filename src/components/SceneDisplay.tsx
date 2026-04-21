@@ -144,23 +144,43 @@ export const SceneDisplay = ({
         </div>
       )}
 
-      {/* NEW: In-game Save Trigger (Right Side) */}
+      {/* Refined Manual Save Trigger: Minimalist Hanging UI Component (Fate Compass) */}
       {!showStartTrigger && !showChoices && !showEnding && (
-        <div className="fixed right-4 md:right-12 top-1/2 -translate-y-1/2 z-[60]">
+        <div className="fixed right-4 md:right-12 top-0 z-[60]">
           <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.1 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: 5 }}
             onClick={() => setShowProgress(true)}
-            className="flex flex-col items-center gap-2 group cursor-none"
-            title="手动记录当前进度"
+            className="flex flex-col items-center group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-full border border-amber-900/40 flex items-center justify-center bg-black/40 backdrop-blur-sm group-hover:border-amber-600 transition-colors">
-              <Sword className="w-5 h-5 text-amber-700/60 group-hover:text-amber-500 transition-colors rotate-45" />
+            {/* Hanging Line - Matches ChronoClock */}
+            <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-900/30 to-amber-900/30 opacity-40 group-hover:opacity-100 group-hover:h-24 md:group-hover:h-32 transition-all duration-700" />
+            
+            {/* The "Fate Compass" Icon */}
+            <div className="relative w-12 h-12 flex items-center justify-center mt-[-4px]">
+              {/* Outer Decorative Rings */}
+              <div className="absolute inset-0 border border-amber-900/20 rounded-full scale-75 group-hover:scale-100 group-hover:border-amber-600/40 transition-all duration-700" />
+              <div className="absolute inset-1 border border-dotted border-amber-900/10 rounded-full scale-90 group-hover:rotate-180 transition-transform duration-1000" />
+              
+              {/* Central Symbol: A stylized pivot/needle */}
+              <div className="relative w-6 h-6 flex items-center justify-center">
+                {/* Horizontal Bar */}
+                <div className="w-full h-[1px] bg-amber-900/40 group-hover:bg-amber-600 transition-colors" />
+                {/* Vertical Needle */}
+                <div className="absolute h-full w-[1px] bg-amber-900/60 group-hover:bg-amber-500 transition-colors shadow-[0_0_8px_rgba(217,119,6,0.3)]" />
+                
+                {/* Tiny Star Points */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-1 h-1 bg-amber-600 rotate-45 scale-50 group-hover:scale-100 transition-transform" />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-1 h-1 bg-amber-600 rotate-45 scale-50 group-hover:scale-100 transition-transform" />
+              </div>
+              
+              {/* Pulse effect on hover */}
+              <div className="absolute inset-0 bg-amber-600/5 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="text-[8px] uppercase tracking-widest text-amber-900/40 group-hover:text-amber-600 transition-colors [writing-mode:vertical-lr]">
-              Record
-            </span>
+
+            {/* Decorative Weight Dot */}
+            <div className="w-1.5 h-1.5 rotate-45 border border-amber-900/40 bg-[#0a0a0a] mt-1 group-hover:bg-amber-900 transition-colors" />
           </motion.button>
         </div>
       )}
