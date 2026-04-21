@@ -11,13 +11,13 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
 
   useEffect(() => {
     if (stage === 'title') {
-      // 标题动画总时长（浮现+停留+隐没）约 8 秒
+      // 标题动画总时长 8 秒
       const titleTimer = setTimeout(() => {
         setTitleFinished(true);
-        // 标题完全隐没后再等待 5 秒切换到注意事项
+        // 标题完全隐没后再等待 1.5 秒切换到注意事项（原 5 秒，缩短为 1.5 秒）
         const waitTimer = setTimeout(() => {
           setStage('tips');
-        }, 5000);
+        }, 1500);
         return () => clearTimeout(waitTimer);
       }, 8000);
       return () => clearTimeout(titleTimer);
@@ -32,9 +32,9 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
       className="fixed inset-0 z-[5000] bg-black flex flex-col items-center justify-center text-center overflow-hidden cursor-none"
       onClick={() => {
         if (stage === 'title') {
-          // 点击跳过标题阶段，直接进入等待5秒后的注意事项
+          // 点击跳过标题阶段，直接等待1.5秒后进入提示页
           setTitleFinished(true);
-          setTimeout(() => setStage('tips'), 5000);
+          setTimeout(() => setStage('tips'), 1500);
         } else {
           onComplete();
         }
