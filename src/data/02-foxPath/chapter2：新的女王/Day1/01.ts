@@ -4,7 +4,6 @@ export const act2Scenes: Record<string, Scene> = {
   // 清晨
   Act2ChapterSplash: {
     id: 'Act2ChapterSplash',
-    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     isChapter: true,
     chapterNumber: 'CAPVT I', // Latin for Chapter 1
     chapterSubtitle: 'REGINA NOVA', // Latin for The New Queen
@@ -17,7 +16,6 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F48-suburb': {
     id: 'F48-suburb',
-    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '近郊',
     description: '王城近郊',
     paragraphs: [
@@ -86,7 +84,6 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F50-MonasteryView': {
     id: 'F50-MonasteryView',
-    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '慈悲修道院',
     description: '远望修道院',
     paragraphs: [
@@ -113,7 +110,6 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F51-StorraSanctuary': {
     id: 'F51-StorraSanctuary',
-    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '圣堂武士团',
     description: '圣堂武士团简介',
     paragraphs: [
@@ -133,7 +129,6 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F52-CityGate': {
     id: 'F52-CityGate',
-    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '城门',
     description: '抵达城门',
     paragraphs: [
@@ -217,7 +212,6 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F55-FarewellValley': {
     id: 'F55-FarewellValley',
-    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '再见，女王陛下',
     description: '与瓦列家族再见',
     paragraphs: [

@@ -420,11 +420,15 @@ export default function App() {
     let bgmUrl = scene.bgm || SCENE_BGM_CONFIG[currentSceneId];
     
     if (!bgmUrl && !musicUrl && !ambienceUrl) {
-      const sceneNum = parseInt(currentSceneId.replace(/\D/g, '')) || 0;
+      const sceneNumMatch = currentSceneId.match(/F(\d+)/);
+      const sceneNum = sceneNumMatch ? parseInt(sceneNumMatch[1]) : 0;
       const isFoxChapter1 = currentSceneId.startsWith('F') && sceneNum > 0 && sceneNum < 48;
-      
+      const isFoxChapter2 = (currentSceneId.startsWith('F') && sceneNum >= 48) || currentSceneId === 'Act2ChapterSplash';
+
       if (currentSceneId === 'start' || isFoxChapter1) {
         bgmUrl = BGM_ASSETS.MAIN_THEME;
+      } else if (isFoxChapter2) {
+        bgmUrl = BGM_ASSETS.CHAPTER2_AMBIENCE;
       }
     }
 
