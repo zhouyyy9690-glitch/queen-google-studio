@@ -105,10 +105,10 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
                 transition={{ duration: 1.2, ease: "easeOut" }}
               >
                 <p className="text-white/70 text-sm md:text-base leading-relaxed font-serif tracking-wide mb-4">
-                  本故事纯属虚构
+                  本故事的一切纯属虚构
                 </p>
                 <p className="text-white/50 text-xs md:text-sm leading-relaxed font-serif tracking-wide">
-                  涉及政治、情感与成人内容，请斟酌体验。
+                  游戏程序、视觉交互等均使用AI辅助编码，涉及情感、阴谋与幻想，请斟酌体验。
                 </p>
                 <div className="mt-12 flex justify-center gap-2 text-[10px] text-white/30 font-mono tracking-widest">
                   <span>✦</span>
