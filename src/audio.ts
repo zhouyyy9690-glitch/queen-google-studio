@@ -19,6 +19,12 @@ export const BGM_ASSETS = {
   // 纺锤之路专用音乐
   SPINDLE_THEME: "https://cdn.pixabay.com/audio/2025/10/10/audio_970460aa1a.mp3",
 
+  // 第二章：新的女王 专用
+  CHAPTER2_AMBIENCE: "https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3",
+  CHAPTER2_DROST_MELODY: "https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3",
+  CHAPTER2_RUMOR_MELODY: "https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3",
+  CHAPTER2_FERRY_MELODY: "https://cdn.pixabay.com/audio/2025/05/16/audio_967a4a358c.mp3",
+
   // 推荐：教堂/神秘感 (仪式/重要转折)
   MYSTERY: SILENT_SOUND, 
 };

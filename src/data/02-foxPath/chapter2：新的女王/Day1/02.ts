@@ -3,6 +3,7 @@ import { Scene } from '../../../../types';
 export const day1ScenesPart2: Record<string, Scene> = {
   'F61-OuterCityLife': {
     id: 'F61-OuterCityLife',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '外城区',
     description: '外城风土',
     paragraphs: [

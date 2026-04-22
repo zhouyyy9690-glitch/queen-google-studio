@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useMemo, useRef, WheelEvent, type ReactNode } from 'react';
+import { useState, useEffect, useMemo, useRef, WheelEvent, type ReactNode, type MutableRefObject } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'motion/react';
 import { CHAPTERS_CONFIG, STORAGE_KEYS } from './constants';
 import { ChapterSelectModal } from './components/ChapterSelectModal';
@@ -41,7 +41,7 @@ import { Scene, Stage, Choice, Character, Location as GameLocation, Paragraph, T
 import { characters } from './characters';
 import { locations } from './locations';
 import { insights } from './insights';
-import { fadeAudio, playSFX, SCENE_BGM_CONFIG, SFX_ASSETS } from './audio';
+import { fadeAudio, playSFX, SCENE_BGM_CONFIG, SFX_ASSETS, BGM_ASSETS } from './audio';
 import { TypewriterText } from './components/TypewriterText';
 import { SceneDisplay } from './components/SceneDisplay';
 import { EndingDisplay } from './components/EndingDisplay';
@@ -133,7 +133,9 @@ export default function App() {
   const [showIntro, setShowIntro] = useState(!isTestMode); // 测试模式下默认跳过开场动画
 
   // 引用管理：音频实例与通知计时器
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mainAudioRef = useRef<HTMLAudioElement | null>(null);
+  const ambienceAudioRef = useRef<HTMLAudioElement | null>(null);
+  const musicAudioRef = useRef<HTMLAudioElement | null>(null);
   const notificationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // 触发全局通知（解锁角色/地点等）
@@ -145,14 +147,41 @@ export default function App() {
     notificationTimeoutRef.current = setTimeout(() => {
       setNotification(prev => ({ ...prev, visible: false }));
       notificationTimeoutRef.current = null;
-    }, 5000); // Set to 5 seconds for all types
+    }, 5000); 
   };
 
+  // 监听全局交互以解锁音频
+  useEffect(() => {
+    const handleGlobalClick = () => {
+      if (!hasInteracted) {
+        setHasInteracted(true);
+      }
+    };
+    window.addEventListener('click', handleGlobalClick);
+    window.addEventListener('touchstart', handleGlobalClick);
+    return () => {
+      window.removeEventListener('click', handleGlobalClick);
+      window.removeEventListener('touchstart', handleGlobalClick);
+    };
+  }, [hasInteracted]);
+
   // 极简初始化：确保 Audio 实例在组件生命周期内唯一且尽早创建
-  if (!audioRef.current && typeof Audio !== 'undefined') {
-    audioRef.current = new Audio();
-    audioRef.current.loop = true;
-  }
+  useEffect(() => {
+    if (typeof Audio !== 'undefined') {
+      if (!mainAudioRef.current) {
+        mainAudioRef.current = new Audio();
+        mainAudioRef.current.loop = true;
+      }
+      if (!ambienceAudioRef.current) {
+        ambienceAudioRef.current = new Audio();
+        ambienceAudioRef.current.loop = true;
+      }
+      if (!musicAudioRef.current) {
+        musicAudioRef.current = new Audio();
+        musicAudioRef.current.loop = true;
+      }
+    }
+  }, []);
 
   // Selection & Explanation States
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
@@ -373,99 +402,94 @@ export default function App() {
     setVisitedTexts(prev => [...prev, `--- ${scene.title} ---`]);
   }, [currentSceneId]);
 
-  // 环境音/背景音乐 (BGM) 管理：处理场景切换时的平滑过渡
+  // 分层音频管理：处理场景切换时的平滑过渡（独占优先级模式）
   useEffect(() => {
     const scene = gameData.scenes[currentSceneId];
-    const bgmUrl = SCENE_BGM_CONFIG[currentSceneId] || scene?.bgm;
-    
-    if (!bgmUrl || !audioRef.current) return;
+    if (!scene) return;
 
-    const audio = audioRef.current;
-    
-    // 调试日志：检查 URL 类型和内容
-    console.log("🎵 BGM 切换请求:", {
-      type: typeof bgmUrl,
-      url: bgmUrl,
-      sceneId: currentSceneId
-    });
+    // 1. 确定优先级：Music > Ambience > BGM
+    // 如果设置了高级别的轨道，低级别的轨道将自动停止，防止重叠
+    const musicUrl = scene.music;
+    const ambienceUrl = scene.ambience;
+    // 重要：如果是在主界面，使用 MAIN_THEME；否则优先查找场景配置或 BGM 字段
+    const bgmUrl = currentSceneId === 'start' ? BGM_ASSETS.MAIN_THEME : (scene.bgm || SCENE_BGM_CONFIG[currentSceneId]);
 
-    if (typeof bgmUrl !== 'string') {
-      console.error("❌ 错误: BGM URL 不是字符串类型，请检查导入配置。");
-      return;
-    }
+    const manageExclusiveLayer = async (targetRef: MutableRefObject<HTMLAudioElement | null>, url: string | undefined, defaultVolume: number) => {
+      const audio = targetRef.current;
+      if (!audio) return false;
 
-    // 检查 src 是否真的改变了
-    let normalizedTarget = '';
-    try {
-      normalizedTarget = new URL(bgmUrl, window.location.href).href;
-    } catch (e) {
-      console.error("❌ 无法解析 BGM URL:", bgmUrl, e);
-      return;
-    }
-    const normalizedCurrent = audio.src ? new URL(audio.src, window.location.href).href : '';
+      const normalizedTarget = url ? new URL(url, window.location.href).href : '';
+      const normalizedCurrent = audio.src ? new URL(audio.src, window.location.href).href : '';
 
-    if (normalizedCurrent !== normalizedTarget) {
-      console.log("🎵 尝试切换 BGM 到:", bgmUrl);
-      const switchBGM = async () => {
-        try {
-          // 如果正在播放，先淡出
-          if (!audio.paused) {
-            fadeAudio(audio, 0, 500);
-            await new Promise(resolve => setTimeout(resolve, 500));
-          }
-
-          // 彻底重置音频对象，防止旧状态干扰
-          audio.pause();
-          audio.removeAttribute('src'); 
-          audio.load();
-
-          // 重新设置新源
-          audio.src = bgmUrl;
-          audio.load(); // 强制触发加载过程
-          
-          audio.volume = 0;
-          audio.muted = !hasInteracted || isMuted;
-
-          // 只有在用户交互后才尝试播放
-          if (hasInteracted) {
-            await audio.play();
-            if (!isMuted) {
-              audio.muted = false;
-              fadeAudio(audio, 0.4, 1500);
-            }
-          }
-        } catch (e) {
-          console.error("❌ BGM 播放失败详情:", {
-            error: e,
-            url: bgmUrl,
-            networkState: audio.networkState,
-            readyState: audio.readyState
-          });
+      if (normalizedTarget && normalizedCurrent === normalizedTarget) {
+        if (audio.paused && hasInteracted && !isMuted) {
+          audio.play().catch(() => {});
+          fadeAudio(audio, defaultVolume, 1000);
         }
-      };
-      switchBGM();
-    }
-  }, [currentSceneId]);
-
-  // Handle Interaction & Mute Sync
-  useEffect(() => {
-    if (!audioRef.current) return;
-    const audio = audioRef.current;
-
-    if (hasInteracted && !isMuted) {
-      if (audio.paused) {
-        audio.play().catch(() => {});
+        return true; 
       }
-      audio.muted = false;
-      fadeAudio(audio, bgmVolume, 1000);
+
+      if (normalizedTarget) {
+        audio.pause();
+        audio.src = url!;
+        audio.load();
+        audio.loop = true;
+        audio.volume = 0;
+        if (hasInteracted && !isMuted) {
+          try {
+            await audio.play();
+            fadeAudio(audio, defaultVolume, 1000);
+          } catch(e) { console.error("Layer switch failed", e); }
+        }
+        return true;
+      }
+      return false;
+    };
+
+    const stopLayer = (ref: MutableRefObject<HTMLAudioElement | null>) => {
+      const audio = ref.current;
+      if (audio && !audio.paused) {
+        fadeAudio(audio, 0, 500);
+        setTimeout(() => {
+          // 再次检查此时是否真的不需要该轨道，防止快速切换导致误删
+          audio.pause();
+          audio.src = '';
+        }, 500);
+      }
+    };
+
+    // 执行优先级逻辑：只会有一个物理轨道处于激活状态
+    if (musicUrl) {
+      manageExclusiveLayer(musicAudioRef, musicUrl, bgmVolume * 1.1);
+      stopLayer(ambienceAudioRef);
+      stopLayer(mainAudioRef);
+    } else if (ambienceUrl) {
+      manageExclusiveLayer(ambienceAudioRef, ambienceUrl, bgmVolume * 0.8);
+      stopLayer(musicAudioRef);
+      stopLayer(mainAudioRef);
+    } else if (bgmUrl) {
+      manageExclusiveLayer(mainAudioRef, bgmUrl, bgmVolume);
+      stopLayer(musicAudioRef);
+      stopLayer(ambienceAudioRef);
     } else {
-      fadeAudio(audio, 0, 500);
-      // 不要立即 pause，等淡出后再静音
-      setTimeout(() => {
-        if (isMuted) audio.muted = true;
-      }, 500);
+      stopLayer(mainAudioRef);
+      stopLayer(ambienceAudioRef);
+      stopLayer(musicAudioRef);
     }
-  }, [hasInteracted, isMuted, bgmVolume]);
+  }, [currentSceneId, hasInteracted, isMuted, bgmVolume]);
+
+  // Handle Global Mute/Unmute
+  useEffect(() => {
+    const audios = [mainAudioRef.current, ambienceAudioRef.current, musicAudioRef.current];
+    audios.forEach(audio => {
+      if (!audio) return;
+      if (hasInteracted && !isMuted) {
+        audio.muted = false;
+      } else {
+        audio.muted = true;
+      }
+    });
+  }, [hasInteracted, isMuted]);
 
   useEffect(() => {
     setCurrentParaIndex(0);
@@ -474,8 +498,13 @@ export default function App() {
   useEffect(() => {
     const handleGlobalClick = () => {
       setHasInteracted(true);
-      if (audioRef.current && !isMuted) {
-        audioRef.current.play().catch(() => {});
+      const audios = [mainAudioRef.current, ambienceAudioRef.current, musicAudioRef.current];
+      if (!isMuted) {
+        audios.forEach(audio => {
+          if (audio && audio.src) {
+            audio.play().catch(() => {});
+          }
+        });
       }
     };
     window.addEventListener('click', handleGlobalClick);
@@ -945,14 +974,15 @@ export default function App() {
                   setIsStarting(true);
                   
                   // 强制解锁音频：在用户点击的瞬间执行 play()
-                  if (audioRef.current) {
-                    const audio = audioRef.current;
-                    audio.muted = false;
-                    audio.volume = bgmVolume;
-                    audio.play()
-                      .then(() => console.log("✅ 音频成功解锁"))
-                      .catch(e => console.log("❌ 仍然被拦截", e));
-                  }
+                  const audios = [mainAudioRef.current, ambienceAudioRef.current, musicAudioRef.current];
+                  audios.forEach(audio => {
+                    if (audio && audio.src) {
+                      audio.muted = false;
+                      audio.play()
+                        .then(() => console.log("✅ 音频成功解锁"))
+                        .catch(e => console.log("❌ 仍然被拦截", e));
+                    }
+                  });
                 }}
                 choices={activeChoices}
                 selectedChoice={selectedChoice}

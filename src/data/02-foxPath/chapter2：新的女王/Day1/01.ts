@@ -4,6 +4,7 @@ export const act2Scenes: Record<string, Scene> = {
   // 清晨
   Act2ChapterSplash: {
     id: 'Act2ChapterSplash',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     isChapter: true,
     chapterNumber: 'CAPVT I', // Latin for Chapter 1
     chapterSubtitle: 'REGINA NOVA', // Latin for The New Queen
@@ -16,6 +17,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F48-suburb': {
     id: 'F48-suburb',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '近郊',
     description: '王城近郊',
     paragraphs: [
@@ -59,6 +61,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F49-ThreeRiddlesFerry': {
     id: 'F49-ThreeRiddlesFerry',
+    music: 'https://cdn.pixabay.com/audio/2025/05/16/audio_967a4a358c.mp3',
     title: '三谜渡',
     description: '三谜渡的来历',
     paragraphs: [
@@ -83,6 +86,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F50-MonasteryView': {
     id: 'F50-MonasteryView',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '慈悲修道院',
     description: '远望修道院',
     paragraphs: [
@@ -109,6 +113,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F51-StorraSanctuary': {
     id: 'F51-StorraSanctuary',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '圣堂武士团',
     description: '圣堂武士团简介',
     paragraphs: [
@@ -128,6 +133,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F52-CityGate': {
     id: 'F52-CityGate',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '城门',
     description: '抵达城门',
     paragraphs: [
@@ -146,6 +152,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F53-OuterCityArrival': {
     id: 'F53-OuterCityArrival',
+    music: 'https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3',
     title: '外城',
     description: '势力展示',
     paragraphs: [
@@ -165,6 +172,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F53-1-Welcome': {
     id: 'F53-1-Welcome',
+    music: 'https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3',
     title: '欢迎......？',
     description: '势力展示',
     paragraphs: [
@@ -185,6 +193,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F54-ArchbishopWords': {
     id: 'F54-ArchbishopWords',
+    music: 'https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3',
     title: '昆提斯·德罗斯特的箴言',
     description: '',
     paragraphs: [
@@ -208,6 +217,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F55-FarewellValley': {
     id: 'F55-FarewellValley',
+    ambience: 'https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3',
     title: '再见，女王陛下',
     description: '与瓦列家族再见',
     paragraphs: [
@@ -223,6 +233,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F56-HammondTopic': {
     id: 'F56-HammondTopic',
+    music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '哈蒙德的传闻',
     description: '哈蒙德传闻',
     paragraphs: [
@@ -249,6 +260,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F57-MaresAndMireis': {
     id: 'F57-MaresAndMireis',
+    music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '银与石的米瑞斯',
     description: '米瑞斯介绍与马雷家族',
     paragraphs: [
@@ -273,6 +285,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F58-BearFamilyRumor': {
     id: 'F58-BearFamilyRumor',
+    music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '南下的阿尔摩恩',
     description: '阿尔摩恩传闻',
     paragraphs: [
@@ -296,6 +309,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F59-KarimMarriage': {
     id: 'F59-KarimMarriage',
+    music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '卡里姆的寡妇',
     description: '曾经的联姻往事',
     paragraphs: [
@@ -316,6 +330,7 @@ export const act2Scenes: Record<string, Scene> = {
 
   'F60-GoldenKnightRumor': {
     id: 'F60-GoldenKnightRumor',
+    music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '黄金骑士',
     description: '珀西瓦尔的传说',
     paragraphs: [

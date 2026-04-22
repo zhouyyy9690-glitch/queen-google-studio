@@ -51,7 +51,9 @@ export interface Scene {
   isChapter?: boolean;    // 标记是否为章节标题封面
   chapterNumber?: string; // 章节编号 (如 "CAPVT I")
   chapterSubtitle?: string; // 章节副标题
-  bgm?: string;           // 背景音乐标识
+  bgm?: string;           // 背景音乐标识 (通用/旧版兼容)
+  music?: string;         // 情感旋律层 (用于特定心理描写或关键转折)
+  ambience?: string;      // 环境背景层 (用于地理环境、自然音效)
   particleType?: ParticleType; // 环境粒子特效类型
 }
 
