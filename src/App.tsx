@@ -411,8 +411,22 @@ export default function App() {
     // 如果设置了高级别的轨道，低级别的轨道将自动停止，防止重叠
     const musicUrl = scene.music;
     const ambienceUrl = scene.ambience;
-    // 重要：如果是在主界面，使用 MAIN_THEME；否则优先查找场景配置或 BGM 字段
-    const bgmUrl = currentSceneId === 'start' ? BGM_ASSETS.MAIN_THEME : (scene.bgm || SCENE_BGM_CONFIG[currentSceneId]);
+    
+    // 逻辑：
+    // - 如果有显式定义的 bgm (场景文件内或配置表内)，使用它
+    // - 如果是主界面 ('start')，必播 MAIN_THEME
+    // - 如果是狐狸线第一章场景 (ID 为 F1-F47)，默认回退到 MAIN_THEME (用户要求一致)
+    // - 其他情况（如第二章），如果没有定义 BGM/Ambience/Music，则保持安静
+    let bgmUrl = scene.bgm || SCENE_BGM_CONFIG[currentSceneId];
+    
+    if (!bgmUrl && !musicUrl && !ambienceUrl) {
+      const sceneNum = parseInt(currentSceneId.replace(/\D/g, '')) || 0;
+      const isFoxChapter1 = currentSceneId.startsWith('F') && sceneNum > 0 && sceneNum < 48;
+      
+      if (currentSceneId === 'start' || isFoxChapter1) {
+        bgmUrl = BGM_ASSETS.MAIN_THEME;
+      }
+    }
 
     const manageExclusiveLayer = async (targetRef: MutableRefObject<HTMLAudioElement | null>, url: string | undefined, defaultVolume: number) => {
       const audio = targetRef.current;
