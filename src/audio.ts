@@ -25,6 +25,9 @@ export const BGM_ASSETS = {
   CHAPTER2_RUMOR_MELODY: "https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3",
   CHAPTER2_FERRY_MELODY: "https://cdn.pixabay.com/audio/2025/05/16/audio_967a4a358c.mp3",
 
+  // 黑鹰之路专用 (目前使用占位符)
+  EAGLE_THEME: "https://cdn.pixabay.com/download/audio/2024/09/01/audio_7335689da6.mp3?filename=dark-medieval-ambient-237070.mp3",
+
   // 推荐：教堂/神秘感 (仪式/重要转折)
   MYSTERY: SILENT_SOUND, 
 };
@@ -38,49 +41,54 @@ export const SFX_ASSETS = {
 };
 
 // --- 2. 场景与 BGM 对应表 (Scene BGM Mapping) ---
-// 如果场景中没有定义 bgm，系统会优先从此表查找。
-// 这样你可以在一个地方统一管理所有场景的配乐。
+// 此表仅用于存放“特殊配乐设定”。
+// 普通场景会自动根据章节回退到对应的主题曲（见 getChapterTheme）。
 
 export const SCENE_BGM_CONFIG: Record<string, string> = {
   "start": BGM_ASSETS.MAIN_THEME,
-  
-  // 狐狸之路
-  "F1-fox": BGM_ASSETS.MAIN_THEME,
-  
-  // 第二章：新的女王 场景 BGM
-  "Act2ChapterSplash": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F48-suburb": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F50-MonasteryView": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F51-StorraSanctuary": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F52-CityGate": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F55-FarewellValley": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F61-Onlyyourself": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F61-OuterCityLife": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F62-MidCity": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F62-Howmanypeople": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F63-InnerCity": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F65-PalaceGate": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F66-NoticeCayde": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F67-NoticeJasper1": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F68-JasperRedcloak": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F69-NoticeCorbin": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  "F70-Parting": BGM_ASSETS.CHAPTER2_AMBIENCE,
-  
-  // 红鹿之路 (Deer Path)
-  "d1-deer": BGM_ASSETS.DEER_THEME,
-  "d2-CarriageTalk": BGM_ASSETS.DEER_THEME,
-  "d2-1-DeanHammond": BGM_ASSETS.DEER_THEME,
-  "d2-2-GeorgeHammond": BGM_ASSETS.DEER_THEME,
-  "d3-Dissatisfied": BGM_ASSETS.DEER_THEME,
-  "d3-1-ScholarNeed": BGM_ASSETS.DEER_THEME,
-  "d4-EnterCity": BGM_ASSETS.DEER_THEME,
-  "d4-EnterCity-1": BGM_ASSETS.DEER_THEME,
-  
-  // 纺锤之路 (Spindle Path)
-  "Destiny": BGM_ASSETS.SPINDLE_THEME,
-  
-  // 示例：特定场景使用神秘音乐
-  // "F29-AutoKnight": BGM_ASSETS.MYSTERY,
+  "F49-ThreeRiddlesFerry": BGM_ASSETS.CHAPTER2_FERRY_MELODY,
+  "F56-HammondTopic": BGM_ASSETS.CHAPTER2_RUMOR_MELODY,
+  "F53-OuterCityArrival": BGM_ASSETS.CHAPTER2_DROST_MELODY,
+  "F53-1-Welcome": BGM_ASSETS.CHAPTER2_DROST_MELODY,
+  "F54-ArchbishopWords": BGM_ASSETS.CHAPTER2_DROST_MELODY,
+};
+
+/**
+ * 自动识别场景所属章节并返回对应的主题曲
+ */
+export const getChapterTheme = (sceneId: string): string => {
+  // 1. 主界面
+  if (sceneId === 'start') return BGM_ASSETS.MAIN_THEME;
+
+  // 2. 狐狸线 (Fox Path)
+  if (sceneId.startsWith('F') || sceneId === 'Act2ChapterSplash') {
+    const numMatch = sceneId.match(/F(\d+)/);
+    const num = numMatch ? parseInt(numMatch[1]) : 0;
+    
+    // Chapter 1 (F1-F47) -> Main Theme (和游戏主题曲一致)
+    if (num > 0 && num < 48) return BGM_ASSETS.MAIN_THEME;
+    // Chapter 2 (F48+) -> Chapter 2 Ambience
+    if (num >= 48 || sceneId === 'Act2ChapterSplash') return BGM_ASSETS.CHAPTER2_AMBIENCE;
+    
+    return BGM_ASSETS.MAIN_THEME; // 默认
+  }
+
+  // 3. 红鹿线 (Deer Path)
+  if (sceneId.startsWith('d')) {
+    return BGM_ASSETS.DEER_THEME;
+  }
+
+  // 4. 纺锤线 (Spindle Path)
+  if (sceneId === 'Destiny' || sceneId === 'Spindle' || sceneId.startsWith('S')) {
+    return BGM_ASSETS.SPINDLE_THEME;
+  }
+
+  // 5. 黑鹰线 (Black Eagle Path)
+  if (sceneId.startsWith('e') || sceneId.startsWith('Eagle')) {
+    return BGM_ASSETS.EAGLE_THEME;
+  }
+
+  return BGM_ASSETS.MAIN_THEME;
 };
 
 // --- 3. 音频处理逻辑 (Audio Logic) ---

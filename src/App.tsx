@@ -41,7 +41,7 @@ import { Scene, Stage, Choice, Character, Location as GameLocation, Paragraph, T
 import { characters } from './characters';
 import { locations } from './locations';
 import { insights } from './insights';
-import { fadeAudio, playSFX, SCENE_BGM_CONFIG, SFX_ASSETS, BGM_ASSETS } from './audio';
+import { fadeAudio, playSFX, SCENE_BGM_CONFIG, SFX_ASSETS, BGM_ASSETS, getChapterTheme } from './audio';
 import { TypewriterText } from './components/TypewriterText';
 import { SceneDisplay } from './components/SceneDisplay';
 import { EndingDisplay } from './components/EndingDisplay';
@@ -407,29 +407,15 @@ export default function App() {
     const scene = gameData.scenes[currentSceneId];
     if (!scene) return;
 
-    // 1. 确定优先级：Music > Ambience > BGM
-    // 如果设置了高级别的轨道，低级别的轨道将自动停止，防止重叠
+    // 2. 核心 BGM 抉择逻辑：
+    // - 优先级：显式设置 (music/ambience/bgm) > 章节默认主题 (getChapterTheme)
     const musicUrl = scene.music;
     const ambienceUrl = scene.ambience;
-    
-    // 逻辑：
-    // - 如果有显式定义的 bgm (场景文件内或配置表内)，使用它
-    // - 如果是主界面 ('start')，必播 MAIN_THEME
-    // - 如果是狐狸线第一章场景 (ID 为 F1-F47)，默认回退到 MAIN_THEME (用户要求一致)
-    // - 其他情况（如第二章），如果没有定义 BGM/Ambience/Music，则保持安静
     let bgmUrl = scene.bgm || SCENE_BGM_CONFIG[currentSceneId];
     
+    // 如果没有显示设置任何音频轨道，则回退到章节主题曲
     if (!bgmUrl && !musicUrl && !ambienceUrl) {
-      const sceneNumMatch = currentSceneId.match(/F(\d+)/);
-      const sceneNum = sceneNumMatch ? parseInt(sceneNumMatch[1]) : 0;
-      const isFoxChapter1 = currentSceneId.startsWith('F') && sceneNum > 0 && sceneNum < 48;
-      const isFoxChapter2 = (currentSceneId.startsWith('F') && sceneNum >= 48) || currentSceneId === 'Act2ChapterSplash';
-
-      if (currentSceneId === 'start' || isFoxChapter1) {
-        bgmUrl = BGM_ASSETS.MAIN_THEME;
-      } else if (isFoxChapter2) {
-        bgmUrl = BGM_ASSETS.CHAPTER2_AMBIENCE;
-      }
+      bgmUrl = getChapterTheme(currentSceneId);
     }
 
     const manageExclusiveLayer = async (targetRef: MutableRefObject<HTMLAudioElement | null>, url: string | undefined, defaultVolume: number) => {
