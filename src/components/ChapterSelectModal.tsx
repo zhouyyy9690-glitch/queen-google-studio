@@ -535,13 +535,13 @@ export const ChapterSelectModal: React.FC<ChapterSelectModalProps> = ({
           </div>
         )}
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false} custom={pageDirection}>
           {viewMode === 'roads' ? (
             <motion.div
               key="road-selection"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
               className="w-full flex flex-col flex-grow order-1 md:order-1"
             >
@@ -549,12 +549,39 @@ export const ChapterSelectModal: React.FC<ChapterSelectModalProps> = ({
             </motion.div>
           ) : (
             <motion.div
-              key={subPageView === 0 ? "chapter-summary" : "chapter-insights"}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="w-full flex-grow order-1 md:order-1 h-full overflow-hidden"
+              key={`${selectedRoad}-${currentPage}-${subPageView}`}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                const threshold = 100;
+                if (info.offset.x < -threshold) {
+                  nextPage();
+                } else if (info.offset.x > threshold) {
+                  prevPage();
+                }
+              }}
+              style={{ transformOrigin: pageDirection === 'next' ? 'center right' : 'center left' }}
+              initial={{ 
+                opacity: 0, 
+                rotateY: pageDirection === 'next' ? 45 : -45,
+                x: pageDirection === 'next' ? 100 : -100,
+                scale: 0.9
+              }}
+              animate={{ 
+                opacity: 1, 
+                rotateY: 0,
+                x: 0,
+                scale: 1
+              }}
+              exit={{ 
+                opacity: 0, 
+                rotateY: pageDirection === 'next' ? -45 : 45,
+                x: pageDirection === 'next' ? -100 : 100,
+                scale: 0.9
+              }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full flex-grow order-1 md:order-1 h-full overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing perspective-1000"
             >
               {subPageView === 0 ? (
                 <div className="w-full h-full flex flex-col md:flex-row">

@@ -29,48 +29,50 @@ export const Notification: React.FC<NotificationProps> = ({ notifications }) => 
             className="relative flex items-center justify-center py-3 px-10 group"
           >
             {/* 丝帛/宣纸底层背景 */}
-            <div className={`absolute inset-0 shadow-2xl opacity-95 ${
+            <div className={`absolute inset-0 shadow-[0_10px_30px_rgba(0,0,0,0.8)] opacity-95 ${
               note.type === 'location' ? 'bg-[#1a2f23]' : 
               note.type === 'character' ? 'bg-[#2a1a1a]' : 
               note.type === 'insight' ? 'bg-[#1a1a2a]' :
               'bg-[#2d1810]'
             }`} 
             style={{
-              clipPath: 'polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%)',
-              border: note.type === 'location' ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(180,83,9,0.3)'
+              clipPath: 'polygon(0% 15%, 10% 0%, 90% 0%, 100% 15%, 100% 85%, 90% 100%, 10% 100%, 0% 85%)',
+              border: note.type === 'location' ? '1px solid rgba(16,185,129,0.4)' : '1px solid rgba(180,83,9,0.4)'
             }}>
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')] opacity-20 mix-blend-overlay" />
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')] opacity-30 mix-blend-overlay" />
+              {/* 装饰边框内线 */}
+              <div className="absolute inset-1 border border-white/5 pointer-events-none" style={{ clipPath: 'inherit' }} />
             </div>
 
-            {/* 装饰侧边线 */}
-            <div className={`absolute left-4 top-1/2 -translate-y-1/2 w-1 h-3 rounded-full ${
-              note.type === 'location' ? 'bg-emerald-500/60' : 
-              note.type === 'insight' ? 'bg-indigo-400/60' : 
-              'bg-amber-600/60'
+            {/* 装饰侧边流苏或铜扣感 */}
+            <div className={`absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full border border-white/20 ${
+              note.type === 'location' ? 'bg-emerald-700' : 
+              note.type === 'insight' ? 'bg-indigo-700' : 
+              'bg-amber-700'
             }`} />
             
-            <div className={`absolute right-4 top-1/2 -translate-y-1/2 w-1 h-3 rounded-full ${
-              note.type === 'location' ? 'bg-emerald-500/60' : 
-              note.type === 'insight' ? 'bg-indigo-400/60' : 
-              'bg-amber-600/60'
+            <div className={`absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full border border-white/20 ${
+              note.type === 'location' ? 'bg-emerald-700' : 
+              note.type === 'insight' ? 'bg-indigo-700' : 
+              'bg-amber-700'
             }`} />
 
             {/* 通知主文本 */}
-            <div className="relative z-10 flex flex-col items-center">
-              <span className={`font-serif italic text-[8px] tracking-[0.4em] uppercase mb-1 ${
-                note.type === 'location' ? 'text-emerald-500/40' : 
-                note.type === 'insight' ? 'text-indigo-400/40' : 
-                'text-amber-600/40'
+            <div className="relative z-10 flex flex-col items-center py-1">
+              <span className={`font-serif italic text-[7px] md:text-[8px] tracking-[0.5em] uppercase mb-1.5 ${
+                note.type === 'location' ? 'text-emerald-500/60' : 
+                note.type === 'insight' ? 'text-indigo-400/60' : 
+                'text-amber-600/60'
               }`}>
-                {note.type === 'character' ? 'Chronicle Recorded' : 
-                 note.type === 'location' ? 'Map Annotated' : 
-                 note.type === 'insight' ? 'Secret Observed' : 'Fate Sealed'}
+                {note.type === 'character' ? '— Archive Entry —' : 
+                 note.type === 'location' ? '— Cartography —' : 
+                 note.type === 'insight' ? '— Secret Observation —' : '— Fate Altered —'}
               </span>
               
-              <h4 className={`font-chinese text-sm md:text-base tracking-[0.2em] font-medium ${
-                note.type === 'location' ? 'text-emerald-200/90' : 
-                note.type === 'insight' ? 'text-indigo-200/90' : 
-                'text-amber-100/90'
+              <h4 className={`font-chinese text-sm md:text-lg tracking-[0.3em] font-medium drop-shadow-md ${
+                note.type === 'location' ? 'text-emerald-100/90' : 
+                note.type === 'insight' ? 'text-indigo-100/90' : 
+                'text-amber-50/90'
               }`}>
                 {note.title}
               </h4>

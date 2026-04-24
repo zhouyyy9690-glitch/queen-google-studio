@@ -9,6 +9,7 @@ export const SFX_ASSETS = {
   CLICK: "https://cdn.pixabay.com/audio/2022/03/10/audio_017c747e3d.mp3",
   PAGE_TURN: "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==",
   DOOR_OPEN: "https://cdn.pixabay.com/download/audio/2025/12/19/audio_af89e72c6a.mp3?filename=dragon-studio-open-door-stock-sfx-454246.mp3",
+  UNLOCK: "https://cdn.pixabay.com/audio/2021/08/04/audio_3d98d2495d.mp3", // 清脆的竖琴拨弦
 };
 
 // --- 2. 背景音乐资源库 (BGM Assets Library) ---

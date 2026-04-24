@@ -25,6 +25,7 @@ export const dayScenes: Record<string, Scene> = {
     id: 'F7-Yourthoughts1',
     title: '沉思',
     description: '关于身世的思考',
+    bgm: 'MAIN_THEME',
     paragraphs: [
       { text: '翠谷之风吹拂着你的头发，刚才发生的所有事、在这里度过的所有时间，都乘着风，从你的心中漂流而过。' },
       { text: '从记事起，你就没有见过自己的父母，只是每年能收到以他们的名义寄来的一封信。从玛格丽特修女他们那，你知道，你是当今征服王国[C:劳顿·赫西]陛下与王后[C:伊莎贝拉·赫西]的女儿。\n并且，直到现在都据说你没有兄弟姐妹。' },

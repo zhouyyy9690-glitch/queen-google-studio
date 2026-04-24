@@ -109,6 +109,8 @@ export default function App() {
   const [currentPath, setCurrentPath] = useState<'fox' | 'deer' | 'eagle' | null>(null);
   // 剧情旗标（Flags）：存储玩家的选择和触发的事件，影响后续剧情
   const [flags, setFlags] = useState<Record<string, any>>({});
+  // 会话旗标（Session Flags）：存储本次游戏运行时的临时状态，不一定持久化
+  const [sessionFlags, setSessionFlags] = useState<Record<string, any>>({});
   
   // UI 显示控制状态
   const [showHistory, setShowHistory] = useState(false);
@@ -139,15 +141,33 @@ export default function App() {
 
   // 核心状态：多重通知队列
   const [notifications, setNotifications] = useState<{id: string, title: string, type: 'ending' | 'character' | 'location' | 'insight'}[]>([]);
+  const lastNotificationRef = useRef<{time: number, type: string, title: string}[]>([]);
 
   // 触发全局通知（解锁角色/地点等）
   const triggerNotification = (title: string, type: 'ending' | 'character' | 'location' | 'insight') => {
+    // 限制同一高度的瞬间重复通知 (比如一页里解锁了三个角色，只弹一次“新的人物已记录”)
+    const now = Date.now();
+    const isGeneric = type === 'location' || type === 'character';
+    
+    if (isGeneric) {
+      const recent = lastNotificationRef.current.find(n => n.type === type && (now - n.time < 1000));
+      if (recent) return; // 1秒内不重复弹送同类型的通用提示
+    }
+
+    lastNotificationRef.current.push({ time: now, type, title });
+    if (lastNotificationRef.current.length > 10) lastNotificationRef.current.shift();
+
     const id = Math.random().toString(36).substring(2, 9);
     
     // 根据用户要求修改地名和人名的提示文本
     let displayTitle = title;
     if (type === 'location') displayTitle = '新的地图已注释';
     if (type === 'character') displayTitle = '新的人物已记录';
+
+    // 播放提示音：当地点或见闻解锁时
+    if (type === 'location' || type === 'insight') {
+      playSFX(SFX_ASSETS.UNLOCK, isMuted, sfxVolume);
+    }
 
     setNotifications(prev => [...prev, { id, title: displayTitle, type }]);
     
@@ -355,6 +375,7 @@ export default function App() {
     saveGame();
     setIsStarting(false);
     resetGame();
+    setSessionFlags({});
   };
 
   // --- 测试模式生命周期管理 ---
@@ -394,10 +415,33 @@ export default function App() {
   // Handle Event Initialization
   useEffect(() => {
     const scene = gameData.scenes[currentSceneId];
-    if (scene?.event) {
-      setCurrentStageId(scene.event.startStage);
-    } else {
-      setCurrentStageId(null);
+    if (scene) {
+      // 触发进入场景的回调逻辑
+      if (scene.onEnter) {
+        const stateProxy = {
+          flags: { ...flags },
+          sessionFlags: { ...sessionFlags },
+          nextSceneId: currentSceneId
+        };
+        
+        scene.onEnter(stateProxy);
+        
+        // 检查是否有逻辑重定向
+        if (stateProxy.nextSceneId !== currentSceneId) {
+          setCurrentSceneId(stateProxy.nextSceneId);
+          return; // 递归调用会由 useEffect 重新触发
+        }
+        
+        // 更新状态
+        setFlags(stateProxy.flags);
+        setSessionFlags(stateProxy.sessionFlags);
+      }
+
+      if (scene.event) {
+        setCurrentStageId(scene.event.startStage);
+      } else {
+        setCurrentStageId(null);
+      }
     }
   }, [currentSceneId]);
 
@@ -525,8 +569,12 @@ export default function App() {
     ? currentScene.event.stages[currentStageId] 
     : null;
 
-  const checkCondition = (condition?: string): boolean => {
+  const checkCondition = (condition?: string | ((state: any) => boolean)): boolean => {
     if (!condition) return true;
+
+    if (typeof condition === 'function') {
+      return condition({ flags, sessionFlags });
+    }
 
     // Support OR (||) first, then AND (&&)
     return condition.split('||').some(orPart => {
@@ -653,6 +701,17 @@ export default function App() {
       setCurrentPath(choice.animalType);
     }
 
+    // 执行选项的回调逻辑
+    if (choice.onSelect) {
+      const stateProxy = {
+        flags: { ...flags },
+        sessionFlags: { ...sessionFlags }
+      };
+      choice.onSelect(stateProxy);
+      setFlags(stateProxy.flags);
+      setSessionFlags(stateProxy.sessionFlags);
+    }
+
     if (choice.setFlags) {
       setFlags(prev => ({ ...prev, ...choice.setFlags }));
     }
@@ -697,6 +756,7 @@ export default function App() {
     setSeenLocationNames(new Set());
     setCurrentPath(null);
     setFlags({});
+    setSessionFlags({});
     setCurrentSceneId(gameData.initialScene);
     setCurrentStageId(null);
     setCurrentParaIndex(0);

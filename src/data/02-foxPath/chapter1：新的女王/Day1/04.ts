@@ -196,7 +196,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
       { text: '你垂着眼睛，盯着自己的裙摆。蕾丝花边在阳光中投下细碎的影子，多像笼子上的花纹。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'Act2ChapterSplash' }
+      { text: '继续', nextSceneId: 'F82-Lunch' }
     ]
   }
 };

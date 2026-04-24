@@ -7,8 +7,9 @@ export interface Choice {
   nextStageId?: string;   // 选择后跳转到的阶段 ID (用于 Event 模式)
   explanation?: string;   // 选项背后的深层含义解释 (用于显示解释弹窗)
   animalType?: 'fox' | 'deer' | 'eagle' | 'destiny'; // 选项归属的路径属性
-  condition?: string;      // 触发该选项需要满足的标记条件
+  condition?: string | ((state: any) => boolean);      // 触发该选项需要满足的标记条件
   setFlags?: Record<string, any>; // 选择后需设置的状态标记
+  onSelect?: (state: any) => void; // 选择后的回调逻辑
   sfx?: string;           // 选择时的音效
 }
 
@@ -42,11 +43,12 @@ export type ParticleType = 'snow' | 'dust' | 'evening' | 'nature' | 'ink' | 'non
 export interface Scene {
   id: string;             // 场景唯一标识符
   title: string;          // 场景标题
-  description: string;    // 场景背景描述
+  description?: string;    // 场景背景描述
   explanation?: string;   // 场景整体的隐藏解释
   paragraphs?: Paragraph[]; // 场景内的段落文本
   event?: EventConfig;    // 复杂的交互事件配置 (如多阶段选择)
   choices?: Choice[];     // 该场景下的玩家可选项
+  onEnter?: (state: any) => void; // 进入场景时的回调逻辑
   isEnding?: boolean;     // 标记是否为结局场景
   isChapter?: boolean;    // 标记是否为章节标题封面
   chapterNumber?: string; // 章节编号 (如 "CAPVT I")
