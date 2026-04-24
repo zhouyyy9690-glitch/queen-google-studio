@@ -4,6 +4,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
   'F82-Lunch': {
     id: 'F82-Lunch',
     title: '红堡的午餐',
+    particleType: 'dust',
     paragraphs: [
       { text: '一位侍女轻轻叩响你的房门。“陛下。”她恭敬地说，“午餐准备好了。”' },
       { text: '除了清早在马车上的一顿早餐外，整个上午你什么都没吃。你本该感到饥饿，但你见过的所有人、听过的所有名字已经塞满了你的胃。' },
@@ -30,6 +31,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
   'F83-EatSilent': {
     id: 'F83-EatSilent',
     title: '你默默吃饭',
+    particleType: 'dust',
     paragraphs: [
       { text: '在空旷的餐厅里，你的声音显得很小，就像石子丢进深井。侍女微微鞠躬，退回她原本的位置。' },
       { text: '桌上的餐食很好，但你望着这张桌子，想到的却是翠谷的午餐。每一个中午，玛格丽特修女会坐在你的左手边，帮你把面包掰成小块；大骑士偶尔会讲起年轻时的故事，塞普迪莫斯学士会考你的历史知识。有时芬因也在这，他会趁他们不注意，偷偷把自己的甜点推到你面前。' },
@@ -45,6 +47,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
   'F84-AskMargaret': {
     id: 'F84-AskMargaret',
     title: '你感到愤怒',
+    particleType: 'dust',
     paragraphs: [
       { text: '侍女对你摇头。' },
       { text: '“说话。”你突然感到一股无名之火，声音也随之提高，“和我一起来的玛格丽特修女在哪？！”' },
@@ -60,6 +63,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
   'F85-RefuseEat': {
     id: 'F85-RefuseEat',
     title: '你不想吃',
+    particleType: 'dust',
     paragraphs: [
       { text: '“是午餐不合您的胃口吗？”' },
       { text: '侍女小心翼翼地问你，而你丢下勺子，拒绝再说一句话。' },
@@ -80,6 +84,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
   'F86-ObserveRoom': {
     id: 'F86-ObserveRoom',
     title: '挂毯上的人',
+    particleType: 'dust',
     paragraphs: [
       { text: '“是埃塞尔雷德王。”侍女说。' },
       { text: '你这才注意到，这间餐厅里处处都有赫西家族的故事。' },
@@ -104,6 +109,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
   'F87-Transition2': {
     id: 'F87-Transition2',
     title: '结束午餐',
+    particleType: 'dust',
     paragraphs: [
       { text: '因为胃口不佳，你只吃了几片面包，一杯乳酪，几勺奶油蔬菜汤。南境风味调料的烤小牛肉你多吃了几口，但迷迭香的用法还是和翠谷不一样。' },
       { text: '你擦拭嘴唇，站起来。' },

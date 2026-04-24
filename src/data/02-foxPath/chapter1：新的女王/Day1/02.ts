@@ -5,6 +5,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F61-Onlyyourself': {
     id: 'F61-Onlyyourself',
     title: '你只有自己了',
+    particleType: 'dust',
     description: '贫民窟、码头、鱼市等',
     paragraphs: [
       { text: '现在，马车里只剩下你一个人，你却感到昆提斯·德罗斯特的目光仿佛还在身上。\n你努力坐直身体，试图让自己变得平静一点。' },
@@ -20,6 +21,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F61-OuterCityLife': {
     id: 'F61-OuterCityLife',
     title: '外城',
+    particleType: 'dust',
     description: '贫民窟、码头、鱼市等',
     paragraphs: [
       { text: '好奇心驱使你掀起帘子，一个衣衫褴褛的女人抱着一个孩子，泣声不断。\n她佝偻的身体与面前穿白袍的骑士形成鲜明对比，你注意到在这些骑士之外，民众们大多穿着破旧，甚至肮脏。' },
@@ -38,6 +40,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F62-MidCity': {
     id: 'F62-MidCity',
     title: '中城',
+    particleType: 'dust',
     description: '中城风土',
     paragraphs: [
       { text: '马车继续向前。也许只过了一小会儿，一声突如其来的高呼吓了你一跳。' },
@@ -54,6 +57,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F62-Howmanypeople': {
     id: 'F62-Howmanypeople',
     title: '好多人！',
+    particleType: 'dust',
     description: '中城风土',
     paragraphs: [
       { text: '你发誓这是你从出生以来到现在见过最多的人，比瓦兰提尔·诺恩那天早上带来的人马还要多。到处都是人，到处都是悬挂的红底金纹狐狸旗帜。\n酒馆，银匠铺，民居......你的露面让这些人更加狂热。他们高呼着你的名字，高呼着赫西家族，你看到昆提斯·德罗斯特大主教的念珠在日光下发亮。' },
@@ -68,6 +72,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F63-InnerCity': {
     id: 'F63-InnerCity',
     title: '内城',
+    particleType: 'dust',
     description: '内城风貌',
     paragraphs: [
       { text: '你注意到，外面的声音开始消失了。' },
@@ -90,6 +95,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F65-PalaceGate': {
     id: 'F65-PalaceGate',
     title: '王宫',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '很快，马车再一次停了下来。大骑士为你打开车门，向你伸出手。\n望着他深刻严肃的脸，你意识到，你的旅程结束了。' },
@@ -115,6 +121,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F66-NoticeCayde': {
     id: 'F66-NoticeCayde',
     title: '凯安·法哈迪',
+    particleType: 'dust',
     description: '你注意到凯安·法哈迪',
     paragraphs: [
       { text: '你的目光落在凯安·法哈迪脸上。他的眼睛——你注意到，他长得和你、还有你见过的人都有点不太一样。\n是眼睛吗？还是鼻子？他看起来似乎更深邃，也更......像某些动物。' },
@@ -128,6 +135,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F67-NoticeJasper1': {
     id: 'F67-NoticeJasper1',
     title: '贾斯珀·马雷',
+    particleType: 'dust',
     description: '你注意到贾斯珀·马雷',
     paragraphs: [
       { text: '贾斯珀·马雷是他们三个里最高那个，你想他大概比大骑士还要高一点。\n然而，他脸上的伤疤才是让你忍不住注意他的原因。在阳光下，他的左眼因为牵扯伤疤而微微眯起，这让他的颧骨看起来更高了。' },
@@ -142,6 +150,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F68-JasperRedcloak': {
     id: 'F68-JasperRedcloak',
     title: '马雷与红袍卫士',
+    particleType: 'dust',
     description: '你想起马车上的话',
     paragraphs: [
       { text: '等等，马雷？' },
@@ -157,6 +166,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
   'F69-NoticeCorbin': {
     id: 'F69-NoticeCorbin',
     title: '科尔宾·米德',
+    particleType: 'dust',
     description: '你注意到科尔宾·米德',
     paragraphs: [
       { text: '比起凯安、罗德里克和贾斯珀，你几乎是下意识又看向科尔宾·米德。罗德里克·索恩的严肃让人警惕，凯安·法哈迪的懒散让人产生距离，贾斯珀·马雷的阴沉更是拒之千里。\n但科尔宾·米德的温和让你想要放松，他传递给你的信息就是这样。' },

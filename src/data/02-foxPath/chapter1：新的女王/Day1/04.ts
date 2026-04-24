@@ -5,6 +5,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F73-CouncilMeeting': {
     id: 'F73-CouncilMeeting',
     title: '御前会议？',
+    particleType: 'dust',
     description: '御前会议',
     paragraphs: [
       { text: '叩叩。' },
@@ -25,6 +26,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F73-1-CouncilMeeting': {
     id: 'F73-1-CouncilMeeting',
     title: '御前会议！',
+    particleType: 'dust',
     description: '御前会议2',
     paragraphs: [
       { text: '两名红金罩袍的卫士为你打开大门。这扇门比你房间的那扇更大，更重，也更华丽。\n金红的浮雕狐狸奔跑在林间，七星圣纹高悬，犹如一顶冠冕。' },
@@ -50,6 +52,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F74-CeremonyProcess': {
     id: 'F74-CeremonyProcess',
     title: '典礼流程',
+    particleType: 'dust',
     description: '典礼流程',
     paragraphs: [
       { text: '你的目光依次扫过乔治·哈蒙德之后的三位男士。\n他们都有些不一样。' },
@@ -76,6 +79,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F75-CeremonyDeploy': {
     id: 'F75-CeremonyDeploy',
     title: '典礼部署',
+    particleType: 'dust',
     description: '典礼部署相关',
     paragraphs: [
       { text: '乔治·哈蒙德这时转向格雷戈尔·隆德。' },
@@ -97,6 +101,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F76-CouncilEnd': {
     id: 'F76-CouncilEnd',
     title: '结束了',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '“陛下，今日所有待议的事情都结束了。”' },
@@ -114,6 +119,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F77-HammondDinner': {
     id: 'F77-HammondDinner',
     title: '哈蒙德的晚餐',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '其他三位大臣陆续离开，而乔治·哈蒙德留了下来。\n他站在你的座位下方，似乎在等你。' },
@@ -135,6 +141,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F78-AskAttention': {
     id: 'F78-AskAttention',
     title: '乔治·哈蒙德看向了你',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '乔治·哈蒙德看向你，你感到自己在被一头巨大的黑鹰盯着。\n它的羽翼遮天蔽日，鸟喙锋利如铁。他的爪子粗壮有力，能抓住整座红堡。' },
@@ -155,6 +162,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F79-AugustinGregor': {
     id: 'F79-AugustinGregor',
     title: '奥古斯丁和格雷戈尔看向了你',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '“很遗憾，典礼上不能。”奥古斯丁·莫尔回答你，“世俗武力不能在需要的时候替代七神之剑，放在平时是没有问题的。”' },
@@ -171,6 +179,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F80-Thanks': {
     id: 'F80-Thanks',
     title: '你努力把话说出口',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '冷静。凯瑟琳，冷静。', isThought: true },
@@ -186,6 +195,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
   'F81-Transition1': {
     id: 'F81-Transition1',
     title: '你快要哭了',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '门随着乔治·哈蒙德的离开就再没有关上。你扶住额头，强忍眼泪，半天没动。' },

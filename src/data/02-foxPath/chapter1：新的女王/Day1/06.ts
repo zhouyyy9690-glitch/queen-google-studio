@@ -4,6 +4,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F88-Scholar': {
     id: 'F88-Scholar',
     title: '学士来了',
+    particleType: 'dust',
     paragraphs: [
       { text: '你不记得自己什么时候睡着了。醒来时，你感到疲惫。这一觉你什么也没梦见，又也许，是你忘记了。' },
       { text: '......好渴。', isThought: true },
@@ -32,6 +33,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F88-ScholarMeeting': {
     id: 'F88-ScholarMeeting',
     title: '塞普迪莫斯学士',
+    particleType: 'dust',
     paragraphs: [
       { text: '你几乎迫不及待地跟着侍女走向书房。午后的走廊静悄悄的，金红罩袍的卫士们看起来犹如王宫的装饰品，他们个个都像一尊不会说话的雕塑。' },
       { text: '“学士！”' },
@@ -77,6 +79,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F89-HammondDetail': {
     id: 'F89-HammondDetail',
     title: '哈蒙德',
+    particleType: 'dust',
     paragraphs: [
       { text: '“他是个不好对付的男人。”塞普迪莫斯学士看着你，“征服王国西境大公爵，财政大臣兼御前首相，他在您的父亲，先王劳顿陛下四十三岁的时候就成了财政大臣。三年后， he 成为御前首相。”' },
       { text: '“他从我的父亲开始，就是王国的财政大臣吗？”' },
@@ -106,6 +109,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F90-HammondDeep': {
     id: 'F90-HammondDeep',
     title: '哈蒙德的秘闻',
+    particleType: 'dust',
     paragraphs: [
       { text: '“您从瓦列家的小姐们那听来的？”' },
       { text: '“您怎么知道？”' },
@@ -133,6 +137,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F91-MaresDetail': {
     id: 'F91-MaresDetail',
     title: '米瑞斯的马雷',
+    particleType: 'dust',
     paragraphs: [
       { text: '“我都不敢相信。”你说，“米瑞斯的马雷竟然会是我的红袍卫士。”' },
       { text: '“您觉得贾斯珀·马雷如何？”' },
@@ -159,6 +164,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F92-GoldenKnightDetail': {
     id: 'F92-GoldenKnightDetail',
     title: '渡海的黄金骑士',
+    particleType: 'dust',
     paragraphs: [
       { text: '“很多人都这么说。”塞普迪莫斯学士说，“到今天也有人这么说，但这件事对你来说太遥远了，殿下。黄金骑士珀西瓦尔·莱昂离开已经快二十年了。”' },
       { text: '“离开？”你好奇起来，“他为什么离开？去了哪？”' },
@@ -182,6 +188,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F93-CouncilDetail': {
     id: 'F93-CouncilDetail',
     title: '御前会议的大臣们',
+    particleType: 'dust',
     paragraphs: [
       { text: '你低下头，手指绕着裙边。想起御前会议，你的胃又开始不舒服。' },
       { text: '你只是个坐在王座上的少女，他们都没把你当回事。乔治·哈蒙德几乎替代了你，他们说的话你听不明白，而他们也只回答你最简单的问题。' },
@@ -239,6 +246,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F95-ContinueTalk': {
     id: 'F95-ContinueTalk',
     title: '你还想问',
+    particleType: 'dust',
     paragraphs: [
       { text: '你点点头，另一个话题涌到嘴边：' }
     ],
@@ -269,6 +277,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
   'F96-Transition3': {
     id: 'F96-Transition3',
     title: '告别学士',
+    particleType: 'dust',
     paragraphs: [
       { text: '不知不觉，你已经知道了很多东西。' },
       { text: '门被轻轻叩响，塞普迪莫斯学士和你一起站起来。' },
@@ -276,7 +285,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
       { text: '你点点头。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'Act2ChapterSplash' }
+      { text: '继续', nextSceneId: 'F97-Garden' }
     ]
   }
 };

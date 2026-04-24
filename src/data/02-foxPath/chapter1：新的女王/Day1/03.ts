@@ -5,6 +5,7 @@ export const day1ScenesPart3: Record<string, Scene> = {
   'F70-Parting': {
     id: 'F70-Parting',
     title: '分别',
+    particleType: 'dust',
     description: '分别',
     paragraphs: [
       { text: '“罗德里克。”大骑士说，“殿下就交给你了。”' },
@@ -32,6 +33,7 @@ export const day1ScenesPart3: Record<string, Scene> = {
   'F71-Howlongroad': {
     id: 'F71-Howlongroad',
     title: '好长的路',
+    particleType: 'dust',
     description: '你跟随艾莉丝·维斯特走过红堡的长廊',
     paragraphs: [
       { text: '跟随艾莉丝·威斯特的脚步，你发现红堡比外面看起来还要深邃。\n每走几步，就有身穿红金罩袍的卫士向你们行礼，他们的眼睛低垂，没有人看你。' },
@@ -62,6 +64,7 @@ export const day1ScenesPart3: Record<string, Scene> = {
   'F71-WashAndDress': {
     id: 'F71-WashAndDress',
     title: '梳洗换装',
+    particleType: 'dust',
     description: '梳洗换装',
     paragraphs: [
       { text: '你在热水里舒展了身体。直到这一刻，你才感到一阵沉重的困意。' },
@@ -82,6 +85,7 @@ export const day1ScenesPart3: Record<string, Scene> = {
   'F72-BriefAlone': {
     id: 'F72-BriefAlone',
     title: '独处',
+    particleType: 'dust',
     description: '侍女们离开了',
     paragraphs: [
       { text: '镜子里的女孩已经让你认不出来。她姜红色的长发被梳成侧边的发辫，穿一件淡蓝色的丝绸裙。\n你伸手，触摸她苍白的面容，抚过眼下那一抹淡青。' },

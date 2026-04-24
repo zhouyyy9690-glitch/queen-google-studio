@@ -17,6 +17,7 @@ export const act2Scenes: Record<string, Scene> = {
   'F48-suburb': {
     id: 'F48-suburb',
     title: '近郊',
+    particleType: 'dust',
     description: '王城近郊',
     paragraphs: [
       { text: '将近一周的旅程里，你几乎都在马车上。\n大骑士他们骑着马，玛格丽特修女在祷告、用餐和休息的时间会来到你身边。除此之外，你基本只能一个人待着。' },
@@ -61,6 +62,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F49-ThreeRiddlesFerry',
     music: 'https://cdn.pixabay.com/audio/2025/05/16/audio_967a4a358c.mp3',
     title: '三谜渡',
+    particleType: 'dust',
     description: '三谜渡的来历',
     paragraphs: [
       { text: '这时，远处一座形似教堂的建筑吸引了你的注意。\n与常见的教堂顶饰不同，你看到它的顶饰被做成了巨大的巢穴。' },
@@ -85,6 +87,7 @@ export const act2Scenes: Record<string, Scene> = {
   'F50-MonasteryView': {
     id: 'F50-MonasteryView',
     title: '慈悲修道院',
+    particleType: 'dust',
     description: '远望修道院',
     paragraphs: [
       { text: '“那那里是......”' },
@@ -111,6 +114,7 @@ export const act2Scenes: Record<string, Scene> = {
   'F51-StorraSanctuary': {
     id: 'F51-StorraSanctuary',
     title: '圣堂武士团',
+    particleType: 'dust',
     description: '圣堂武士团简介',
     paragraphs: [
       { text: '“对了，看那里。”梅莉桑德指了指离慈悲修道院稍远一些、但规模看起来更大的一座建筑。“那应该就是[L:斯托拉圣堂]了。”' },
@@ -130,6 +134,7 @@ export const act2Scenes: Record<string, Scene> = {
   'F52-CityGate': {
     id: 'F52-CityGate',
     title: '城门',
+    particleType: 'dust',
     description: '抵达城门',
     paragraphs: [
       { text: '“女王陛下真厉害，一下就说清楚了。”梅莉奥拉为你鼓了鼓掌，“也就是说，他们的荣誉与生命早就献给了七神，所以......' },
@@ -149,6 +154,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F53-OuterCityArrival',
     music: 'https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3',
     title: '外城',
+    particleType: 'dust',
     description: '势力展示',
     paragraphs: [
       { text: '你们的马车缓缓从西门驶过，这是王城凯斯的正大门，对向[L:琥珀海]的方向。' },
@@ -169,6 +175,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F53-1-Welcome',
     music: 'https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3',
     title: '欢迎......？',
+    particleType: 'dust',
     description: '势力展示',
     paragraphs: [
       { text: '等你的双脚落地后，那只手就收了回去。\n你望过去，发现手的主人是个头发花白，面目和蔼的老人。他穿着黑袍，胸前垂着七种编法的念珠。' },
@@ -190,6 +197,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F54-ArchbishopWords',
     music: 'https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3',
     title: '昆提斯·德罗斯特的箴言',
+    particleType: 'dust',
     description: '',
     paragraphs: [
       { text: '如果七神真的祝福了你，那么祂们就不该让你如此紧张。但你想七神真的祝福了你，所以昆提斯·德罗斯特扬了扬手。' },
@@ -213,6 +221,7 @@ export const act2Scenes: Record<string, Scene> = {
   'F55-FarewellValley': {
     id: 'F55-FarewellValley',
     title: '再见，女王陛下',
+    particleType: 'dust',
     description: '与瓦列家族再见',
     paragraphs: [
       { text: '与此同时，你听到一阵轻轻的脚步声。\n回过头，你发现是梅莉桑德、梅莉奥拉和梅莉娜也从马车上下来了。' },
@@ -231,6 +240,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F56-HammondTopic',
     music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '哈蒙德的传闻',
+    particleType: 'dust',
     description: '哈蒙德传闻',
     paragraphs: [
       { text: '“是啊，他的脾气听说可差劲了。”梅莉奥拉撇了撇嘴，随即她往窗外望了一眼，确定只有大骑士在那之后，才悄声对你说，“我听说，他之所以现在只有一个儿子，是因为他的精力都放在挑剔男人身上。”' },
@@ -258,6 +268,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F57-MaresAndMireis',
     music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '银与石的米瑞斯',
+    particleType: 'dust',
     description: '米瑞斯介绍与马雷家族',
     paragraphs: [
       { text: '说到米瑞斯，梅莉桑德和梅莉奥拉的眼睛亮了起来。\n梅莉娜则趴到你的膝上，她对姐姐们的话题不太感兴趣。' },
@@ -283,6 +294,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F58-BearFamilyRumor',
     music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '南下的阿尔摩恩',
+    particleType: 'dust',
     description: '阿尔摩恩传闻',
     paragraphs: [
       { text: '“他们离王城凯斯太远了，来回一趟要不少时间。”梅莉桑德说，“所以一般没什么大事，阿尔摩恩家族是不会出现在王城凯斯的。”' },
@@ -307,6 +319,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F59-KarimMarriage',
     music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '卡里姆的寡妇',
+    particleType: 'dust',
     description: '曾经的联姻往事',
     paragraphs: [
       { text: '“我不太清楚这件事，她结婚的时候我们都还没出生呢，女王陛下。”梅莉桑德绕了绕头发，“但是，妈妈有和我们说过，是因为卡利勒·卡里姆死了，伊瑟尔迪丝公主才会从东境回来。”' },
@@ -328,6 +341,7 @@ export const act2Scenes: Record<string, Scene> = {
     id: 'F60-GoldenKnightRumor',
     music: 'https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3',
     title: '黄金骑士',
+    particleType: 'dust',
     description: '珀西瓦尔的传说',
     paragraphs: [
       { text: '“我知道，因为劳顿国王陛下想把她嫁给[C：珀西瓦尔·莱昂]。”梅莉娜有些兴奋，“我们都知道这个传说！大家都这么觉得——觉得伊瑟尔迪丝殿下是因为他才去修道院的。”' },
