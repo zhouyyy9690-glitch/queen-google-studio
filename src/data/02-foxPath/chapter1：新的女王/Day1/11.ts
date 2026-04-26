@@ -110,29 +110,34 @@ export const day1ScenesPart11: Record<string, Scene> = {
     title: '撞见红袍卫士',
     paragraphs: [],
     onEnter: (state) => {
-      const characters = ['cayane', 'corbin', 'roderick', 'jasper'];
-      let maxAffinity = -1;
-      let highestChar = '';
-      characters.forEach(char => {
-        const affinity = state.flags[`relationship.${char}`] || 0;
-        if (affinity > maxAffinity) {
-          maxAffinity = affinity;
-          highestChar = char;
+      // 排除掉陪同赴宴的那一位
+      const excludedKnight = state.flags.knight_at_feast; // 'roderick' 或 'corbin'
+      
+      const affinities = [
+        { id: 'cayane', nextScene: 'F111-CaydeEncounter', score: (state.flags['relationship.cayane'] as number) || 0, priority: 4 },
+        { id: 'corbin', nextScene: 'F112-CorbinEncounter', score: (state.flags['relationship.corbin'] as number) || 0, priority: 3 },
+        { id: 'roderick', nextScene: 'F113-RodrikEncounter', score: (state.flags['relationship.roderick'] as number) || 0, priority: 2 },
+        { id: 'jasper', nextScene: 'F114-JasperEncounter', score: (state.flags['relationship.jasper'] as number) || 0, priority: 1 }
+      ];
+
+      // 过滤掉陪同赴宴的骑士
+      const availableKnights = affinities.filter(k => k.id !== excludedKnight);
+
+      // 寻找最高分，如果是平分，则按照 priority (凯安 > 科尔宾 > 罗德里克 > 贾斯珀)
+      let bestKnight = availableKnights[0];
+      for (let i = 1; i < availableKnights.length; i++) {
+        if (availableKnights[i].score > bestKnight.score) {
+          bestKnight = availableKnights[i];
+        } else if (availableKnights[i].score === bestKnight.score) {
+          if (availableKnights[i].priority > bestKnight.priority) {
+            bestKnight = availableKnights[i];
+          }
         }
-      });
-      state.flags.affinity_highest = highestChar;
+      }
+
+      state.nextSceneId = bestKnight.nextScene;
     },
-    choices: [
-      { text: '继续', nextSceneId: 'F111-CaydeEncounter', condition: 'affinity_highest === "cayane"' },
-      { text: '继续', nextSceneId: 'F112-CorbinEncounter', condition: 'affinity_highest === "corbin" && knight_at_feast !== "corbin"' },
-      { text: '继续', nextSceneId: 'F113-RodrikEncounter', condition: 'affinity_highest === "roderick" && knight_at_feast !== "roderick"' },
-      { text: '继续', nextSceneId: 'F114-JasperEncounter', condition: 'affinity_highest === "jasper"' },
-      // Fallback for demo if no affinity set
-      { text: '遇到凯安', nextSceneId: 'F111-CaydeEncounter', condition: '!affinity_highest' },
-      { text: '遇到科尔宾', nextSceneId: 'F112-CorbinEncounter', condition: '!affinity_highest && knight_at_feast !== "corbin"' },
-      { text: '遇到罗德里克', nextSceneId: 'F113-RodrikEncounter', condition: '!affinity_highest && knight_at_feast !== "roderick"' },
-      { text: '遇到贾斯珀', nextSceneId: 'F114-JasperEncounter', condition: '!affinity_highest' }
-    ]
+    choices: []
   },
 
   'F111-CaydeEncounter': {

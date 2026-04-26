@@ -146,7 +146,7 @@ export const day1ScenesPart2: Record<string, Scene> = {
       { 
         text: '等等，马雷？', 
         nextSceneId: 'F68-JasperRedcloak', 
-        condition: { flag: 'askedMireisInSuburbs', op: 'eq', value: true, comment: '已在近郊场景里询问过米瑞斯' },
+        condition: (state) => !!state.flags.askedMireisInSuburbs,
         affect: { jasper: 2 },
         actions: [
           { type: 'set', flag: 'story.met_jasper_properly', value: true }

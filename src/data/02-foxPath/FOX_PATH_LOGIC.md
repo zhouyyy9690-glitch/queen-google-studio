@@ -9,12 +9,12 @@
 ### 核心变量与 Flag
 | Flag 变量 | 含义 | 设置位置 | 影响 |
 | :--- | :--- | :--- | :--- |
-| `toldFain` | 是否向芬恩坦白真相 | `act1-p2-day.ts` | 影响逃亡时的对话及后续重逢时的心境。 |
-| `talkedToNun` | 是否拜访梅莉桑德修女 | `act1-p4-night.ts` | 决定夜谈的完成度。 |
+| `toldFain` | 是否向芬恩坦白真相 | `act1-p2-day.ts` | 影响逃亡时的对话以及决定是否能顺利进入第一章 |
+| `talkedToNun` | 是否拜访玛格丽特修女 | `act1-p4-night.ts` | 决定夜谈的完成度。 |
 | `nunDeepTalk` | 修女夜谈是否进入深层 | `act1-p4-night.ts` | 逃亡成功条件的判据之一。 |
 | `talkedToKnight` | 是否拜访罗德里克爵士 | `act1-p4-night.ts` | 决定夜谈的完成度。 |
 | `knightDeepTalk` | 爵士夜谈是否进入深层 | `act1-p4-night.ts` | 逃亡成功条件的判据之一。 |
-| `talkedToScholar` | 是否拜访昆提斯 | `act1-p4-night.ts` | 决定夜谈的完成度。 |
+| `talkedToScholar` | 是否拜访学士| `act1-p4-night.ts` | 决定夜谈的完成度。 |
 | `scholarDeepTalk` | 学者夜谈是否进入深层 | `act1-p4-night.ts` | 逃亡成功条件的判据之一。 |
 
 ### 关键分歧点

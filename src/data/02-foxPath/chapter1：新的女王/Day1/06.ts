@@ -44,7 +44,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
     ],
     choices: [
       {
-        text: '“我想了解那个叫乔治·哈蒙德的男人。”',
+        text: '“乔治·哈蒙德到底是怎样的男人？”',
         nextSceneId: 'F89-HammondDetail',
         affect: { hammond: 1 },
         onSelect: (state) => {
@@ -238,6 +238,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
 
       const hasMoreOptions = HammondAvailable || MaresAvailable || GoldenKnightAvailable || CouncilAvailable;
 
+      // 和学士的对话最多进行两个话题
       if (talkCount < 2 && hasMoreOptions) {
         state.nextSceneId = 'F95-ContinueTalk';
       } else {

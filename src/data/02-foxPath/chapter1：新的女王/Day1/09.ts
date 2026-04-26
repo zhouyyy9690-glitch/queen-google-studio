@@ -55,8 +55,8 @@ export const day1ScenesPart9: Record<string, Scene> = {
       { text: '你闭了闭眼睛，再次睁开时，心中已经有了两个人选。' }
     ],
     choices: [
-      { text: '帮我找罗德里克·索恩爵士过来。', nextSceneId: 'F102-2-RoderickThorn', affect: { roderick: 2 } },
-      { text: '科尔宾·米德爵士现在在哪？', nextSceneId: 'F102-3-CorbinMide', affect: { corbin: 2 } }
+      { text: '帮我找罗德里克·索恩爵士过来。', nextSceneId: 'F102-2-RoderickThorn', affect: { roderick: 2 }, setFlags: { 'knight_at_feast': 'roderick' } },
+      { text: '科尔宾·米德爵士现在在哪？', nextSceneId: 'F102-3-CorbinMide', affect: { corbin: 2 }, setFlags: { 'knight_at_feast': 'corbin' } }
     ]
   },
 

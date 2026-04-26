@@ -60,7 +60,7 @@ export const act2Scenes: Record<string, Scene> = {
       { text: '三个少女都停了下来，齐刷刷看着你。三双一模一样的栗棕色眼睛，映出六个好奇的你：' }
     ],
     choices: [
-      { text: '“乔治·哈蒙德的脾气很糟糕吗？”', nextSceneId: 'F56-HammondTopic', setFlags: { askedHammondInSuburbs: true } },
+      { text: '乔治·哈蒙德的脾气很糟糕吗？', nextSceneId: 'F56-HammondTopic', setFlags: { askedHammondInSuburbs: true } },
       { text: '“米瑞斯是怎样的地方？”', nextSceneId: 'F57-MaresAndMireis', affect: { melisande: 2 }, setFlags: { askedMireisInSuburbs: true } },
       { text: '“阿尔摩恩大公很少来凯斯吗？”', nextSceneId: 'F58-BearFamilyRumor', affect: { durin: 1 } }
     ]
