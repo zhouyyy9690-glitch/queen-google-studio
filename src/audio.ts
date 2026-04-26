@@ -16,10 +16,16 @@ export const SFX_ASSETS = {
 export const BGM_ASSETS = {
   // 【各路线 核心主题曲】
   MAIN_THEME: "https://cdn.pixabay.com/download/audio/2024/08/31/audio_2120f21e75.mp3?filename=deuslower-medieval-ambient-236809.mp3",
+  FOX_CH0_THEME: "https://cdn.pixabay.com/audio/2026/03/23/audio_87a13308bf.mp3",
   FOX_CH2_THEME: "https://cdn.pixabay.com/audio/2025/10/27/audio_dc93b69db8.mp3",
   DEER_THEME: "https://cdn.pixabay.com/download/audio/2026/03/19/audio_54cbf38413.mp3?filename=watermelon_beats-medieval-folk-music-505203.mp3",
   SPINDLE_THEME: "https://cdn.pixabay.com/audio/2025/10/10/audio_970460aa1a.mp3",
   EAGLE_THEME: "https://cdn.pixabay.com/download/audio/2024/09/01/audio_7335689da6.mp3?filename=dark-medieval-ambient-237070.mp3",
+
+  // 【芬因相关】
+  FAIN_THEME: "https://cdn.pixabay.com/audio/2024/06/14/audio_a23f5f75f7.mp3",
+  GARDEN_MEET: "https://cdn.pixabay.com/audio/2025/09/01/audio_c3ad9d51a7.mp3",
+  DINNER_PARTY: "https://cdn.pixabay.com/audio/2023/06/16/audio_bb02473d94.mp3",
 
   // 【特定场景/功能 气氛音乐】
   MYSTERY: "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==",
@@ -36,8 +42,25 @@ export const SCENE_BGM_CONFIG: Record<string, string> = {
 
   // [狐狸序章 (Chapter 1) 特定音乐]
   // "F29-Specific": BGM_ASSETS.MYSTERY,
+  "F29-AutoKnight": BGM_ASSETS.FAIN_THEME,
+  "F30-KnightCeremony": BGM_ASSETS.FAIN_THEME,
+  "F39-FainGoodnight": BGM_ASSETS.FAIN_THEME,
 
   // [新的女王 (Chapter 2) 特定音乐]
+  "F117-FainVigil": BGM_ASSETS.FAIN_THEME,
+  "F77-HammondDinner": BGM_ASSETS.DINNER_PARTY,
+  "F103-1-withRoderickThorn": BGM_ASSETS.DINNER_PARTY,
+  "F103-2-withCorbinMide": BGM_ASSETS.DINNER_PARTY,
+  "F104-DinnerStart": BGM_ASSETS.DINNER_PARTY,
+  "F104-1-Unbelievable": BGM_ASSETS.DINNER_PARTY,
+  "F104-2-probe": BGM_ASSETS.DINNER_PARTY,
+  "F104-3-yourresponse": BGM_ASSETS.DINNER_PARTY,
+  "F104-4-youravoidance": BGM_ASSETS.DINNER_PARTY,
+  "F97-Garden": BGM_ASSETS.GARDEN_MEET,
+  "F111-CaydeEncounter": BGM_ASSETS.GARDEN_MEET,
+  "F112-CorbinEncounter": BGM_ASSETS.GARDEN_MEET,
+  "F113-RodrikEncounter": BGM_ASSETS.GARDEN_MEET,
+  "F114-JasperEncounter": BGM_ASSETS.GARDEN_MEET,
   "F49-ThreeRiddlesFerry": BGM_ASSETS.CHAPTER2_FERRY_MELODY,
   "F56-HammondTopic": BGM_ASSETS.CHAPTER2_RUMOR_MELODY,
   "F53-OuterCityArrival": BGM_ASSETS.CHAPTER2_DROST_MELODY,
@@ -59,9 +82,9 @@ export const getChapterTheme = (sceneId: string): string => {
     const num = numMatch ? parseInt(numMatch[1]) : 0;
     
     // 【狐狸线・序章 (Prologvs)：从 F1 到 F47】
-    // 逻辑：绿野王女 (Chapter 0) 自动播放 MAIN_THEME
+    // 逻辑：绿野王女 (Chapter 0) 自动播放 FOX_CH0_THEME
     if (num > 0 && num < 48) {
-      return BGM_ASSETS.MAIN_THEME;
+      return BGM_ASSETS.FOX_CH0_THEME;
     }
 
     // 【狐狸线・第一章 (Capvt I)：从 F48 到 F100+】

@@ -106,7 +106,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
       { text: '他走了，脚步很轻，像是习惯在荒野行走，没有打扰的刻意。\n你站在原地，过了几秒才反应过来，他是在告诉你理由，以回应你的建议。' }
     ],
     choices: [
-      { text: '梅莉娜说得还挺对', nextSceneId: 'F115-TerraceLights', affect: { durin: 3 } }
+      { text: '......梅莉娜说得还挺对', nextSceneId: 'F115-TerraceLights', affect: { durin: 3 } }
     ]
   },
 
@@ -149,6 +149,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
     id: 'F111-CaydeEncounter',
     title: '法哈迪的次子',
     particleType: 'nature',
+    bgm: 'GARDEN_MEET',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },
@@ -194,6 +195,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
     id: 'F112-CorbinEncounter',
     title: '普通的十六岁',
     particleType: 'nature',
+    bgm: 'GARDEN_MEET',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },
@@ -234,6 +236,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
     id: 'F113-RodrikEncounter',
     title: '上一个红袍卫士',
     particleType: 'nature',
+    bgm: 'GARDEN_MEET',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },
@@ -283,6 +286,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
     id: 'F114-JasperEncounter',
     title: '旧伤',
     particleType: 'nature',
+    bgm: 'GARDEN_MEET',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },

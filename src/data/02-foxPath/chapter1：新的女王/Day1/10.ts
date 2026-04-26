@@ -5,6 +5,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F103-1-withRoderickThorn',
     title: '抵达',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '离开红堡大门，登上马车，王宫在你身后变小。\n王宫外就是内城，有名望的贵族会在这里购置房产，有一些家族的宅子已经历史悠久。四境大公爵的宅邸是其中历史最长的。' },
       { text: '马车夫将你和罗德里克·索恩送到飘扬着黑鹰旗帜的大宅前。你的红袍卫士先一步下车，将你接引下来。' },
@@ -40,6 +41,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F103-2-withCorbinMide',
     title: '抵达',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '离开红堡大门，登上马车，王宫在你身后变小。\n王宫外就是内城，有名望的贵族会在这里购置房产，有一些家族的宅子已经历史悠久。四境大公爵的宅邸是其中历史最长的。' },
       { text: '马车夫将你和科尔宾·米德送到飘扬着黑鹰旗帜的大宅前。你的红袍卫士先一步下车，将你接引下来。' },
@@ -83,6 +85,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F104-DinnerStart',
     title: '晚宴开场',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '你在乔治右手边落座。坐在这，他只需要稍一侧脸就能和你说话。\n太近了，你咬着嘴唇坐下，发现他们已经开了餐前酒。' },
       { text: '你的右手边坐着今晚的第二位女性。她看起来比梅莉桑德更年长，有一头深棕色的直发，发尾微微卷曲，似乎染过金色挑染，在烛光下泛着柔和的光泽。' },
@@ -130,6 +133,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F104-1-Unbelievable',
     title: '难以置信！',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '热气腾腾的烤乳猪卧在银盘里，猪皮烤得金黄酥脆，嘴里镶着一颗红彤彤的苹果。\n侍从用长刀切开猪腹，一股混合着迷迭香和蜂蜜的蒸汽涌出来，熏得你眼睛发酸。' },
       { text: '闻起来很香，但你没什么胃口。\n看着被剖开的乳猪，你感到一丝厌恶。' },
@@ -153,6 +157,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F104-2-probe',
     title: '伯恩·斯特莱的试探',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '“说起来。”' },
       { text: '伯恩·斯特莱在这时看向你：“女王陛下，您先前在翠谷待了十四年，期间一次都没有回过凯斯，是吗？”' },
@@ -170,6 +175,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F104-3-yourresponse',
     title: '他露出微笑',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '你成功把所有人的目光吸引到你的身上，除了乔治·哈蒙德。\n他似乎并不关心这边发生了什么，正在和萨米娅修女耳语。如果你此时能够看清，萨米娅修女正向你轻微地摇了摇头。' },
       { text: '“......不是这样的。”' },
@@ -193,6 +199,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
     id: 'F104-4-youravoidance',
     title: '他若有所思',
     particleType: 'nature',
+    bgm: 'DINNER_PARTY',
     paragraphs: [
       { text: '“真遗憾。”伯恩·斯特莱若有所思地说，“如果我的独生女在外，我一定会很想念她。”' },
       { text: '“爸爸，您的女儿可不少。”罗莎莉·斯特莱接过了话题。' },

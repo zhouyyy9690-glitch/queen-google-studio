@@ -47,6 +47,7 @@ export const day1ScenesPart12: Record<string, Scene> = {
     id: 'F117-FainVigil',
     title: '芬因为你守夜',
     particleType: 'nature',
+    bgm: 'FAIN_THEME',
     paragraphs: [
       { text: '你扒在门边，眼巴巴地望着走廊那头，心里在默数。\n当你数到第三十下，芬因·里德的身影出现了。他是跑过来的，穿着便衣，脚步轻而迅速。' },
       { text: '“芬！”' },

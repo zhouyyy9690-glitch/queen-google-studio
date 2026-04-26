@@ -5,6 +5,7 @@ export const day1ScenesPart7: Record<string, Scene> = {
     id: 'F97-Garden',
     title: '空闲的午后',
     particleType: 'dust',
+    bgm: 'GARDEN_MEET',
     paragraphs: [
       { text: '门外，侍女正在静候。' },
       { text: '“什么事情？”' },

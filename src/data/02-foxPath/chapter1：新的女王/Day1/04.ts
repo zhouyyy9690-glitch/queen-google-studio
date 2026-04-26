@@ -120,6 +120,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
     id: 'F77-HammondDinner',
     title: '哈蒙德的晚餐',
     particleType: 'dust',
+    bgm: 'DINNER_PARTY',
     description: '',
     paragraphs: [
       { text: '其他三位大臣陆续离开，而乔治·哈蒙德留了下来。\n他站在你的座位下方，似乎在等你。' },

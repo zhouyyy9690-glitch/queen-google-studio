@@ -334,6 +334,7 @@ export const nightScenes: Record<string, Scene> = {
     id: 'F29-AutoKnight',
     title: '命运的指引',
     description: '自动跳转到册封仪式',
+    bgm: 'FAIN_THEME',
     paragraphs: [
       { text: '在完全的黑夜里，你反而更加清晰地想起了那个金发男孩。\n芬因正在午夜的花园等候我。\n你回忆起白天的情况，看向在今天下午找出来的一件旧物。' },
       { text: '溪木堡的守夜人路线固定，你知道怎么绕开他们。' }
@@ -346,6 +347,7 @@ export const nightScenes: Record<string, Scene> = {
     id: 'F30-KnightCeremony',
     title: '午夜之约',
     description: '午夜与芬因',
+    bgm: 'FAIN_THEME',
     paragraphs: [
       { text: '你来到花园。月色洁白如银，芬因·里德站在盛放的鸢尾花丛旁。银色的月光洒在他金色的头发上，仿佛为他镀上不朽神光。\n夜风拂过，你知道他看见了你，正如你看见了他。' },
       { text: '空气里弥漫着清甜的香气。\n踏着露水、青草与芬芳，你来到他的面前。' },
@@ -427,6 +429,7 @@ export const nightScenes: Record<string, Scene> = {
     id: 'F39-FainGoodnight',
     title: '晚安',
     description: '和芬因晚安，转第二天',
+    bgm: 'FAIN_THEME',
     paragraphs: [
       { text: '翠谷之风吹过你们身旁。\n大地和天空都如此安静，你从芬因的怀抱中探出脑袋，看向四周。' },
       { text: '多么寂静啊，就像过去的十四年一样。\n你在这样的寂静中生活了整整十四年，而当太阳升起，你就要迎接未知的挑战。' },
