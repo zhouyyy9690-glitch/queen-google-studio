@@ -60,6 +60,7 @@ import { ChroniclerTransition } from './components/ChroniclerTransition';
 import { GameHeader } from './components/GameHeader';
 import { GameFooter } from './components/GameFooter';
 import { IntroScreen } from './components/IntroScreen';
+import { ICPFooter } from './components/ICPFooter';
 import ParticleBackground from './components/ParticleBackground';
 import CustomCursor from './components/CustomCursor';
 
@@ -1316,6 +1317,8 @@ export default function App() {
             />
           )}
         </AnimatePresence>
+        
+        <ICPFooter />
       </main>
     )}
   </AnimatePresence>
