@@ -15,7 +15,7 @@ export const day1ScenesPart8: Record<string, Scene> = {
     ],
     choices: [
       { text: '谁派你来的？', nextSceneId: 'F99-Hostile' },
-      { text: '......修女，您为什么在这里？', nextSceneId: 'F100-Polite' }
+      { text: '......修女，您为什么在这里？', nextSceneId: 'F100-Polite', affect: { samia: 3 } }
     ]
   },
 
@@ -82,7 +82,7 @@ export const day1ScenesPart8: Record<string, Scene> = {
       { text: '萨米娅修女对你行了一礼，优雅地离开了。' }
     ],
     choices: [
-      { text: '要到傍晚了啊......', nextSceneId: 'F102-TalkWithFain' }
+      { text: '要到傍晚了啊......', nextSceneId: 'F102-TalkWithFain', affect: { samia: 1 } }
     ]
   }
 };

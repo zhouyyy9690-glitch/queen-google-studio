@@ -80,7 +80,7 @@ export const day1ScenesPart12: Record<string, Scene> = {
       { text: '你让他一遍又一遍地重复这个誓言。直到第七遍，你没有听见后面的部分。\n那一部分属于天上的剑师、铁神和老客，而这一部分的你已经属于无性无声之琴看守的睡眠。' }
     ],
     choices: [
-      { text: '新的一天', nextSceneId: 'start' }
+      { text: '新的一天', nextSceneId: 'start', affect: { finn: 3 } }
     ]
   }
 };

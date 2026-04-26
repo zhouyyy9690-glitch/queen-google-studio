@@ -74,7 +74,7 @@ interface WorldMapProps {
   setShowMap: (val: boolean) => void; // 切换地图显示状态
   unlockedLocations: Set<string>; // 已解锁地点 ID 集合
   locations: GameLocation[]; // 地点数据列表
-  currentPath: 'fox' | 'deer' | 'eagle' | 'all' | 'common'; // 当前剧情路径
+  currentPath: 'fox' | 'deer' | 'eagle' | 'destiny' | 'all' | 'common' | null; // 当前剧情路径
   mapRef: React.RefObject<HTMLDivElement>; // 地图容器引用，用于处理缩放偏移
   handleMapZoom: (e: React.WheelEvent) => void; // 处理地图缩放
   mapX: any; // 地图 X 轴平移量（MotionValue）

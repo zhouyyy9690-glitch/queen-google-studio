@@ -1,0 +1,45 @@
+{
+  "story": {
+    "askedMireisInSuburbs": {
+      "type": "boolean",
+      "description": "Whether the player inquired about Mireis in the suburbs."
+    },
+    "met_knight": {
+      "type": "boolean",
+      "description": "Whether the player has encountered the knight."
+    }
+  },
+
+  "stat": {
+    "affinity_highest": {
+      "type": "string",
+      "description": "The ID of the character with the highest affinity."
+    }
+  },
+
+  "relationship": {
+    "cayane": {
+      "type": "number",
+      "description": "Affinity level with Cayane."
+    },
+    "corbin": {
+      "type": "number",
+      "description": "Affinity level with Corbin."
+    },
+    "roderick": {
+      "type": "number",
+      "description": "Affinity level with Roderick."
+    },
+    "jasper": {
+      "type": "number",
+      "description": "Affinity level with Jasper."
+    }
+  },
+
+  "world": {
+    "is_fox_path_active": {
+      "type": "boolean",
+      "description": "Whether the Fox Path storyline is active."
+    }
+  }
+}

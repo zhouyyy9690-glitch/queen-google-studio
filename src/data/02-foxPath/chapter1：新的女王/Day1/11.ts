@@ -101,7 +101,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
       { text: '他走了，脚步很轻，像是习惯在荒野行走，没有打扰的刻意。\n你站在原地，过了几秒才反应过来，他是在告诉你理由，以回应你的建议。' }
     ],
     choices: [
-      { text: '梅莉娜说得还挺对', nextSceneId: 'F115-TerraceLights' }
+      { text: '梅莉娜说得还挺对', nextSceneId: 'F115-TerraceLights', affect: { durin: 3 } }
     ]
   },
 
@@ -109,10 +109,23 @@ export const day1ScenesPart11: Record<string, Scene> = {
     id: 'F110-RedcloakEncounter',
     title: '撞见红袍卫士',
     paragraphs: [],
+    onEnter: (state) => {
+      const characters = ['cayane', 'corbin', 'roderick', 'jasper'];
+      let maxAffinity = -1;
+      let highestChar = '';
+      characters.forEach(char => {
+        const affinity = state.flags[`relationship.${char}`] || 0;
+        if (affinity > maxAffinity) {
+          maxAffinity = affinity;
+          highestChar = char;
+        }
+      });
+      state.flags.affinity_highest = highestChar;
+    },
     choices: [
-      { text: '继续', nextSceneId: 'F111-CaydeEncounter', condition: 'affinity_highest === "cayde"' },
+      { text: '继续', nextSceneId: 'F111-CaydeEncounter', condition: 'affinity_highest === "cayane"' },
       { text: '继续', nextSceneId: 'F112-CorbinEncounter', condition: 'affinity_highest === "corbin" && knight_at_feast !== "corbin"' },
-      { text: '继续', nextSceneId: 'F113-RodrikEncounter', condition: 'affinity_highest === "rodrik" && knight_at_feast !== "roderick"' },
+      { text: '继续', nextSceneId: 'F113-RodrikEncounter', condition: 'affinity_highest === "roderick" && knight_at_feast !== "roderick"' },
       { text: '继续', nextSceneId: 'F114-JasperEncounter', condition: 'affinity_highest === "jasper"' },
       // Fallback for demo if no affinity set
       { text: '遇到凯安', nextSceneId: 'F111-CaydeEncounter', condition: '!affinity_highest' },
@@ -162,7 +175,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
       { text: '“从这里向左拐过去，就到您的房间了，那里的露台风景看起来不错。”你的红袍卫士对你微微欠身，“散心还是一个人待着更好。晚安，陛下。”' }
     ],
     choices: [
-      { text: '......晚安，凯安爵士。', nextSceneId: 'F109-MeetDurin' }
+      { text: '......晚安，凯安爵士。', nextSceneId: 'F109-MeetDurin', affect: { cayane: 3 } }
     ]
   },
 
@@ -201,7 +214,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
       { text: '你点点头。确实，到这边就是你记得的部分。\n对于被跳走的话题，你也没有追问。' }
     ],
     choices: [
-      { text: '晚安，科尔宾爵士', nextSceneId: 'F109-MeetDurin' }
+      { text: '晚安，科尔宾爵士', nextSceneId: 'F109-MeetDurin', affect: { corbin: 3 } }
     ]
   },
 
@@ -249,7 +262,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
       { text: '“那么，晚安，陛下。”\n他对你微微欠身。' }
     ],
     choices: [
-      { text: '晚安，罗德里克爵士', nextSceneId: 'F109-MeetDurin' }
+      { text: '晚安，罗德里克爵士', nextSceneId: 'F109-MeetDurin', affect: { roderick: 2 } }
     ]
   },
 
@@ -292,7 +305,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
       { text: '他抿住嘴唇。“......晚安，陛下。”' }
     ],
     choices: [
-      { text: '晚安，贾斯珀爵士', nextSceneId: 'F109-MeetDurin' }
+      { text: '晚安，贾斯珀爵士', nextSceneId: 'F109-MeetDurin', affect: { jasper: 2 } }
     ]
   }
 };

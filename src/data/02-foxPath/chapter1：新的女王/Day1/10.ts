@@ -31,7 +31,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
       { text: '“您在宴会结束时来找我吧。”你放低了声音，“索恩爵士，拜托了。”' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F104-DinnerStart', setFlags: { knight_at_feast: 'roderick' } }
+      { text: '继续', nextSceneId: 'F104-DinnerStart', setFlags: { knight_at_feast: 'roderick' }, affect: { roderick: 1 } }
     ]
   },
 
@@ -73,7 +73,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
       { text: '你只能点点头。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F104-DinnerStart', setFlags: { knight_at_feast: 'corbin' } }
+      { text: '继续', nextSceneId: 'F104-DinnerStart', setFlags: { knight_at_feast: 'corbin' }, affect: { corbin: 1 } }
     ]
   },
 
@@ -119,7 +119,7 @@ export const day1ScenesPart10: Record<string, Scene> = {
       { text: '主菜被端了上来。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F104-1-Unbelievable' }
+      { text: '继续', nextSceneId: 'F104-1-Unbelievable', affect: { bern: 1, rosalie: 1, hammond: 1, kavi: 1 } }
     ]
   },
 
@@ -156,8 +156,8 @@ export const day1ScenesPart10: Record<string, Scene> = {
       { text: '那双深褐色的虎目，定定地落在你脸上。' }
     ],
     choices: [
-      { text: '不是这样的！', nextSceneId: 'F104-3-yourresponse' },
-      { text: '我......不太清楚。', nextSceneId: 'F104-4-youravoidance' }
+      { text: '不是这样的！', nextSceneId: 'F104-3-yourresponse', affect: { bern: 1, hammond: 1, samia: -1 } },
+      { text: '我......不太清楚。', nextSceneId: 'F104-4-youravoidance', affect: { samia: 1 } }
     ]
   },
 

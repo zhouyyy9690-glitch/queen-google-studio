@@ -19,7 +19,19 @@ interface CompendiumProps {
   setSelectedCharacterId: (id: string) => void; // 设置选中角色ID的回调
   history: string[]; // 游戏剧情历史记录，用于根据进度显示不同的角色介绍
   currentSceneId: string; // 当前场景ID
+  flags: Record<string, any>; // 全局标记对象，用于获取好感度
 }
+
+/**
+ * 根据数值获取好感度描述
+ */
+const getAffinityLevel = (value: number): string => {
+  if (value < 10) return 'L0 陌生人';
+  if (value < 20) return 'L1 相识';
+  if (value < 30) return 'L2 熟络';
+  if (value < 40) return 'L3 信任';
+  return 'L4 亲密'; 
+};
 
 /**
  * 人物志（Bestiary）组件：展示已解锁角色的详细背景、身份和故事进度
@@ -34,7 +46,8 @@ export const Compendium = ({
   selectedCharacter,
   setSelectedCharacterId,
   history,
-  currentSceneId
+  currentSceneId,
+  flags
 }: CompendiumProps) => {
   const [viewMode, setViewMode] = React.useState<'list' | 'web'>('web'); // 默认为命运之网
 
@@ -179,6 +192,8 @@ export const Compendium = ({
                   const nameEn = lastUpdate?.nameEn || selectedCharacter.nameEn;
                   const title = lastUpdate?.title || selectedCharacter.title;
                   const description = lastUpdate?.description || selectedCharacter.description;
+                  const affinityValue = flags[`relationship.${selectedCharacter.id}`] || 0;
+                  const affinityLabel = getAffinityLevel(affinityValue);
 
                   return (
                     <motion.div 
@@ -190,7 +205,7 @@ export const Compendium = ({
                       {/* 详情内容 */}
                       <div className="relative group">
                         <div className="absolute inset-0 bg-amber-600/10 blur-3xl animate-pulse rounded-full" />
-                        <div className="w-32 h-32 md:w-48 md:h-48 border-2 border-double border-amber-900/30 flex items-center justify-center relative ring-1 ring-amber-600/5 group-hover:border-amber-600/40 transition-all duration-1000">
+                        <div className="w-32 h-32 md:w-41 md:h-41 border-2 border-double border-amber-900/30 flex items-center justify-center relative ring-1 ring-amber-600/5 group-hover:border-amber-600/40 transition-all duration-1000">
                            <div className="scale-[2.5] transition-all duration-1000 transform group-hover:scale-[2.6]">
                               <EmbossedInitial nameEn={nameEn} className="w-full h-full text-4xl md:text-6xl" />
                            </div>
@@ -198,6 +213,15 @@ export const Compendium = ({
                            <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-amber-600/30" />
                            <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-amber-600/30" />
                            <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-amber-600/30" />
+
+                           {/* 好感度徽章 */}
+                           {selectedCharacter.path === 'fox' && (
+                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#0a0a0a] border border-amber-900/40 backdrop-blur-sm z-10 transition-all group-hover:border-amber-500/50">
+                               <span className="text-[9px] text-amber-600 uppercase tracking-[0.2em] whitespace-nowrap">
+                                 关系 · {affinityLabel}
+                               </span>
+                             </div>
+                           )}
                         </div>
                       </div>
 
@@ -269,6 +293,8 @@ export const Compendium = ({
                   const nameEn = lastUpdate?.nameEn || selectedCharacter.nameEn;
                   const title = lastUpdate?.title || selectedCharacter.title;
                   const description = lastUpdate?.description || selectedCharacter.description;
+                  const affinityValue = flags[`relationship.${selectedCharacter.id}`] || 0;
+                  const affinityLabel = getAffinityLevel(affinityValue);
 
                   return (
                     <motion.div
@@ -277,8 +303,13 @@ export const Compendium = ({
                       exit={{ opacity: 0, y: 50 }}
                       className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-xl bg-black/80 backdrop-blur-md border border-amber-900/30 p-6 md:p-8 flex items-start gap-6 pointer-events-auto shadow-2xl z-20"
                     >
-                      <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 border border-amber-900/30 flex items-center justify-center">
+                      <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 border border-amber-900/30 flex items-center justify-center relative">
                         <EmbossedInitial nameEn={nameEn} className="text-3xl md:text-4xl" />
+                        {selectedCharacter.path === 'fox' && (
+                          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black border border-amber-900/60 whitespace-nowrap">
+                            <span className="text-[7px] text-amber-600 tracking-widest">{affinityLabel}</span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-grow min-w-0">
                         <div className="flex items-center justify-between mb-1">

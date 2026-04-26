@@ -26,7 +26,7 @@ export const day1ScenesPart3: Record<string, Scene> = {
       { text: '这时，你发现玛格丽特修女不见了。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F71-Howlongroad' }
+      { text: '继续', nextSceneId: 'F71-Howlongroad', affect: { roderick: 1 } }
     ]
   },
 

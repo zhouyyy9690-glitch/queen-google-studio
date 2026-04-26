@@ -112,9 +112,9 @@ export const day1ScenesPart2: Record<string, Scene> = {
       { text: '你的目光在他们身上扫了扫，注意到......' }
     ],
     choices: [
-      { text: '他长得和我们有点不太一样。', nextSceneId: 'F66-NoticeCayde' },
-      { text: '他看起来好阴沉。', nextSceneId: 'F67-NoticeJasper1' },
-      { text: '他让我有点安心', nextSceneId: 'F69-NoticeCorbin' }
+      { text: '他长得和我们有点不太一样。', nextSceneId: 'F66-NoticeCayde', affect: { cayane: 2 } },
+      { text: '他看起来好阴沉。', nextSceneId: 'F67-NoticeJasper1', affect: { jasper: 2 } },
+      { text: '他让我有点安心', nextSceneId: 'F69-NoticeCorbin', affect: { corbin: 2 } }
     ]
   },
 
@@ -143,7 +143,15 @@ export const day1ScenesPart2: Record<string, Scene> = {
     ],
     choices: [
       { text: '冷冰冰的......', nextSceneId: 'F70-Parting', setFlags: { '已在红袍初见中注意贾斯珀·马雷': true } },
-      { text: '等等，马雷？', nextSceneId: 'F68-JasperRedcloak', condition: '已在近郊场景里询问过米瑞斯' }
+      { 
+        text: '等等，马雷？', 
+        nextSceneId: 'F68-JasperRedcloak', 
+        condition: { flag: 'askedMireisInSuburbs', op: 'eq', value: true, comment: '已在近郊场景里询问过米瑞斯' },
+        affect: { jasper: 2 },
+        actions: [
+          { type: 'set', flag: 'story.met_jasper_properly', value: true }
+        ]
+      }
     ]
   },
 

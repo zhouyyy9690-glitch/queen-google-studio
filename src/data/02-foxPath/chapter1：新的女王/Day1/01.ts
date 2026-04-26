@@ -10,7 +10,15 @@ export const act2Scenes: Record<string, Scene> = {
     title: '新的女王',
     description: 'Fox Path Act 2 Chapter Splash',
     choices: [
-      { text: '继续', nextSceneId: 'F48-suburb' }
+      { 
+        text: '继续', 
+        nextSceneId: 'F48-suburb',
+        setFlags: {
+          'relationship.melisande': 22,
+          'relationship.finn': 25,
+          'relationship.valantir': 3
+        }
+      }
     ]
   },
 
@@ -53,8 +61,8 @@ export const act2Scenes: Record<string, Scene> = {
     ],
     choices: [
       { text: '“乔治·哈蒙德的脾气很糟糕吗？”', nextSceneId: 'F56-HammondTopic', setFlags: { askedHammondInSuburbs: true } },
-      { text: '“米瑞斯是怎样的地方？”', nextSceneId: 'F57-MaresAndMireis', setFlags: { askedMireisInSuburbs: true } },
-      { text: '“阿尔摩恩大公很少来凯斯吗？”', nextSceneId: 'F58-BearFamilyRumor' }
+      { text: '“米瑞斯是怎样的地方？”', nextSceneId: 'F57-MaresAndMireis', affect: { melisande: 2 }, setFlags: { askedMireisInSuburbs: true } },
+      { text: '“阿尔摩恩大公很少来凯斯吗？”', nextSceneId: 'F58-BearFamilyRumor', affect: { durin: 1 } }
     ]
   },
 
@@ -167,7 +175,7 @@ export const act2Scenes: Record<string, Scene> = {
       { text: '你觉得自己的手在发抖，但那只承托着你的手却十分稳定。\n与你冰凉的手心相比，这只从黑袍下伸来的手竟要温暖得多。' }
     ],
     choices: [
-      { text: '“......”', nextSceneId: 'F53-1-Welcome' }
+      { text: '“......”', nextSceneId: 'F53-1-Welcome', affect: { quintis: 1 } }
     ]
   },
 
@@ -189,7 +197,7 @@ export const act2Scenes: Record<string, Scene> = {
       { text: '[C：罗德里克·索恩]，红袍卫士卫队长，为您效劳。”他没有在意你的胆怯，但也没有上前。那张没什么表情的脸上看不出任何东西。\n也许是他注意到，你的脸已经白了。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F54-ArchbishopWords' }
+      { text: '继续', nextSceneId: 'F54-ArchbishopWords', affect: { quintis: 1, roderick: 2 } }
     ]
   },
 
@@ -214,7 +222,7 @@ export const act2Scenes: Record<string, Scene> = {
       { text: '好在昆提斯·德罗斯特说完后，便回到他原本的位置。\n你松了一口气，心却不由自主地为刚刚那句话剧烈跳动起来。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F55-FarewellValley' }
+      { text: '继续', nextSceneId: 'F55-FarewellValley', affect: { quintis: 1 } }
     ]
   },
 

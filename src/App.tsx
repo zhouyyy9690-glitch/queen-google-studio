@@ -574,37 +574,72 @@ export default function App() {
     ? currentScene.event.stages[currentStageId] 
     : null;
 
-  const checkCondition = (condition?: string | ((state: any) => boolean)): boolean => {
+  const checkCondition = (condition?: any): boolean => {
     if (!condition) return true;
 
+    // 1. 处理函数式条件 (Legacy support)
     if (typeof condition === 'function') {
       return condition({ flags, sessionFlags });
     }
 
-    // Support OR (||) first, then AND (&&)
-    return condition.split('||').some(orPart => {
-      return orPart.split('&&').every(andPart => {
-        const trimmed = andPart.trim();
-        
-        // Handle equality: key === value
-        if (trimmed.includes('===')) {
-          const [key, value] = trimmed.split('===').map(s => s.trim());
-          const flagValue = flags[key];
-          if (value === 'true') return flagValue === true;
-          if (value === 'false') return flagValue === false || flagValue === undefined;
-          return String(flagValue) === value;
-        }
-        
-        // Handle negation: !key
-        if (trimmed.startsWith('!')) {
-          const key = trimmed.substring(1).trim();
-          return !flags[key];
-        }
-        
-        // Handle simple existence: key
-        return !!flags[trimmed];
+    // 2. 处理字符串条件 (Legacy support - 保持逻辑 100% 不变)
+    if (typeof condition === 'string') {
+      return condition.split('||').some(orPart => {
+        return orPart.split('&&').every(andPart => {
+          const trimmed = andPart.trim();
+          if (trimmed.includes('===')) {
+            const [key, value] = trimmed.split('===').map(s => s.trim());
+            const flagValue = flags[key];
+            if (value === 'true') return flagValue === true;
+            if (value === 'false') return flagValue === false || flagValue === undefined;
+            return String(flagValue) === value;
+          }
+          if (trimmed.startsWith('!')) {
+            const key = trimmed.substring(1).trim();
+            return !flags[key];
+          }
+          return !!flags[trimmed];
+        });
       });
-    });
+    }
+
+    // 3. 处理结构化条件对象 (New DSL support)
+    const evaluateObject = (cond: any): boolean => {
+      if (!cond) return true;
+      
+      // 逻辑组合操作: and, or, not
+      if (cond.and && Array.isArray(cond.and)) {
+        return cond.and.every((c: any) => evaluateObject(c));
+      }
+      if (cond.or && Array.isArray(cond.or)) {
+        return cond.or.some((c: any) => evaluateObject(c));
+      }
+      if (cond.not) {
+        return !evaluateObject(cond.not);
+      }
+      
+      // 原子条件判断: flag, op, value
+      if (cond.flag) {
+        const val = flags[cond.flag];
+        const target = cond.value;
+        switch (cond.op) {
+          case 'eq': return val === target;
+          case 'neq': return val !== target;
+          case 'gt': return val > target;
+          case 'lt': return val < target;
+          case 'gte': return val >= target;
+          case 'lte': return val <= target;
+          default: return !!val; // 默认退化为存在性检查
+        }
+      }
+      return true;
+    };
+
+    if (typeof condition === 'object') {
+      return evaluateObject(condition);
+    }
+
+    return true;
   };
 
   const activeParagraphs: Paragraph[] = currentStage 
@@ -719,6 +754,55 @@ export default function App() {
 
     if (choice.setFlags) {
       setFlags(prev => ({ ...prev, ...choice.setFlags }));
+    }
+
+    // --- 快速好感度处理 (affect) ---
+    if (choice.affect) {
+      setFlags(prev => {
+        const nextFlags = { ...prev };
+        Object.entries(choice.affect!).forEach(([charId, amount]) => {
+          const flag = `relationship.${charId}`;
+          const current = typeof nextFlags[flag] === 'number' ? nextFlags[flag] : 0;
+          nextFlags[flag] = Math.max(0, Math.min(100, current + amount));
+        });
+        return nextFlags;
+      });
+    }
+
+    // --- Action DSL Runner ---
+    if (choice.actions && Array.isArray(choice.actions)) {
+      setFlags(prev => {
+        const nextFlags = { ...prev };
+        choice.actions?.forEach((action: any) => {
+          const { type, flag, value } = action;
+          if (!flag) return;
+
+          switch (type) {
+            case 'set':
+              nextFlags[flag] = value;
+              break;
+            case 'add': {
+              const currentAdd = typeof nextFlags[flag] === 'number' ? nextFlags[flag] : 0;
+              let newValue = currentAdd + (typeof value === 'number' ? value : 0);
+              if (flag.startsWith('relationship.')) {
+                newValue = Math.max(0, Math.min(100, newValue));
+              }
+              nextFlags[flag] = newValue;
+              break;
+            }
+            case 'sub': {
+              const currentSub = typeof nextFlags[flag] === 'number' ? nextFlags[flag] : 0;
+              let newValue = currentSub - (typeof value === 'number' ? value : 0);
+              if (flag.startsWith('relationship.')) {
+                newValue = Math.max(0, Math.min(100, newValue));
+              }
+              nextFlags[flag] = newValue;
+              break;
+            }
+          }
+        });
+        return nextFlags;
+      });
     }
 
     if (choice.nextStageId) {
@@ -1175,6 +1259,7 @@ export default function App() {
               setSelectedCharacterId={setSelectedCharacterId}
               history={history}
               currentSceneId={currentSceneId}
+              flags={flags}
             />
           )}
         </AnimatePresence>

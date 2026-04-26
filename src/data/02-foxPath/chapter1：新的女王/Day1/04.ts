@@ -19,7 +19,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
       { text: '西蒙·柴勒侧过身，做了个请的动作。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F73-1-CouncilMeeting' }
+      { text: '继续', nextSceneId: 'F73-1-CouncilMeeting', affect: { hammond: 5 } }
     ]
   },
 
@@ -72,7 +72,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
     ],
     choices: [
       { text: '......', nextSceneId: 'F75-CeremonyDeploy' },
-      { text: '请问......', nextSceneId: 'F78-AskAttention' }
+      { text: '请问......', nextSceneId: 'F78-AskAttention', affect: { hammond: 2 } }
     ]
   },
 
@@ -94,7 +94,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
     ],
     choices: [
       { text: '......', nextSceneId: 'F76-CouncilEnd' },
-      { text: '红袍卫士不能进大圣堂吗？', nextSceneId: 'F79-AugustinGregor' }
+      { text: '红袍卫士不能进大圣堂吗？', nextSceneId: 'F79-AugustinGregor', affect: { augustin: 1, gregor: 1, aldous: 1 } }
     ]
   },
 
@@ -112,7 +112,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
     ],
     choices: [
       { text: '......（沉默着点头致意）', nextSceneId: 'F77-HammondDinner' },
-      { text: '感谢......诸位大人。', nextSceneId: 'F80-Thanks' }
+      { text: '感谢......诸位大人。', nextSceneId: 'F80-Thanks', affect: { augustin: 2, aldous: 2, gregor: 2, hammond: 2 } }
     ]
   },
 
@@ -134,7 +134,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
       { text: '乔治·哈蒙德走远之后，你听见凯安小声说。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F81-Transition1' }
+      { text: '继续', nextSceneId: 'F81-Transition1', affect: { roderick: 1 } }
     ]
   },
 
@@ -206,7 +206,7 @@ export const day1ScenesPart4: Record<string, Scene> = {
       { text: '你垂着眼睛，盯着自己的裙摆。蕾丝花边在阳光中投下细碎的影子，多像笼子上的花纹。' }
     ],
     choices: [
-      { text: '继续', nextSceneId: 'F82-Lunch' }
+      { text: '继续', nextSceneId: 'F82-Lunch', affect: { corbin: 1 } }
     ]
   }
 };

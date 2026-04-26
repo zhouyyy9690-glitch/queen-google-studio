@@ -46,6 +46,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
       {
         text: '“我想了解那个叫乔治·哈蒙德的男人。”',
         nextSceneId: 'F89-HammondDetail',
+        affect: { hammond: 1 },
         onSelect: (state) => {
           state.flags.askedHammondInScholarTalk = true;
         }
@@ -53,6 +54,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
       {
         text: '“米瑞斯的马雷竟然是我的红袍卫士。”',
         nextSceneId: 'F91-MaresDetail',
+        affect: { jasper: 2 },
         condition: (state) => !!state.flags.askedMireisInSuburbs,
         onSelect: (state) => {
           state.flags.askedMaresInScholarTalk = true;
@@ -69,6 +71,7 @@ export const Day1ScholarScenes: Record<string, Scene> = {
       {
         text: '“关于御前会议，来的人我都不认识......”',
         nextSceneId: 'F93-CouncilDetail',
+        affect: { augustin: 1, aldous: 1, gregor: 1 },
         onSelect: (state) => {
           state.flags.askedCouncilInScholarTalk = true;
         }
@@ -101,7 +104,8 @@ export const Day1ScholarScenes: Record<string, Scene> = {
       {
         text: '“我还听说他脾气很坏，对男人也很挑剔......”',
         condition: (state) => !!state.flags.askedHammondInSuburbs,
-        nextSceneId: 'F90-HammondDeep'
+        nextSceneId: 'F90-HammondDeep',
+        affect: { hammond: 1 }
       }
     ]
   },

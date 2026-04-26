@@ -7,8 +7,10 @@ export interface Choice {
   nextStageId?: string;   // 选择后跳转到的阶段 ID (用于 Event 模式)
   explanation?: string;   // 选项背后的深层含义解释 (用于显示解释弹窗)
   animalType?: 'fox' | 'deer' | 'eagle' | 'destiny'; // 选项归属的路径属性
-  condition?: string | ((state: any) => boolean);      // 触发该选项需要满足的标记条件
+  condition?: string | any | ((state: any) => boolean);      // 触发该选项需要满足的标记条件
   setFlags?: Record<string, any>; // 选择后需设置的状态标记
+  affect?: Record<string, number>; // 快速增减角色好感度 (如 { finn: 5, george: -2 })
+  actions?: any[];        // 选择后执行的结构化动作列表
   onSelect?: (state: any) => void; // 选择后的回调逻辑
   sfx?: string;           // 选择时的音效
 }
@@ -77,7 +79,7 @@ export interface Character {
   updates?: CharacterUpdate[]; // 随着剧情推进而解锁的额外描述
   unlockedAt: string | string[]; // 解锁该角色的场景 ID
   iconType: 'fox' | 'sword' | 'eagle' | 'bear' | 'tiger' | 'ring' | 'user' | 'scroll' | 'shield' | 'heart' | 'moon'; // 显示的图标类型
-  path?: 'fox' | 'deer' | 'eagle' | 'all' | 'common'; // 所属剧情路径
+  path?: 'fox' | 'deer' | 'eagle' | 'destiny' | 'all' | 'common'; // 所属剧情路径
   matchNames?: string[];  // 剧情文本中用于自动高亮的匹配词
   
   // NEW: 关系网扩展

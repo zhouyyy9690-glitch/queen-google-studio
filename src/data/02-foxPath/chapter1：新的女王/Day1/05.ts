@@ -23,7 +23,7 @@ export const Day1LunchScenes: Record<string, Scene> = {
     choices: [
       { text: '“…不需要。”', nextSceneId: 'F83-EatSilent' },
       { text: '“......和我一起来的玛格丽特修女在哪？”', nextSceneId: 'F84-AskMargaret' },
-      { text: '“我不想吃。”', nextSceneId: 'F85-RefuseEat' },
+      { text: '“我不想吃。”', nextSceneId: 'F85-RefuseEat', affect: { alice: 2 } },
       { text: '“......那副挂毯上，是谁？”', nextSceneId: 'F86-ObserveRoom' }
     ]
   },
