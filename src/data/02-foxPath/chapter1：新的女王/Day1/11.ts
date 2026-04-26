@@ -4,6 +4,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F105-LeaveDining': {
     id: 'F105-LeaveDining',
     title: '离开',
+    particleType: 'nature',
     paragraphs: [
       { text: '最后一道甜点上来时，你觉得自己已经在这坐了一个世纪年那么长。\n一个世纪年是一百年，你想自己已经老了一百岁，更别提你还喝了一些酒。' },
       { text: '他们聊了一些话题，你根本听不明白，他们也没打算让你明白。乔治和伯恩之后因为受南境春汛影响的道路修缮问题讨论了起来，而罗莎莉、奥托和迪恩之间也让你插不进去一句话。\n卡维·法哈迪偶尔和乔治他们说话，更多时间他在解决面前的菜肴。你觉得这个男人才是今晚唯一一个来吃饭的，而你，只是被叫来饱受折磨。' },
@@ -19,6 +20,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F106-WalkAround': {
     id: 'F106-WalkAround',
     title: '逛一逛',
+    particleType: 'nature',
     paragraphs: [
       { text: '夜晚的红堡静悄悄的。褪去了白天的喧嚣，石墙在烛火中投下巨大的阴影。\n空气里有一股凉意，混合着蜡油和旧石头的味道，让你感到陌生。' },
       { text: '远处，巡逻侍卫踏地的闷响偶尔传来，像是这座石头巨兽的心跳。' },
@@ -35,6 +37,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F107-ObserveGuard': {
     id: 'F107-ObserveGuard',
     title: '你走进王宫深处',
+    particleType: 'nature',
     paragraphs: [
       { text: '你白天时还没有走进过左边的岔路。到了这时，你开始好奇那里有什么。' },
       { text: '沿着长廊走到底，你来到一扇大门前。\n门口的王宫侍卫和别处略有不同，他们的手里拿着长戟。' },
@@ -52,6 +55,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F108-Getlost': {
     id: 'F108-Getlost',
     title: '你好像迷路了',
+    particleType: 'nature',
     paragraphs: [
       { text: '红堡里的走廊错综复杂，你沿着刚才的路往深处走，很快碰到了一面石壁。' },
       { text: '死角。' },
@@ -70,6 +74,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F109-MeetDurin': {
     id: 'F109-MeetDurin',
     title: '意外的见面',
+    particleType: 'nature',
     paragraphs: [
       { text: '转过拐角后，你看见了一扇熟悉的门。\n这里离红堡的大门很近，你在下午闲逛的时候来过这里。' },
       { text: '从这里直走，只要拐一个弯，就可以回房间了。' },
@@ -143,6 +148,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F111-CaydeEncounter': {
     id: 'F111-CaydeEncounter',
     title: '法哈迪的次子',
+    particleType: 'nature',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },
@@ -187,6 +193,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F112-CorbinEncounter': {
     id: 'F112-CorbinEncounter',
     title: '普通的十六岁',
+    particleType: 'nature',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },
@@ -226,6 +233,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F113-RodrikEncounter': {
     id: 'F113-RodrikEncounter',
     title: '上一个红袍卫士',
+    particleType: 'nature',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },
@@ -274,6 +282,7 @@ export const day1ScenesPart11: Record<string, Scene> = {
   'F114-JasperEncounter': {
     id: 'F114-JasperEncounter',
     title: '旧伤',
+    particleType: 'nature',
     paragraphs: [
       { text: '通往花园的道路在夜晚看来如此陌生。\n这边没有壁灯，今夜月光黯淡，你不禁有一点害怕。' },
       { text: '往回走吧，不去花园了。', isThought: true },

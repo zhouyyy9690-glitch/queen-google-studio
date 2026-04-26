@@ -107,7 +107,7 @@ export const ProgressSave = ({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 0, pointerEvents: 'none' }}
           className="fixed inset-0 z-[110] bg-[#0a0a0a]/98 backdrop-blur-md p-6 flex items-center justify-center"
         >
           {/* 带边框和边角装饰的容器 */}

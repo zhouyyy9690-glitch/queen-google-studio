@@ -491,7 +491,7 @@ export const ChapterSelectModal: React.FC<ChapterSelectModalProps> = ({
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, pointerEvents: 'none' }}
       className="fixed inset-0 z-[600] bg-[#050505] flex items-center justify-center overflow-hidden p-4 md:p-8"
     >
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 pointer-events-none" />
@@ -659,7 +659,7 @@ export const ChapterSelectModal: React.FC<ChapterSelectModalProps> = ({
                                 className="flex items-center gap-4 md:gap-5 px-8 md:px-10 py-3 md:py-5 bg-amber-900/10 border border-amber-900/20 hover:border-amber-600/60 text-amber-600 uppercase tracking-[0.4em] text-[8px] md:text-xs font-chinese font-medium transition-all group mt-6 md:mt-16 shadow-lg"
                               >
                                 <Play className="w-3 h-3 md:w-4 md:h-4 fill-current" />
-                                揭开记忆 · Recall the Path
+                                由此章开始 · Start Chapter
                               </motion.button>
                             ) : (
                               <div className="flex items-center gap-4 px-8 md:px-10 py-3 md:py-5 bg-white/[0.01] border border-white/5 text-neutral-800 uppercase tracking-[0.4em] text-[8px] md:text-xs mt-6 md:mt-16 cursor-not-allowed">

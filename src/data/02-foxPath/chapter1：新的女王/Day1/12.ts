@@ -4,6 +4,7 @@ export const day1ScenesPart12: Record<string, Scene> = {
   'F115-TerraceLights': {
     id: 'F115-TerraceLights',
     title: '露台远眺',
+    particleType: 'nature',
     paragraphs: [
       { text: '你回到房间，洗了澡，换了衣服，顺便吃了些东西。\n侍女一一满足你的要求，她们在你的命令下安静离开.现在，房间里只有你一个人。' },
       { text: '卧房铺着柔软的地毯，赤脚踩上去十分舒适。你只穿着一件白色睡裙，走到窗边，推开那扇被关上的窗户。' },
@@ -23,6 +24,7 @@ export const day1ScenesPart12: Record<string, Scene> = {
   'F116-Sleepless': {
     id: 'F116-Sleepless',
     title: '睡不着',
+    particleType: 'nature',
     paragraphs: [
       { text: '睡不着。' },
       { text: '怎么样都睡不着。' },
@@ -44,6 +46,7 @@ export const day1ScenesPart12: Record<string, Scene> = {
   'F117-FainVigil': {
     id: 'F117-FainVigil',
     title: '芬因为你守夜',
+    particleType: 'nature',
     paragraphs: [
       { text: '你扒在门边，眼巴巴地望着走廊那头，心里在默数。\n当你数到第三十下，芬因·里德的身影出现了。他是跑过来的，穿着便衣，脚步轻而迅速。' },
       { text: '“芬！”' },

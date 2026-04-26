@@ -59,7 +59,7 @@ export const Compendium = ({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, pointerEvents: 'none' }}
       onClick={() => setShowCompendium(false)}
       className="fixed inset-0 z-[150] bg-[#0a0a0a]/98 backdrop-blur-xl flex items-center justify-center p-4 md:p-12 overflow-hidden pointer-events-auto"
     >

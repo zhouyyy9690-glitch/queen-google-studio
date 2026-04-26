@@ -30,7 +30,7 @@ export const VolumeMixer = ({
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, pointerEvents: 'none' }}
       className="fixed inset-0 z-[500] bg-[#0a0a0a] overflow-y-auto px-6 py-12 md:p-12"
     >
       <div className="min-h-full flex flex-col items-center justify-center relative">
