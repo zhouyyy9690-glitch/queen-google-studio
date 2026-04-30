@@ -235,194 +235,222 @@ const ChapterMapPreview = ({ chapter, isUnlocked, unlockedLocations }: { chapter
 };
 
 // --------------------------------------------------------------------------------
-// 七星圣核组件 (Holy Core of Seven Stars)
 // --------------------------------------------------------------------------------
-const HolyCore = ({ color, isActive, onClick, emblem }: { color: string, isActive: boolean, onClick: () => void, emblem: string }) => {
-  const glowColors: Record<string, string> = {
-    emerald: 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.6)]',
-    blue: 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]',
-    cyan: 'bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.6)]',
-    amber: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.6)]'
-  };
-
-  const ringColors: Record<string, string> = {
-    emerald: 'border-emerald-900/40',
-    blue: 'border-blue-900/40',
-    cyan: 'border-cyan-900/40',
-    amber: 'border-amber-900/40'
-  };
-
-  return (
-    <div className="relative flex flex-col items-center scale-90 md:scale-100 transition-transform">
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onClick}
-        className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center group cursor-pointer"
-      >
-        {/* Orbit Rings */}
-        <div className={`absolute inset-0 rounded-full border border-2 ${ringColors[color]} opacity-20 group-hover:scale-110 transition-transform duration-700`} />
-        <div className={`absolute inset-3 rounded-full border border-dashed ${ringColors[color]} opacity-10 group-hover:rotate-180 transition-transform duration-1000`} />
-        
-        {/* The 7 Stars Orbit */}
-        {Array.from({ length: 7 }).map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 pointer-events-none"
-          >
-            <div 
-              className={`w-1 h-1 rounded-full ${glowColors[color].split(' ')[0]} absolute left-1/2 -top-0.5 -translate-x-1/2 opacity-40`}
-              style={{ filter: 'blur(0.5px)' }}
-            />
-          </motion.div>
+// 塔罗意象插图 (Tarot Woodcut Illustrations)
+// --------------------------------------------------------------------------------
+const TarotIllustration = ({ type, color }: { type: string, color: string }) => {
+  const baseClass = "w-full h-full opacity-60";
+  
+  if (type === 'fox') { // THE CHARIOT (战车)
+    return (
+      <svg viewBox="0 0 100 120" className={baseClass} fill="none" stroke={color}>
+        <path d="M20 45 L80 45 L75 25 L25 25 Z" strokeWidth="1" /> {/* Canopy */}
+        <circle cx="30" cy="95" r="12" strokeWidth="1.5" />
+        <circle cx="70" cy="95" r="12" strokeWidth="1.5" />
+        <path d="M15 85 L85 85" strokeWidth="0.5" strokeDasharray="2 2" />
+        <path d="M50 15 L50 35" strokeWidth="2" strokeLinecap="round" />
+        <path d="M35 55 L45 75 M65 55 L55 75" strokeWidth="1" />
+        <circle cx="50" cy="20" r="3" fill={color} />
+      </svg>
+    );
+  }
+  if (type === 'deer') { // KNIGHT OF CUPS (圣杯骑士)
+    return (
+      <svg viewBox="0 0 100 120" className={baseClass} fill="none" stroke={color}>
+        <path d="M35 85 L65 85 L60 105 L40 105 Z" strokeWidth="1" />
+        <path d="M30 40 C30 80 70 80 70 40 C70 30 30 30 30 40" strokeWidth="1.5" />
+        <path d="M20 30 Q50 10 80 30" strokeWidth="0.5" opacity="0.3" />
+        <path d="M50 50 Q60 40 50 30 Q40 40 50 50" fill={color} opacity="0.4" />
+        <circle cx="50" cy="65" r="3" fill={color} />
+      </svg>
+    );
+  }
+  if (type === 'eagle') { // KING OF SWORDS (REVERSED / 逆位宝剑国王)
+    return (
+      <svg viewBox="0 0 100 120" className={baseClass} fill="none" stroke={color}>
+        <g transform="rotate(180, 50, 60)">
+          <path d="M50 20 L50 90" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M30 35 L70 35" strokeWidth="2" />
+          <path d="M45 15 L55 15 L50 10 Z" fill={color} />
+          <path d="M25 95 L75 95" strokeWidth="0.5" opacity="0.4" />
+          <circle cx="50" cy="65" r="15" strokeWidth="0.5" strokeDasharray="3 3" />
+        </g>
+      </svg>
+    );
+  }
+  if (type === 'spindle') { // WHEEL OF FORTUNE (命运之轮)
+    return (
+      <svg viewBox="0 0 100 120" className={baseClass} fill="none" stroke={color}>
+        <circle cx="50" cy="60" r="35" strokeWidth="1.5" />
+        <circle cx="50" cy="60" r="28" strokeWidth="0.5" strokeDasharray="4 2" />
+        <circle cx="50" cy="60" r="5" fill={color} />
+        {[0, 45, 90, 135, 180, 225, 270, 315].map(a => (
+          <line key={a} x1="50" y1="60" x2={50 + Math.cos(a * Math.PI / 180) * 35} y2={60 + Math.sin(a * Math.PI / 180) * 35} strokeWidth="1" />
         ))}
-
-        {/* Central Core */}
-        <div className="relative w-12 h-12 flex items-center justify-center">
-          <div className={`absolute inset-0 rotate-45 border border-2 ${ringColors[color]} opacity-40 group-hover:rotate-[135deg] transition-transform duration-700`} />
-          <motion.div 
-            animate={isActive ? {
-              scale: [1, 1.2, 1],
-              opacity: [0.6, 1, 0.6],
-              filter: ["blur(1px)", "blur(4px)", "blur(1px)"]
-            } : {}}
-            transition={{ duration: 2, repeat: Infinity }}
-            className={`w-4 h-4 md:w-5 md:h-5 rounded-full ${glowColors[color]} flex items-center justify-center`}
-          >
-            <span className="text-xl filter brightness-0 invert opacity-40 group-hover:opacity-80 transition-opacity">
-              {emblem}
-            </span>
-          </motion.div>
-        </div>
-        
-        {/* Glow Halo */}
-        <div className={`absolute inset-0 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity ${glowColors[color].split(' ')[0]}`} />
-      </motion.button>
-      
-      <div className="mt-4 flex flex-col items-center">
-        <div className={`w-8 h-px bg-gradient-to-r from-transparent via-current to-transparent opacity-20 ${ringColors[color].replace('border-', 'text-')}`} />
-        <span className="text-[8px] tracking-[0.4em] uppercase font-typewriter mt-2 opacity-30">Engrave Path</span>
-      </div>
-    </div>
-  );
+        <path d="M50 15 L50 30 M40 20 L60 20" strokeWidth="1" opacity="0.6" />
+        <path d="M50 105 L50 90" strokeWidth="1" opacity="0.6" />
+      </svg>
+    );
+  }
+  return null;
 };
 
 // --------------------------------------------------------------------------------
-// 路线选择视图 (Road Selection)
+// 塔罗卡牌配置
+// --------------------------------------------------------------------------------
+const TAROT_MAP: Record<string, { latinName: string, arcana: string, isReversed?: boolean }> = {
+  fox: { 
+    latinName: "THE CHARIOT", 
+    arcana: "VII"
+  },
+  deer: { 
+    latinName: "KNIGHT OF CUPS", 
+    arcana: "KNIGHT"
+  },
+  eagle: { 
+    latinName: "KING OF SWORDS", 
+    arcana: "KING",
+    isReversed: true
+  },
+  spindle: { 
+    latinName: "WHEEL OF FORTUNE", 
+    arcana: "X"
+  }
+};
+
+// --------------------------------------------------------------------------------
+// 路线选择视图 (Tarot Carousel)
 // --------------------------------------------------------------------------------
 const RoadSelectionView = ({ onSelectRoad }: { onSelectRoad: (roadId: string) => void }) => {
-  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const roads = ROADS_CONFIG;
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 400;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
+  const nextCard = () => setActiveIndex((prev) => (prev + 1) % roads.length);
+  const prevCard = () => setActiveIndex((prev) => (prev - 1 + roads.length) % roads.length);
 
   return (
-    <div className="w-full h-full flex flex-col pt-6 md:pt-10 pb-4 relative z-20 overflow-hidden">
-      {/* Ornate Corner Elements in the VIEW */}
-      <div className="absolute top-4 left-4 w-10 h-10 border-t border-l border-amber-900/10 pointer-events-none opacity-40" />
-      <div className="absolute top-4 right-4 w-10 h-10 border-t border-r border-amber-900/10 pointer-events-none opacity-40" />
-
-      <div className="text-center mb-4 md:mb-5 flex flex-col items-center shrink-0">
-        <span className="font-typewriter text-amber-900/40 text-[8px] md:text-[9px] tracking-[0.8em] uppercase block mb-1">— Liber Fatorvm —</span>
-        <h2 className="font-chinese text-2xl md:text-4xl text-amber-100/90 tracking-widest font-medium">
-          命 运 之 径
+    <div className="w-full h-full flex flex-col pt-6 md:pt-10 pb-4 relative z-20 overflow-hidden bg-[#0d0d0d]">
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')] opacity-[0.08] pointer-events-none" />
+      
+      <div className="text-center mb-6 md:mb-10 flex flex-col items-center shrink-0 z-30">
+        <span className="font-typewriter text-amber-900/40 text-[9px] md:text-[11px] tracking-[1.2em] uppercase block mb-3">— ARCHIVVM FATORVM —</span>
+        <h2 className="font-serif text-2xl md:text-5xl text-amber-50/70 tracking-[0.6em] font-light italic">
+          ORACLVM
         </h2>
-        <div className="w-20 h-px bg-gradient-to-r from-transparent via-amber-900/30 to-transparent mt-2 relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rotate-45 border border-amber-900/50 bg-[#0c0c0c]" />
-        </div>
+        <div className="w-48 h-px bg-gradient-to-r from-transparent via-amber-900/40 to-transparent mt-4" />
       </div>
 
-      <div className="relative flex-grow flex items-center min-h-0">
-        {/* Navigation Buttons */}
+      <div className="relative flex-grow flex items-center justify-center perspective-1000">
         <button 
-          onClick={() => scroll('left')}
-          className="absolute left-2 md:left-4 z-50 p-2.5 rounded-full bg-black/40 border border-amber-900/10 text-amber-600/60 hover:text-amber-500 hover:bg-black/60 transition-all backdrop-blur-sm"
+          onClick={prevCard}
+          className="absolute left-6 md:left-20 z-50 p-4 rounded-full border border-amber-900/10 text-amber-900/30 hover:text-amber-500 hover:border-amber-500/30 transition-all backdrop-blur-md group"
         >
-          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+          <ChevronLeft className="w-8 h-8 group-hover:-translate-x-1 transition-transform" />
         </button>
         
         <button 
-          onClick={() => scroll('right')}
-          className="absolute right-2 md:right-4 z-50 p-2.5 rounded-full bg-black/40 border border-amber-900/10 text-amber-600/60 hover:text-amber-500 hover:bg-black/60 transition-all backdrop-blur-sm"
+          onClick={nextCard}
+          className="absolute right-6 md:right-20 z-50 p-4 rounded-full border border-amber-900/10 text-amber-900/30 hover:text-amber-500 hover:border-amber-500/30 transition-all backdrop-blur-md group"
         >
-          <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+          <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
         </button>
 
-        <div 
-          ref={scrollRef}
-          className="w-full h-full overflow-x-auto no-scrollbar snap-x snap-mandatory flex items-center px-12 md:px-[20%] lg:px-[30%] gap-6 pb-2 scroll-smooth"
-        >
-          {ROADS_CONFIG.map((road) => (
-            <motion.div
-              key={road.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex-shrink-0 w-full md:w-[380px] lg:w-[400px] h-[90%] max-h-[550px] snap-center relative group flex flex-col"
-            >
-              {/* Manuscript Page Background */}
-              <div className="absolute inset-0 bg-[#0f0f0f] border border-amber-900/10 shadow-2xl overflow-hidden ring-1 ring-amber-900/5 transition-all group-hover:ring-amber-600/20">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')] opacity-[0.03] pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-b from-amber-900/[0.04] to-transparent pointer-events-none" />
-                
-                {/* Ornate Corner Elements for the page */}
-                <div className="absolute top-4 left-4 w-6 h-6 border-t border-l border-amber-900/20" />
-                <div className="absolute bottom-4 right-4 w-6 h-6 border-b border-r border-amber-900/20" />
-              </div>
+        <div className="relative w-full h-full flex items-center justify-center">
+          <AnimatePresence mode="popLayout">
+            {roads.map((road, index) => {
+              const tarot = TAROT_MAP[road.id];
+              const isCenter = index === activeIndex;
+              const isPrev = index === (activeIndex - 1 + roads.length) % roads.length;
+              const isNext = index === (activeIndex + 1) % roads.length;
 
-              <div className="relative flex-grow flex flex-col items-center justify-between p-8 md:p-10 text-center overflow-hidden">
-                <div className="w-full shrink-0">
-                  <h3 className="font-chinese text-xl md:text-2xl text-amber-600/80 mb-1 font-medium italic tracking-wide">
-                    {road.title}
-                  </h3>
-                  <p className="font-mono text-[8px] text-amber-900/50 uppercase tracking-[0.4em] mb-4">
-                    {road.subtitle}
-                  </p>
-                  <div className="h-px w-12 bg-amber-900/15 mx-auto mb-4" />
-                </div>
+              if (!isCenter && !isPrev && !isNext) return null;
 
-                {/* The Holy Core Button - Moved to be more central */}
-                <div className="flex-grow flex items-center justify-center py-2 shrink-0">
-                  <HolyCore 
-                    color={road.color} 
-                    isActive={false} 
-                    emblem={road.emblem}
-                    onClick={() => onSelectRoad(road.id)} 
-                  />
-                </div>
+              return (
+                <motion.div
+                  key={road.id}
+                  initial={{ opacity: 0, x: isNext ? 400 : -400, scale: 0.8 }}
+                  animate={{ 
+                    opacity: isCenter ? 1 : 0.25,
+                    x: isCenter ? 0 : (isNext ? 380 : -380),
+                    scale: isCenter ? 1 : 0.65,
+                    rotateY: isCenter ? 0 : (isNext ? -25 : 25),
+                    zIndex: isCenter ? 40 : 20
+                  }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ type: "spring", stiffness: 180, damping: 22 }}
+                  className={`absolute w-[260px] md:w-[320px] lg:w-[350px] max-h-[80vh] aspect-[1/1.6] flex flex-col pointer-events-${isCenter ? 'auto' : 'none'}`}
+                >
+                  <div className="relative h-full flex flex-col bg-[#dfd4bd] shadow-[0_45px_100px_-20px_rgba(0,0,0,0.9)] border-[4px] border-[#8b7355]/40 overflow-hidden rounded-[2px]">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')] opacity-45 mix-blend-multiply pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/20" />
+                    
+                    <div className="relative h-full flex flex-col p-5">
+                      <div className="flex justify-between items-center mb-4 border-b border-black/10 pb-2">
+                        <span className="font-serif text-base font-bold text-amber-950/40 italic">{tarot.arcana}</span>
+                        <span className="font-typewriter text-[10px] tracking-[0.25em] text-amber-950/60 font-bold">{tarot.latinName}</span>
+                      </div>
 
-                <div className="w-full mt-4 shrink-0">
-                  <p className="text-[13px] md:text-sm text-neutral-400 font-serif leading-relaxed italic opacity-70 px-4 line-clamp-3">
-                    “ {road.description} ”
-                  </p>
-                  
-                  <div className="flex flex-col items-center mt-6">
-                    <div className="w-10 h-px bg-amber-900/20 mb-2" />
-                    <span className="text-[8px] font-display uppercase tracking-[0.4em] text-amber-900/35">Entry of Chronicle</span>
+                      <div className="flex-grow flex items-center justify-center relative mb-6">
+                        <div className="w-full h-full max-h-[180px] md:max-h-[240px]">
+                           <TarotIllustration type={road.id} color="#4a3721" />
+                        </div>
+                        <div className="absolute bottom-2 text-[28px] font-serif text-black/[0.03] italic pointer-events-none select-none uppercase tracking-[0.2em] whitespace-nowrap">
+                          Destinatum
+                        </div>
+                      </div>
+
+                      {/* 底部按钮：拉丁文 REVELARE FATVM */}
+                      <div className="h-24 flex flex-col items-center justify-center relative bg-black/[0.03] -mx-5 -mb-5 border-t border-black/10">
+                        <motion.button
+                          onClick={() => onSelectRoad(road.id)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex flex-col items-center justify-center cursor-pointer group/fate transition-all"
+                        >
+                          <span className="font-serif text-xl md:text-2xl text-red-900/80 tracking-[0.3em] font-bold drop-shadow-sm group-hover/fate:text-red-700 transition-colors uppercase">
+                            REVELARE FATVM
+                          </span>
+                          <div className="w-24 h-px bg-red-900/20 mt-2 scale-x-50 group-hover/fate:scale-x-100 transition-transform duration-500" />
+                          <span className="mt-2 font-typewriter text-[7px] tracking-[0.5em] text-amber-950/30 uppercase opacity-40 group-hover/fate:opacity-100 transition-opacity whitespace-nowrap">
+                            Sortem Aperire
+                          </span>
+                        </motion.button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+
+                  {isCenter && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute -bottom-28 left-0 right-0 text-center pointer-events-none px-4"
+                    >
+                       <h4 className="font-serif text-[10px] text-amber-900/40 uppercase tracking-[0.3em] mb-2">{road.subtitle}</h4>
+                       <p className="text-[11px] md:text-xs text-neutral-500 font-serif leading-relaxed italic tracking-widest mx-auto opacity-60">
+                        — {road.description} —
+                      </p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
       </div>
 
-      <div className="shrink-0 flex justify-center gap-3 mt-2 mb-2">
-        {ROADS_CONFIG.map((_, i) => (
-          <div key={i} className="w-1.5 h-1.5 rounded-full bg-amber-900/10" />
+      <div className="shrink-0 flex justify-center gap-6 mt-12 mb-4">
+        {roads.map((_, i) => (
+          <div 
+            key={i} 
+            className={`w-1.5 h-1.5 rotate-45 transition-all ${i === activeIndex ? 'bg-amber-600 scale-150' : 'bg-amber-900/20'}`} 
+          />
         ))}
       </div>
     </div>
   );
 };
+
+
 
 // --------------------------------------------------------------------------------
 // 章节选择模态框主体
