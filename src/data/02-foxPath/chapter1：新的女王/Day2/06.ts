@@ -106,25 +106,27 @@ export const day2Scenes06: Record<string, Scene> = {
   "F131-2-Logicaljudement": {
     id: "F131-2-Logicaljudement",
     title: "逻辑判断",
-    paragraphs: [
-      { text: "（你在心中回想着刚才的谈话，学士静静地等待着你继续发问。）" }
-    ],
-    choices: [
-      { 
-        text: "（继续对话）", 
-        nextSceneId: "F131-3-Dialoguetransition",
-        condition: { topicCount: { operator: "<", value: 2 } }
-      },
-      { 
-        text: "（结束谈话）", 
-        nextSceneId: "F131-4-day2talktranstion",
-        condition: { topicCount: 2 }
+    paragraphs: [],
+    onEnter: (state) => {
+      const topicCount = state.flags.topicCount || 0;
+      
+      const HammondAvailable = !state.flags.discussedHammond;
+      const SamiaAvailable = !state.flags.discussedSamia;
+      const YuliaAvailable = !state.flags.discussedYulia && !!state.flags.choseYuliaForBreakfast;
+      
+      const hasMoreOptions = HammondAvailable || SamiaAvailable || YuliaAvailable;
+
+      if (topicCount < 2 && hasMoreOptions) {
+        state.nextSceneId = "F131-3-Dialoguetransition";
+      } else {
+        state.nextSceneId = "F131-4-day2talktranstion";
       }
-    ]
+    },
+    choices: []
   },
   "F131-3-Dialoguetransition": {
     id: "F131-3-Dialoguetransition",
-    title: "过渡",
+    title: "你们的谈话",
     paragraphs: [
       { text: "“关于刚才提到的，我还有些想法。”你对学士说。" }
     ],

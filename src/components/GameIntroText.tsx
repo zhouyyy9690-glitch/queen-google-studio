@@ -18,7 +18,7 @@ export const GameIntroText: React.FC<GameIntroTextProps> = ({ isVisible = true }
           >
             {/* 主标题：绛红女王 */}
             <div className="relative mb-10">
-              <h1 className="text-5xl md:text-7xl font-chinese font-black tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-tr from-[#5a0a0a] via-[#c73b3b] to-[#e2c18d] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+              <h1 className="text-5xl md:text-7xl font-chinese font-black tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-[#c92a2a] via-[#8c0505] to-[#4a0000] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
                 绛红女王
               </h1>
               <div className="mt-4 text-xs md:text-sm font-display tracking-[0.8em] text-[#b38b5d]/80 uppercase italic">

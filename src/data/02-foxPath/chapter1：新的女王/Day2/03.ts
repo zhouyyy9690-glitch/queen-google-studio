@@ -15,7 +15,7 @@ export const day2Scenes03: Record<string, Scene> = {
     ],
     choices: [
       { text: "让塞西尔·阿尔摩恩来陪我", nextSceneId: "F121-CecileTalk", affect: { cecile: 5 }, setFlags: { cecileInitFavor: 5 } },
-      { text: "去请尤利娅·维里克进来", nextSceneId: "F122-YuliaTalk", affect: { yulia: 2, lisa: -1 }, setFlags: { yuliaInitFavor: 2, chosenYuliaForBreakfast: true } },
+      { text: "去请尤利娅·维里克进来", nextSceneId: "F122-YuliaTalk", affect: { yulia: 2, lisa: -1 }, setFlags: { yuliaInitFavor: 2, chosenYuliaForBreakfast: true, choseYuliaForBreakfast: true } },
       { text: "我想和阿莱娜·斯特莱说话", nextSceneId: "F123-AlainaTalk", affect: { alaina: 1 }, setFlags: { alainaInitFavor: 1 } },
       { text: "丽莎·朗贝尔可以坐在我身边", nextSceneId: "F124-LisaTalk", affect: { lisa: 3 }, setFlags: { lisaInitFavor: 3 } }
     ]

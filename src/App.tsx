@@ -593,6 +593,35 @@ export default function App() {
           default: return !!val; // 默认退化为存在性检查
         }
       }
+
+      // 如果不是上述内置结构，则作为包含自定义字段的对象来解析 (例如 { discussedHammond: false, topicCount: { operator: "<", value: 2 } })
+      const keys = Object.keys(cond);
+      if (keys.length > 0) {
+        return keys.every(key => {
+          const val = flags[key];
+          const condVal = cond[key];
+          
+          if (condVal && typeof condVal === 'object') {
+            const operator = condVal.operator || condVal.op;
+            const target = condVal.value;
+            if (operator === '<' || operator === 'lt') return (val || 0) < target;
+            if (operator === '>' || operator === 'gt') return (val || 0) > target;
+            if (operator === '<=' || operator === 'lte') return (val || 0) <= target;
+            if (operator === '>=' || operator === 'gte') return (val || 0) >= target;
+            if (operator === '==' || operator === '===' || operator === 'eq') return val === target;
+            if (operator === '!=' || operator === '!==' || operator === 'neq') return val !== target;
+          }
+          
+          if (condVal === false) {
+            return val === false || val === undefined || val === null;
+          }
+          if (condVal === true) {
+            return !!val;
+          }
+          return val === condVal;
+        });
+      }
+
       return true;
     };
 

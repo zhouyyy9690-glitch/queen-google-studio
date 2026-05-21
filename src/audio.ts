@@ -32,6 +32,8 @@ export const BGM_ASSETS = {
   CHAPTER2_DROST_MELODY: "https://cdn.pixabay.com/audio/2025/06/13/audio_c45365ddc9.mp3",
   CHAPTER2_RUMOR_MELODY: "https://cdn.pixabay.com/audio/2025/06/26/audio_a252a9ac32.mp3",
   CHAPTER2_FERRY_MELODY: "https://cdn.pixabay.com/audio/2025/05/16/audio_967a4a358c.mp3",
+  // 🏰 红堡夜晚与黄昏的主旋律（Capvt I / Chapter 1 新的女王），用于深夜和晚宴后的探索场景
+  RED_KEEP_NIGHT: "https://cdn.pixabay.com/audio/2024/01/26/audio_60ecf8aaea.mp3",
 };
 
 // --- 3. 特定场景音乐映射 (Override Config) ---
@@ -94,9 +96,13 @@ export const getChapterTheme = (sceneId: string): string => {
     }
 
     // 【狐狸线・第一章 (Capvt I)：从 F48 到 F100+】
-    // 逻辑：新的女王 (Chapter 1) 自动播放 FOX_CH2_THEME
+    // 逻辑：新的女王 (Chapter 1)
+    // 1. 白天时间段播放 Capvt I 主题音乐 (FOX_CH2_THEME)。
+    // 2. 从黄昏/夜晚（第一天傍晚 F102~117，以及第二天晚间 F137 及之后）自动切入红堡黑夜主旋律 (RED_KEEP_NIGHT)。
+    // 3. 同时保持所有用户预先设定好的特殊音乐（例如晚宴 DINNER_PARTY、花园邂逅 GARDEN_MEET、深夜守夜 FAIN_THEME），这些会被最外层的 SCENE_BGM_CONFIG 或 Scene.bgm 直接优先覆盖。
     if (num >= 48 || sceneId === 'Act2ChapterSplash') {
-      return BGM_ASSETS.FOX_CH2_THEME;
+      const isNight = (num >= 102 && num <= 117) || (num >= 137);
+      return isNight ? BGM_ASSETS.RED_KEEP_NIGHT : BGM_ASSETS.FOX_CH2_THEME;
     }
   }
 

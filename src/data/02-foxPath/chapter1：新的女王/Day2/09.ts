@@ -57,7 +57,7 @@ export const day2Scenes09: Record<string, Scene> = {
       { text: "称颂七神之六，哑言诗人，您是月桂的叶冠，神圣音乐之神。" }
     ],
     choices: [
-      { text: "继续", nextSceneId: "Act2ChapterSplash", affect: { darian: 20 } }
+      { text: "继续", nextSceneId: "F137-Dinner", affect: { darian: 20 } }
     ]
   }
 };
