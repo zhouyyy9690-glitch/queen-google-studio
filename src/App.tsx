@@ -11,6 +11,7 @@ import { ChapterSplash } from './components/ChapterSplash';
 import { OrnateCorner } from './components/OrnateCorner';
 import { BookStack } from './components/BookStack';
 import { MedievalLetters } from './components/MedievalLetters';
+import { MobileDeskLayout } from './components/MobileDeskLayout';
 
 /**
  * 边缘暗角组件 - 提升氛围感，聚焦中心区域
@@ -177,6 +178,21 @@ export default function App() {
   const [isRedBookDetailOpen, setIsRedBookDetailOpen] = useState(false); // 记录红书翻开状态
   const [pausedPaths, setPausedPaths] = useState<Record<string, string | null>>({}); // 各路径的暂停进度
   const [activePrayer, setActivePrayer] = useState<{ ch: string, lat: string } | null>(null); // 七神祷文
+
+  // 窗口分辨率自适应，用于移动端比例自适应缩放桌布
+  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 1024;
+  const deskScale = isMobile ? Math.min(1, Math.max(0.24, windowWidth / 1400)) : 1;
 
   // 引用管理：通知计时器
   const [notifications, setNotifications] = useState<{id: string, title: string, type: 'ending' | 'character' | 'location' | 'insight'}[]>([]);
@@ -1051,37 +1067,59 @@ export default function App() {
           <main className="relative w-full h-screen overflow-hidden flex items-center justify-center p-8 lg:p-12">
             <Vignette />
             <CandleLightEffect />
+
+            {/* 移动端专属悬浮返回键：提取至顶级 z-[1200] 层，防止手势事件被 z-[1100] 的游玩面板或状态栏拦截 */}
+            {isMobile && isNarrativeMode && (
+              <MobileDeskLayout 
+                isNarrativeMode={true}
+                onEntryClick={() => {}}
+                onCompendiumClick={() => {}}
+                onChapterClick={() => {}}
+                onMapClick={() => {}}
+                onEndingClick={() => {}}
+                onReturn={handleReturnToStudy}
+                unlockedEndingsCount={unlockedEndings.length}
+              />
+            )}
+
             {/* 核心桌面层：始终存在，包含书堆和开场文字 */}
             {!currentScene.isEnding && (
-              <div key="desk-base" className={`absolute inset-0 flex items-center justify-center ${isNarrativeMode ? 'z-[900]' : 'z-[30]'} pointer-events-none`}>
-                <div className="relative w-full max-w-[1600px] aspect-video mx-auto pointer-events-none">
-                  <GameIntroText isVisible={showIntroText && currentSceneId === "start"} />
-                  {activePrayer && currentSceneId === 'start' && !isNarrativeMode && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 4, delay: 0.5 }}
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-6 pointer-events-none z-[60] w-full px-12"
-                    >
-                      <div className="text-amber-900/50 font-chinese text-2xl md:text-4xl tracking-[0.3em] drop-shadow-[0_1px_1px_rgba(255,255,255,0.1)]">
-                        {activePrayer.ch}
-                      </div>
-                      <div className="text-amber-950/20 font-latin text-xs md:text-sm tracking-[0.5em] uppercase" style={{ fontFamily: "'MedievalSharp', serif" }}>
-                        {activePrayer.lat}
-                      </div>
-                    </motion.div>
-                  )}
-                  {/* 书堆组件：在叙事模式下几乎完全可见，保持桌面真实感 */}
-                  <motion.div
-                    animate={{
-                      opacity: isNarrativeMode ? 0.9 : 1,
-                      filter: isNarrativeMode ? "grayscale(0.1)" : "grayscale(0)",
-                    }}
-                    transition={{ duration: 1.5 }}
-                    className="pointer-events-auto h-full w-full"
+              <div key="desk-base" className={`absolute inset-0 flex items-center justify-center ${isNarrativeMode ? 'z-[900]' : 'z-[30]'} pointer-events-none overflow-hidden`}>
+                
+                {!isMobile ? (
+                  /* 1. PC 电脑端：保持原汁原味的高保真中世纪纸质大桌面，绝对坐标与油灯完全对正 */
+                  <div 
+                    className="relative pointer-events-none aspect-video mx-auto flex items-center justify-center w-full max-w-[1600px]"
                   >
-                    <MedievalLetters onReturn={handleReturnToStudy} isNarrativeMode={isNarrativeMode} />
-                    <BookStack 
+                    {/* 书堆组件：在叙事模式下几乎完全可见，保持桌面真实感 */}
+                    <motion.div
+                      animate={{
+                        opacity: isNarrativeMode ? 0.9 : 1,
+                        filter: isNarrativeMode ? "grayscale(0.1)" : "grayscale(0)",
+                      }}
+                      transition={{ duration: 1.5 }}
+                      className="pointer-events-auto h-full w-full relative"
+                    >
+                      <MedievalLetters onReturn={handleReturnToStudy} isNarrativeMode={isNarrativeMode} />
+                      <BookStack 
+                        onEntryClick={() => {
+                          setShowIntroText(false);
+                          setIsRedBookDetailOpen(true);
+                        }}
+                        onCompendiumClick={() => setShowCompendium(true)}
+                        onChapterClick={() => setShowChapterSelect(true)}
+                        onMapClick={() => setShowMap(true)}
+                        onEndingClick={() => setShowGallery(true)}
+                        unlockedEndingsCount={unlockedEndings.length}
+                        isEntryLocked={isNarrativeMode}
+                      />
+                    </motion.div>
+                  </div>
+                ) : (
+                  /* 2. 移动手机端（Route C）：仅在书房主页（非正文游玩时）渲染桌面各圣物面板 */
+                  !isNarrativeMode && (
+                    <MobileDeskLayout 
+                      isNarrativeMode={false}
                       onEntryClick={() => {
                         setShowIntroText(false);
                         setIsRedBookDetailOpen(true);
@@ -1090,33 +1128,56 @@ export default function App() {
                       onChapterClick={() => setShowChapterSelect(true)}
                       onMapClick={() => setShowMap(true)}
                       onEndingClick={() => setShowGallery(true)}
+                      onReturn={handleReturnToStudy}
                       unlockedEndingsCount={unlockedEndings.length}
-                      isEntryLocked={isNarrativeMode}
                     />
-                  </motion.div>
+                  )
+                )}
 
-                  <AnimatePresence>
-                    {isRedBookDetailOpen && (
-                      <OpenedBook 
-                        onClose={() => {
-                          setIsRedBookDetailOpen(false);
-                        }} 
-                        onContinueWriting={handleResumeGame}
-                        pausedPaths={pausedPaths}
-                        onSelectPath={(pathId) => {
-                          const choice = activeChoices.find(c => c.animalType === pathId);
-                          if (choice) {
-                            setIsRedBookDetailOpen(false);
-                            // 直接进入，不通过 handleChoiceClick 以跳过 explanation 弹窗
-                            proceedWithChoice(choice);
-                          }
-                        }}
-                      />
+                {/* 3. 文本与圣言祷告词常驻浮层：不受任何桌面缩放影响，确保在任何机型下都是满幅且大小合适的阅览层 */}
+                <div className="absolute inset-0 pointer-events-none z-[60] flex items-center justify-center">
+                  <div className="relative w-full max-w-[1600px] h-full pointer-events-none flex items-center justify-center">
+                    <GameIntroText isVisible={showIntroText && currentSceneId === "start"} />
+                    {activePrayer && currentSceneId === 'start' && !isNarrativeMode && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 4, delay: 0.5 }}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-6 pointer-events-none z-[60] w-full px-12"
+                      >
+                        <div className="text-amber-900/50 font-chinese text-2xl md:text-4xl tracking-[0.3em] drop-shadow-[0_1px_1px_rgba(255,255,255,0.1)]">
+                          {activePrayer.ch}
+                        </div>
+                        <div className="text-amber-950/20 font-latin text-xs md:text-sm tracking-[0.5em] uppercase" style={{ fontFamily: "'MedievalSharp', serif" }}>
+                          {activePrayer.lat}
+                        </div>
+                      </motion.div>
                     )}
-                  </AnimatePresence>
+                  </div>
                 </div>
               </div>
             )}
+
+            {/* 3. 打开的圣仪红书详情层，提至顶级桌面流外渲染，防止因容器 overflow 导致被裁减，并单独提供针对手机端的高清显示自适应 */}
+            <AnimatePresence>
+              {isRedBookDetailOpen && (
+                <OpenedBook 
+                  onClose={() => {
+                    setIsRedBookDetailOpen(false);
+                  }} 
+                  onContinueWriting={handleResumeGame}
+                  pausedPaths={pausedPaths}
+                  onSelectPath={(pathId) => {
+                    const choice = activeChoices.find(c => c.animalType === pathId);
+                    if (choice) {
+                      setIsRedBookDetailOpen(false);
+                      // 直接进入，不通过 handleChoiceClick 以跳过 explanation 弹窗
+                      proceedWithChoice(choice);
+                    }
+                  }}
+                />
+              )}
+            </AnimatePresence>
 
             {/* 结局展示界面独立分支 */}
             {currentScene.isEnding ? (

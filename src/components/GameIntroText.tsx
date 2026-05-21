@@ -42,8 +42,16 @@ export const GameIntroText: React.FC<GameIntroTextProps> = ({ isVisible = true }
                 <p className="text-base md:text-lg font-chinese leading-relaxed text-[#c9c1af]/80 tracking-widest">
                   直到劳顿·赫西与伊莎贝拉·赫西的女儿——
                 </p>
-                <p className="text-xl md:text-2xl font-chinese font-medium leading-relaxed text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#e2c18d] tracking-[0.25em] drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-                  征服王国的公主，凯瑟琳·赫西诞生。
+                <p className="text-xl md:text-2xl font-chinese font-medium leading-relaxed tracking-[0.25em] drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#e2c18d]">
+                    征服王国的公主，凯瑟琳·赫西
+                  </span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#c92a2a] via-[#8c0505] to-[#4a0000] font-bold">
+                    诞生
+                  </span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#e2c18d]">
+                    。
+                  </span>
                 </p>
               </div>
 

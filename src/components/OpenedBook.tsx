@@ -158,15 +158,15 @@ export const OpenedBook: React.FC<OpenedBookProps> = ({ onClose, onSelectPath, o
         animate={{ 
           opacity: 1,
           filter: 'none',
-          x: -47,
-          y: 4,
-          scale: 0.68,
+          x: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0 : -47,
+          y: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0 : 4,
+          scale: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0.95 : 0.68,
         }}
         exit={{ opacity: 0, filter: 'blur(15px)', y: 10 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="absolute left-1/2 top-1/2 z-[800] pointer-events-auto"
         style={{
-          width: '80%',
+          width: typeof window !== 'undefined' && window.innerWidth < 1024 ? '92%' : '80%',
           maxWidth: '1200px',
           transformOrigin: 'center center',
           translateX: '-50%',
@@ -182,7 +182,7 @@ export const OpenedBook: React.FC<OpenedBookProps> = ({ onClose, onSelectPath, o
       <div className="relative w-full aspect-[1.5/1] bg-[#e3d5ab] rounded-sm shadow-[0_4px_10px_rgba(0,0,0,0.5),0_10px_20px_rgba(0,0,0,0.3)] border-l-[14px] border-[#25160d] overflow-hidden flex ring-1 ring-black/10">
         
         {/* 左页 */}
-        <div className="relative flex-1 p-8 md:p-12 flex flex-col items-center justify-center border-r border-black/[0.08] overflow-hidden">
+        <div className="relative flex-1 p-4 md:p-12 flex flex-col items-center justify-center border-r border-black/[0.08] overflow-hidden">
           {/* 中缝深处阴影 */}
           <div className="absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-black/25 via-black/5 to-transparent pointer-events-none" />
           
@@ -218,7 +218,7 @@ export const OpenedBook: React.FC<OpenedBookProps> = ({ onClose, onSelectPath, o
                 )}
                 <h2 
                   onClick={handleTitleClick}
-                  className="text-4xl md:text-6xl font-chinese font-bold text-[#3d2b1f]/90 tracking-[0.1em] mb-6 drop-shadow-sm cursor-pointer hover:text-[#3d2b1f] transition-colors"
+                  className="text-2xl md:text-5xl font-chinese font-bold text-[#3d2b1f]/90 tracking-[0.1em] mb-4 md:mb-6 drop-shadow-sm cursor-pointer hover:text-[#3d2b1f] transition-colors"
                 >
                   {PAGES[currentPage].title}
                 </h2>
@@ -243,7 +243,7 @@ export const OpenedBook: React.FC<OpenedBookProps> = ({ onClose, onSelectPath, o
         </div>
 
         {/* 右页 */}
-        <div className="relative flex-1 p-12 md:p-20 flex flex-col items-start justify-center bg-gradient-to-br from-[#f0e6d2]/20 to-transparent">
+        <div className="relative flex-1 p-6 md:p-20 flex flex-col items-start justify-center bg-gradient-to-br from-[#f0e6d2]/20 to-transparent">
           {/* 中缝深处阴影 */}
           <div className="absolute left-0 top-0 bottom-0 w-28 bg-gradient-to-r from-black/25 via-black/5 to-transparent pointer-events-none" />
           
@@ -257,12 +257,12 @@ export const OpenedBook: React.FC<OpenedBookProps> = ({ onClose, onSelectPath, o
               className="w-full"
             >
                <div className="relative">
-                  <p className="text-lg md:text-xl font-chinese leading-[1.9] text-[#3d2b1f]/90 tracking-wide text-justify font-serif">
+                  <p className="text-xs sm:text-sm md:text-lg font-chinese leading-[1.6] md:leading-[1.9] text-[#3d2b1f]/90 tracking-wide text-justify font-serif">
                     {PAGES[currentPage].content}
                   </p>
                </div>
                
-               <div className="mt-16 pt-8 border-t border-[#3d2b1f]/10 flex justify-between items-center text-[10px] uppercase tracking-[0.25em] font-mono text-[#3d2b1f]/30">
+               <div className="mt-4 md:mt-16 pt-4 md:pt-8 border-t border-[#3d2b1f]/10 flex justify-between items-center text-[10px] uppercase tracking-[0.25em] font-mono text-[#3d2b1f]/30">
                   <span className="opacity-50">DOCUMENTA / HERSHEY</span>
                   <span>PAGE 0{currentPage + 1}</span>
                </div>
@@ -271,7 +271,7 @@ export const OpenedBook: React.FC<OpenedBookProps> = ({ onClose, onSelectPath, o
         </div>
 
         {/* 去 UI 化的翻页提示 */}
-        <div className="absolute inset-x-0 bottom-10 flex justify-between px-12 pointer-events-none">
+        <div className="absolute inset-x-0 bottom-4 md:bottom-10 flex justify-between px-6 md:px-12 pointer-events-none">
           <button 
             onClick={handlePrev}
             disabled={currentPage === 0}

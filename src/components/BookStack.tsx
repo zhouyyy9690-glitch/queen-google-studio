@@ -143,6 +143,20 @@ export const BookStack: React.FC<BookStackProps> = ({
         <div className="relative w-full h-full bg-[#3d0808] rounded-[2px] shadow-[35px_35px_90px_rgba(0,0,0,0.85)] border border-amber-600/15 overflow-hidden">
            <div className="absolute inset-0 opacity-40 shadow-inner" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/dark-leather.png')" }} />
            
+           {/* 古典艺术：当红书未解锁锁死时，在封面中央展示优雅的金色“START”作为进入游戏/翻页的指引提示 */}
+           {!isEntryLocked && (
+             <div className="absolute inset-0 flex flex-col items-center justify-center">
+               <span 
+                 id="red-book-start-text"
+                 className="text-[#d5b065]/70 group-hover:text-[#f3d99d] text-4xl font-serif tracking-[0.25em] font-light uppercase select-none transition-all duration-500 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
+               >
+                 Start
+               </span>
+               {/* 纤细的双渐变工艺金线，强化古典典雅感，悬浮时同样响应微光变亮 */}
+               <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#d5b065]/40 to-transparent mt-3 group-hover:via-[#f3d99d]/60 transition-all duration-500" />
+             </div>
+           )}
+           
            {/* 锁的图案 */}
            {isEntryLocked && (
              <motion.div 
